@@ -43,6 +43,8 @@ namespace xsoverlay_tweak.Patches.Setting
         [HarmonyPostfix]
         public static void OnRequestCurrentSettings(string sender)
         {
+            if (!sender.Equals("systemui_settings")) return;
+
             TweakSettings settings = new()
             {
                 //?? RefreshRate
