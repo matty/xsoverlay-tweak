@@ -17,13 +17,16 @@ namespace xsoverlay_tweak.Patches.Setting
         {
             public bool EnableRefreshRate;
             public int RefreshRate;
+
             public bool AlwayUpdateCursor;
             public bool AlwaysHideCursor;
             public bool PhysicalMouseDetector;
+
             public bool ActivePointerColor;
             public int ActivePointerOpacity;
             public int PointerScaleMultiply;
             public bool PointerDoubleClickDelay;
+
             public bool MouseNavigation;
             public bool MouseNavigationUseModifiedKey;
         }
@@ -42,15 +45,22 @@ namespace xsoverlay_tweak.Patches.Setting
         {
             TweakSettings settings = new()
             {
+                //?? RefreshRate
                 EnableRefreshRate = XConfig.EnableRefreshRate.Value,
                 RefreshRate = XConfig.RefreshRate.Value,
+
+                //?? Cursor
                 AlwayUpdateCursor = XConfig.AlwayUpdateCursor.Value,
                 AlwaysHideCursor = XConfig.AlwaysHideCursor.Value,
                 PhysicalMouseDetector = XConfig.PhysicalMouseDetector.Value,
+
+                //?? Pointer
                 ActivePointerColor = XConfig.ActivePointerColor.Value,
                 ActivePointerOpacity = XConfig.ActivePointerOpacity.Value,
                 PointerScaleMultiply = XConfig.PointerScaleMultiply.Value,
                 PointerDoubleClickDelay = XConfig.PointerDoubleClickDelay.Value,
+
+                //?? Mouse Navigation
                 MouseNavigation = XConfig.MouseNavigation.Value,
                 MouseNavigationUseModifiedKey = XConfig.MouseNavigationUseModifiedKey.Value
             };
@@ -65,12 +75,15 @@ namespace xsoverlay_tweak.Patches.Setting
         {
             switch (name)
             {
+                //?? RefreshRate
                 case "XSOverlayTweak.EnableRefreshRate":
                     XConfig.EnableRefreshRate.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.RefreshRate":
                     XConfig.RefreshRate.Value = int.Parse(value);
                     break;
+
+                //?? Cursor
                 case "XSOverlayTweak.AlwayUpdateCursor":
                     XConfig.AlwayUpdateCursor.Value = bool.Parse(value);
                     break;
@@ -80,6 +93,8 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.PhysicalMouseDetector":
                     XConfig.PhysicalMouseDetector.Value = bool.Parse(value);
                     break;
+
+                //?? Pointer
                 case "XSOverlayTweak.ActivePointerColor":
                     XConfig.ActivePointerColor.Value = bool.Parse(value);
                     break;
@@ -92,12 +107,16 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.PointerDoubleClickDelay":
                     XConfig.PointerDoubleClickDelay.Value = bool.Parse(value);
                     break;
+
+                //?? Mouse Navigation
                 case "XSOverlayTweak.MouseNavigation":
                     XConfig.MouseNavigation.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.MouseNavigationUseModifiedKey":
                     XConfig.MouseNavigationUseModifiedKey.Value = bool.Parse(value);
                     break;
+
+                //?? About
                 case "XSOverlayTweak.CheckForUpdate":
                     Utils.Update.CheckForUpdate();
                     break;
