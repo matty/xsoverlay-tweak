@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using UnityEngine;
+using Valve.Newtonsoft.Json;
 using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
@@ -12,25 +12,6 @@ namespace xsoverlay_tweak.Patches.Setting
 {
     internal class SettingPage
     {
-        [Serializable]
-        public class TweakSettings
-        {
-            public bool XSOverlayTweak_EnableRefreshRate;
-            public int XSOverlayTweak_RefreshRate;
-
-            public bool XSOverlayTweak_AlwayUpdateCursor;
-            public bool XSOverlayTweak_AlwaysHideCursor;
-            public bool XSOverlayTweak_PhysicalMouseDetector;
-
-            public bool XSOverlayTweak_ActivePointerColor;
-            public int XSOverlayTweak_ActivePointerOpacity;
-            public int XSOverlayTweak_PointerScaleMultiply;
-            public bool XSOverlayTweak_PointerDoubleClickDelay;
-
-            public bool XSOverlayTweak_MouseNavigation;
-            public bool XSOverlayTweak_MouseNavigationUseModifiedKey;
-        }
-
         [HarmonyPatch(typeof(Overlay_Manager), "OnRegisterWebviewOverlay")]
         [HarmonyPostfix]
         public static void WebviewOverlay(ref OverlayWebView wv)
@@ -45,29 +26,29 @@ namespace xsoverlay_tweak.Patches.Setting
         {
             if (!sender.Equals("systemui_settings")) return;
 
-            TweakSettings settings = new()
+            var settings = new Dictionary<string, object>
             {
-                //?? RefreshRate
-                XSOverlayTweak_EnableRefreshRate = XConfig.EnableRefreshRate.Value,
-                XSOverlayTweak_RefreshRate = XConfig.RefreshRate.Value,
+                // RefreshRate
+                ["XSOverlayTweak.EnableRefreshRate"] = XConfig.EnableRefreshRate.Value,
+                ["XSOverlayTweak.RefreshRate"] = XConfig.RefreshRate.Value,
 
-                //?? Cursor
-                XSOverlayTweak_AlwayUpdateCursor = XConfig.AlwayUpdateCursor.Value,
-                XSOverlayTweak_AlwaysHideCursor = XConfig.AlwaysHideCursor.Value,
-                XSOverlayTweak_PhysicalMouseDetector = XConfig.PhysicalMouseDetector.Value,
+                // Cursor
+                ["XSOverlayTweak.AlwayUpdateCursor"] = XConfig.AlwayUpdateCursor.Value,
+                ["XSOverlayTweak.AlwaysHideCursor"] = XConfig.AlwaysHideCursor.Value,
+                ["XSOverlayTweak.PhysicalMouseDetector"] = XConfig.PhysicalMouseDetector.Value,
 
-                //?? Pointer
-                XSOverlayTweak_ActivePointerColor = XConfig.ActivePointerColor.Value,
-                XSOverlayTweak_ActivePointerOpacity = XConfig.ActivePointerOpacity.Value,
-                XSOverlayTweak_PointerScaleMultiply = XConfig.PointerScaleMultiply.Value,
-                XSOverlayTweak_PointerDoubleClickDelay = XConfig.PointerDoubleClickDelay.Value,
+                // Pointer
+                ["XSOverlayTweak.ActivePointerColor"] = XConfig.ActivePointerColor.Value,
+                ["XSOverlayTweak.ActivePointerOpacity"] = XConfig.ActivePointerOpacity.Value,
+                ["XSOverlayTweak.PointerScaleMultiply"] = XConfig.PointerScaleMultiply.Value,
+                ["XSOverlayTweak.PointerDoubleClickDelay"] = XConfig.PointerDoubleClickDelay.Value,
 
-                //?? Mouse Navigation
-                XSOverlayTweak_MouseNavigation = XConfig.MouseNavigation.Value,
-                XSOverlayTweak_MouseNavigationUseModifiedKey = XConfig.MouseNavigationUseModifiedKey.Value
+                // Mouse Navigation
+                ["XSOverlayTweak.MouseNavigation"] = XConfig.MouseNavigation.Value,
+                ["XSOverlayTweak.MouseNavigationUseModifiedKey"] = XConfig.MouseNavigationUseModifiedKey.Value
             };
 
-            var data = JsonUtility.ToJson(settings);
+            var data = JsonConvert.SerializeObject(settings);
             ServerClientBridge.Instance.Api.SendMessage("UpdateSettings", data, null, sender);
         }
 
@@ -77,52 +58,52 @@ namespace xsoverlay_tweak.Patches.Setting
         {
             switch (name)
             {
-                //?? RefreshRate
-                case "XSOverlayTweak_EnableRefreshRate":
+                // RefreshRate
+                case "XSOverlayTweak.EnableRefreshRate":
                     XConfig.EnableRefreshRate.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak_RefreshRate":
+                case "XSOverlayTweak.RefreshRate":
                     XConfig.RefreshRate.Value = int.Parse(value);
                     break;
 
-                //?? Cursor
-                case "XSOverlayTweak_AlwayUpdateCursor":
+                // Cursor
+                case "XSOverlayTweak.AlwayUpdateCursor":
                     XConfig.AlwayUpdateCursor.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak_AlwaysHideCursor":
+                case "XSOverlayTweak.AlwaysHideCursor":
                     XConfig.AlwaysHideCursor.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak_PhysicalMouseDetector":
+                case "XSOverlayTweak.PhysicalMouseDetector":
                     XConfig.PhysicalMouseDetector.Value = bool.Parse(value);
                     break;
 
-                //?? Pointer
-                case "XSOverlayTweak_ActivePointerColor":
+                // Pointer
+                case "XSOverlayTweak.ActivePointerColor":
                     XConfig.ActivePointerColor.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak_ActivePointerOpacity":
+                case "XSOverlayTweak.ActivePointerOpacity":
                     XConfig.ActivePointerOpacity.Value = int.Parse(value);
                     break;
-                case "XSOverlayTweak_PointerScaleMultiply":
+                case "XSOverlayTweak.PointerScaleMultiply":
                     XConfig.PointerScaleMultiply.Value = int.Parse(value);
                     break;
-                case "XSOverlayTweak_PointerDoubleClickDelay":
+                case "XSOverlayTweak.PointerDoubleClickDelay":
                     XConfig.PointerDoubleClickDelay.Value = bool.Parse(value);
                     break;
 
-                //?? Mouse Navigation
-                case "XSOverlayTweak_MouseNavigation":
+                // Mouse Navigation
+                case "XSOverlayTweak.MouseNavigation":
                     XConfig.MouseNavigation.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak_MouseNavigationUseModifiedKey":
+                case "XSOverlayTweak.MouseNavigationUseModifiedKey":
                     XConfig.MouseNavigationUseModifiedKey.Value = bool.Parse(value);
                     break;
 
-                //?? About
-                case "XSOverlayTweak_CheckForUpdate":
+                // About
+                case "XSOverlayTweak.CheckForUpdate":
                     Utils.Update.CheckForUpdate();
                     break;
-                case "XSOverlayTweak_OpenGitHub":
+                case "XSOverlayTweak.OpenGitHub":
                     Utils.Update.OpenGitHubPage();
                     break;
             }
