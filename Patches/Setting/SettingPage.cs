@@ -41,6 +41,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 // Pointer
                 ["XSOverlayTweak.ActivePointerColor"] = XConfig.ActivePointerColor.Value,
                 ["XSOverlayTweak.ActivePointerOpacity"] = XConfig.ActivePointerOpacity.Value,
+                ["XSOverlayTweak.ActivePointerWebView"] = XConfig.ActivePointerWebView.Value,
                 ["XSOverlayTweak.PointerScaleMultiply"] = XConfig.PointerScaleMultiply.Value,
                 ["XSOverlayTweak.PointerDoubleClickDelay"] = XConfig.PointerDoubleClickDelay.Value,
 
@@ -86,6 +87,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.ActivePointerOpacity":
                     XConfig.ActivePointerOpacity.Value = int.Parse(value);
+                    break;
+                case "XSOverlayTweak.ActivePointerWebView":
+                    XConfig.ActivePointerWebView.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.PointerScaleMultiply":
                     XConfig.PointerScaleMultiply.Value = int.Parse(value);

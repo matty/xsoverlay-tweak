@@ -12,6 +12,7 @@ namespace xsoverlay_tweak
 
         public static ConfigEntry<bool> ActivePointerColor;
         public static ConfigEntry<int> ActivePointerOpacity;
+        public static ConfigEntry<bool> ActivePointerWebView;
         public static ConfigEntry<int> PointerScaleMultiply;
         public static ConfigEntry<bool> PointerDoubleClickDelay;
         public static ConfigEntry<bool> PhysicalMouseDetector;
@@ -35,6 +36,7 @@ namespace xsoverlay_tweak
             // Pointer
             ActivePointerColor = cfg.Bind("Pointer", "ActivePointerColor", true, "Highlight the non-active hand's pointer in red for easier identification.");
             ActivePointerOpacity = cfg.Bind("Pointer", "ActivePointerOpacity", 50, "Set the opacity of the non-active hand's pointer.");
+            ActivePointerWebView = cfg.Bind("Pointer", "ActivePointerWebView", true, "Apply the inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture.");
             PointerScaleMultiply = cfg.Bind("Pointer", "PointerScaleMultiply", 100, "Multiplier for the Pointer scale relative to the XSOverlay setting.");
             PointerDoubleClickDelay = cfg.Bind("Pointer", "PointerDoubleClickDelay", true, "Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.");
 

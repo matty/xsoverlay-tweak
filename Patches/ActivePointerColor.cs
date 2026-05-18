@@ -12,9 +12,9 @@ namespace xsoverlay_tweak.Patches
         public static void UpdateHoveringOverlay(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
-            if (__instance.HapticDeviceName == Raycaster.HapticDevice.None) return;
+            if (!IsHand(__instance)) return;
 
-            if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance && __instance.HoveringOverlay.IsDesktopOrWindowCapture)
+            if (!IsActiveHand(__instance))
                 ___VisualCursorElementOverlay.colorTint = Color.red;
             else if (!__instance.HoveringOverlay.IsLocked)
                 ___VisualCursorElementOverlay.colorTint = XSettingsManager.Instance.Settings.AccentColor;
@@ -25,16 +25,37 @@ namespace xsoverlay_tweak.Patches
         public static void DetermineCursorVisibility(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
-            if (__instance.HapticDeviceName == Raycaster.HapticDevice.None) return;
+            if (!IsHand(__instance)) return;
 
-            if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance && __instance.HoveringOverlay.IsDesktopOrWindowCapture)
+            if (!IsActiveHand(__instance))
                 if (___VisualCursorElementOverlay.opacity.Equals(1))
                     ___VisualCursorElementOverlay.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+        }
+
+        private static bool IsActiveHand(Raycaster __instance)
+        {
+            if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
+            {
+                if (XConfig.ActivePointerWebView.Value)
+                {
+                    if (__instance.HoveringOverlay != null)
+                        return false;
+                }
+                else if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
+                    return false;
+            }
+
+            return true;
         }
 
         private static bool IsEnable()
         {
             return XConfig.ActivePointerColor.Value;
+        }
+
+        private static bool IsHand(Raycaster __instance)
+        {
+            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
     }
 }
