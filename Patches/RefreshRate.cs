@@ -6,19 +6,16 @@ namespace xsoverlay_tweak.Patches
 {
     internal class RefreshRate
     {
-        private static float FrameInterval = 1f / 90f;
-
+        private static float HMDRefreshRate = 90f;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
-
-        private static float LastScrollingTime;
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
         public static void Start(DeviceManager __instance)
         {
             if (__instance.HMDRefreshRate > 0)
-                FrameInterval = 1f / (float)__instance.HMDRefreshRate;
+                HMDRefreshRate = __instance.HMDRefreshRate;
 
             // Setting changed
             XConfig.EnableRefreshRate.SettingChanged += (sender, args) =>
@@ -55,7 +52,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
 
             float currentTime = Time.unscaledTime;
-            if (currentTime - LastGrabTime < FrameInterval)
+            if (currentTime - LastGrabTime < (1f / HMDRefreshRate))
                 ___GrabbedDistance = GrabbedDistance;
             else
             {
@@ -71,48 +68,32 @@ namespace xsoverlay_tweak.Patches
         {
             if (!IsEnable()) return true;
 
-            float currentTime = Time.unscaledTime;
-            if (currentTime - LastScrollingTime < FrameInterval)
+            float currentFPS = 1.0f / Time.unscaledDeltaTime;
+            float scrollSpeedMultiplier = XSettingsManager.Instance.Settings.ScrollSpeed * (currentFPS / HMDRefreshRate);
+
+            float num = 0.2f;
+            float y = ___InputDevice.NormalizedScrollAxis.y;
+            float num2 = Mathf.Abs(y);
+            if (num2 <= num || (float)___ScrollClicksPerSecond <= 0f)
             {
-                float num = 0.2f;
-                float ScrollAxis = ___InputDevice.NormalizedScrollAxis.y;
-                float num2 = Mathf.Abs(ScrollAxis);
+                return false;
+            }
 
-                if (num2 <= num || (float)___ScrollClicksPerSecond <= 0f)
-                    return false;
-
-                if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
+            if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
+            {
+                ____tickAccumulator += num2 * (float)___ScrollClicksPerSecond * scrollSpeedMultiplier * Time.unscaledDeltaTime;
+                int num3 = (int)____tickAccumulator;
+                if (num3 > 0)
                 {
-                    ____tickAccumulator += num2 * (float)___ScrollClicksPerSecond * XSettingsManager.Instance.Settings.ScrollSpeed * Time.deltaTime;
-
-                    int num3 = (int)____tickAccumulator;
-                    if (num3 <= 0)
-                        return false;
-
-                    ____tickAccumulator -= (float)num3;
-
-                    if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
-                    {
-                        MouseOperations.Scroll(((ScrollAxis > 0f) ? 1 : (-1)) * num3, XInputManager.sim);
-                        return false;
-                    }
-                }
-                else if (__instance.HoveringOverlay.IsPluginApplication)
-                {
-                    ____tickAccumulator += num2 * (float)___ScrollClicksPerSecond * XSettingsManager.Instance.Settings.ScrollSpeed * Time.deltaTime;
-
-                    int num3 = (int)____tickAccumulator;
-                    if (num3 <= 0)
-                        return false;
-
-                    ____tickAccumulator -= (float)num3;
-
-                    float num4 = ScrollAxis * (num3 * 0.05f);
-                    __instance.HoveringOverlay.WebViewHandler.WebView.Scroll(new Vector2(0f, -num4), ___CursorUVNormalized);
+                    ____tickAccumulator -= num3;
+                    MouseOperations.Scroll(((y > 0f) ? 1 : (-1)) * num3, XInputManager.sim);
                 }
             }
-            else
-                LastScrollingTime = currentTime;
+            else if (__instance.HoveringOverlay.IsPluginApplication)
+            {
+                float num4 = y * scrollSpeedMultiplier * Time.unscaledDeltaTime;
+                __instance.HoveringOverlay.WebViewHandler.WebView.Scroll(new Vector2(0f, 0f - num4), ___CursorUVNormalized);
+            }
 
             return false;
         }
