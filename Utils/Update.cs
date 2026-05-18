@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Valve.Newtonsoft.Json.Linq;
 
 namespace xsoverlay_tweak.Utils
 {
@@ -20,10 +21,9 @@ namespace xsoverlay_tweak.Utils
             };
             client.DefaultRequestHeaders.UserAgent.ParseAdd("xsoverlay-tweak");
             var response = await client.GetStringAsync(GitHubLatestReleaseApi);
+            var responseData = JObject.Parse(response);
 
-            var m = Regex.Match(response, "\"tag_name\"\\s*:\\s*\"(?<tag>[^\"]+)\"",
-                RegexOptions.IgnoreCase);
-            string latestVersionRaw = m.Success ? m.Groups["tag"].Value : string.Empty;
+            string latestVersionRaw = responseData["tag_name"]?.ToString() ?? string.Empty;
             string latestVersion = string.IsNullOrEmpty(latestVersionRaw)
                 ? string.Empty
                 : Regex.Replace(latestVersionRaw, "[^0-9.]", string.Empty);
