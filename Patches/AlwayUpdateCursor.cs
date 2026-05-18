@@ -5,7 +5,6 @@ using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
 {
-    [HarmonyPatch(typeof(Raycaster))]
     internal class AlwayUpdateCursor
     {
         private delegate void SyncedUpdateDelegate(Raycaster instance, Unity_Overlay overlay);
@@ -15,19 +14,19 @@ namespace xsoverlay_tweak.Patches
             public SyncedUpdateDelegate SyncedOverlayUpdate;
         }
         private static readonly List<HandData> _handArray = [];
+        private static readonly Unity_Overlay EmptyOverlay = new();
 
-        [HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("Start")]
         [HarmonyPostfix]
         public static void Start(Raycaster __instance)
         {
             if (!IsController(__instance)) return;
 
             // Add to Update loop array
-            var SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
             _handArray.Add(new HandData
             {
                 Instance = __instance,
-                SyncedOverlayUpdate = AccessTools.MethodDelegate<SyncedUpdateDelegate>(SyncedOverlayUpdate)
+                SyncedOverlayUpdate = AccessTools.MethodDelegate<SyncedUpdateDelegate>(AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate"))
             });
 
             // Setting changed
@@ -40,7 +39,7 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch("SubscribeToEvents"), HarmonyPatch("UnsubscribeFromEvents")]
+        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("SubscribeToEvents"), HarmonyPatch("UnsubscribeFromEvents")]
         [HarmonyPostfix]
         public static void SubscribeToEvents(Raycaster __instance)
         {
@@ -50,26 +49,31 @@ namespace xsoverlay_tweak.Patches
             RemoveUpdatedOverlay(__instance);
         }
 
-        [HarmonyPatch("Update")]
+        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("UnsubscribeFromEvents")]
         [HarmonyPostfix]
-        public static void Update()
+        public static void UnsubscribeFromEvents(Raycaster __instance)
         {
             if (!IsEnable()) return;
+            if (!IsController(__instance)) return;
+
+            RemoveUpdatedOverlay(__instance);
+        }
+
+        [HarmonyPatch(typeof(UpdateDateTime)), HarmonyPatch("Update")]
+        [HarmonyPrefix]
+        public static bool Update()
+        {
+            if (!IsEnable()) return true;
 
             for (int i = _handArray.Count - 1; i >= 0; i--)
             {
                 var data = _handArray[i];
 
-                // Cleanup if destroyed
-                if (data.Instance == null)
-                {
-                    _handArray.RemoveAt(i);
-                    continue;
-                }
-
                 // Invoke the delegate stored in the array
-                data.SyncedOverlayUpdate?.Invoke(data.Instance, new Unity_Overlay());
+                data.SyncedOverlayUpdate?.Invoke(data.Instance, EmptyOverlay);
             }
+
+            return true;
         }
 
         private static void AddUpdatedOverlay(Raycaster __instance)
