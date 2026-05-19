@@ -50,6 +50,21 @@ namespace xsoverlay_tweak.Patches
             return true;
         }
 
+        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleTouchInputForWebApplications")]
+        [HarmonyPrefix]
+        public static bool HandleTouchInputForWebApplications(Raycaster __instance)
+        {
+            if (IsPhysicalMovement)
+            {
+                IsPhysicalMovement = false;
+                AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl").Invoke(__instance, null);
+
+                return false;
+            }
+
+            return true;
+        }
+
         [HarmonyPatch(typeof(Raycaster), "SyncedOverlayUpdate")]
         [HarmonyPrefix]
         public static bool SyncedOverlayUpdate()
