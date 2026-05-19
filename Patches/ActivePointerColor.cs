@@ -34,15 +34,13 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsActiveHand(Raycaster __instance)
         {
-            if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
+            if (PhysicalMouseDetector.IsPhysicalMovement)
+                return false;
+            else if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
             {
-                if (XConfig.ActivePointerWebView.Value)
-                {
-                    if (__instance.HoveringOverlay != null)
+                if (__instance.HoveringOverlay != null)
+                    if (__instance.HoveringOverlay.IsDesktopOrWindowCapture || XConfig.ActivePointerWebView.Value)
                         return false;
-                }
-                else if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
-                    return false;
             }
 
             return true;
