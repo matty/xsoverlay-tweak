@@ -5,7 +5,7 @@ namespace xsoverlay_tweak.Patches
 {
     internal class PhysicalMouseDetector
     {
-        private static bool IsPhysicalMovement = false;
+        public static bool IsPhysicalMovement = false;
         private static MouseInputDetector mouseDetector;
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
@@ -22,11 +22,13 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleClicksForDesktopWindows()
+        public static bool HandleClicksForDesktopWindows(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {
                 IsPhysicalMovement = false;
+                AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl").Invoke(__instance, null);
+
                 return false;
             }
 
@@ -35,11 +37,13 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleTouchInputForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleTouchInputForDesktopWindows()
+        public static bool HandleTouchInputForDesktopWindows(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {
                 IsPhysicalMovement = false;
+                AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl").Invoke(__instance, null);
+
                 return false;
             }
 
