@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -24,7 +23,7 @@ namespace xsoverlay_tweak.Patches
         // Listen for Pointer click WebView to become active hand
         [HarmonyPatch("HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
-        public static bool HandleTouchInputForWebApplications(Raycaster __instance, ref ClickActions clickActions)
+        public static bool HandleTouchInputForWebApplications(Raycaster __instance)
         {
             if (!IsEnable()) return true;
             if (!IsHand(__instance)) return true;
