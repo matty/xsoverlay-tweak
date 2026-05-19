@@ -17,6 +17,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<int> PointerScaleMultiply;
         public static ConfigEntry<bool> PointerDoubleClickDelay;
         public static ConfigEntry<bool> EmulateMouseClickAnimation;
+        public static ConfigEntry<bool> LaserPointer;
 
         public static ConfigEntry<bool> MouseNavigation;
         public static ConfigEntry<bool> MouseNavigationUseModifiedKey;
@@ -41,6 +42,7 @@ namespace xsoverlay_tweak
             PointerScaleMultiply = cfg.Bind("Pointer", "PointerScaleMultiply", 100, "Multiplier for the Pointer scale relative to the XSOverlay setting.");
             PointerDoubleClickDelay = cfg.Bind("Pointer", "PointerDoubleClickDelay", true, "Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.");
             EmulateMouseClickAnimation = cfg.Bind("Pointer", "EmulateMouseClickAnimation", true, "Apply Pointer click animation for Input Method > Emulate Mouse.");
+            LaserPointer = cfg.Bind("Pointer", "Laser Pointer", true, "Draw a Laser Pointer from the VR controllers to mimic the SteamVR dashboard for more accurate targeting.");
 
             // Mouse Navigation
             MouseNavigation = cfg.Bind("Mouse Navigation", "MouseNavigation", false, "Custom keybindings for Mouse Forward/Back navigation.\nConfiguration by press \"Bindings\" tab in XSOverlay settings to open SteamVR bindings menu.\nEdit the Current Binding and add a button for \"MouseBack/MouseForward\".");

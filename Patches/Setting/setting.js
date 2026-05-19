@@ -35,6 +35,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the XSOverlay setting.', default: 100, options: [100, 1000, 50], unit: '%' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Apply Pointer click animation for Input Method > Emulate Mouse.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser Pointer', description: 'Draw a <b>Laser Pointer</b> from the VR controllers to mimic the SteamVR dashboard for more accurate targeting.', default: true },
                 ]
             },
             {

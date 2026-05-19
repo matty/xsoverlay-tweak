@@ -45,6 +45,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.PointerScaleMultiply"] = XConfig.PointerScaleMultiply.Value,
                 ["XSOverlayTweak.PointerDoubleClickDelay"] = XConfig.PointerDoubleClickDelay.Value,
                 ["XSOverlayTweak.EmulateMouseClickAnimation"] = XConfig.EmulateMouseClickAnimation.Value,
+                ["XSOverlayTweak.LaserPointer"] = XConfig.LaserPointer.Value,
 
                 // Mouse Navigation
                 ["XSOverlayTweak.MouseNavigation"] = XConfig.MouseNavigation.Value,
@@ -100,6 +101,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.EmulateMouseClickAnimation":
                     XConfig.EmulateMouseClickAnimation.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.LaserPointer":
+                    XConfig.LaserPointer.Value = bool.Parse(value);
                     break;
 
                 // Mouse Navigation
