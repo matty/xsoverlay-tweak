@@ -1,4 +1,4 @@
-﻿using BepInEx;
+﻿﻿using BepInEx;
 using XSOverlay;
 using XSOverlay.Websockets.API;
 
@@ -8,7 +8,7 @@ namespace xsoverlay_tweak.Utils
     {
         public static void Send(string title, string content = "", float timeout = 5f)
         {
-            var notif = new Objects.NotificationObject
+            Objects.NotificationObject notif = new()
             {
                 title = title,
                 content = content,

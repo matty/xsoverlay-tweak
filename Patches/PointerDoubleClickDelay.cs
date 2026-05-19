@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿﻿using HarmonyLib;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using XSOverlay;
@@ -31,7 +31,7 @@ namespace xsoverlay_tweak.Patches
             // Only lock if this CurrentRaycaster is the one currently providing input
             if (DesktopCursorManager.Instance.GetCurrentInputDevice() == __instance)
             {
-                var state = instanceRefs.GetOrCreateValue(__instance);
+                RaycasterState state = instanceRefs.GetOrCreateValue(__instance);
 
                 // Store current ray state into the CurrentRaycaster-specific state object
                 state.SavedDirection = DirRef(__instance);
@@ -48,7 +48,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return true;
 
             // If we have a state for this hand, check if the timer is still running
-            if (instanceRefs.TryGetValue(__instance, out var state))
+            if (instanceRefs.TryGetValue(__instance, out RaycasterState state))
             {
                 // If timer is NOT ready, return false to skip (block) the original method
                 return state.ClickedTimer.IsReady;

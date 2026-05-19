@@ -1,4 +1,4 @@
-﻿﻿using HarmonyLib;
+﻿﻿﻿﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 
@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches
             for (int i = instanceRefs.Count - 1; i >= 0; i--)
             {
                 WindowComponentManager manager = instanceRefs[i];
-
+                
                 // If window was destroyed, remove from list and skip
                 if (manager == null)
                 {

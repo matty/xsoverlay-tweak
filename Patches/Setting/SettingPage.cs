@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -26,8 +26,8 @@ namespace xsoverlay_tweak.Patches.Setting
         public static void OnRequestCurrentSettings(string sender)
         {
             if (!sender.Equals("systemui_settings")) return;
-
-            var settings = new Dictionary<string, object>
+            
+            Dictionary<string, object> settings = new()
             {
                 // RefreshRate
                 ["XSOverlayTweak.EnableRefreshRate"] = XConfig.EnableRefreshRate.Value,
@@ -54,7 +54,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
             };
 
-            var data = JsonConvert.SerializeObject(settings);
+            string data = JsonConvert.SerializeObject(settings);
             ServerClientBridge.Instance.Api.SendMessage("UpdateSettings", data, null, sender);
         }
 

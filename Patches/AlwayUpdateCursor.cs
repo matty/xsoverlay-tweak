@@ -1,6 +1,7 @@
-﻿using HarmonyLib;
+﻿﻿using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
@@ -67,7 +68,7 @@ namespace xsoverlay_tweak.Patches
 
             for (int i = _handArray.Count - 1; i >= 0; i--)
             {
-                var data = _handArray[i];
+                HandData data = _handArray[i];
 
                 // Invoke the delegate stored in the array
                 data.SyncedOverlayUpdate?.Invoke(data.Instance, EmptyOverlay);
@@ -79,16 +80,16 @@ namespace xsoverlay_tweak.Patches
         private static void AddUpdatedOverlay(Raycaster __instance)
         {
             // Add listener from overlay update 
-            var SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
-            var handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
+            MethodInfo SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
+            Action<Unity_Overlay> handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
             XSOEventSystem.OnUpdatedOverlay += handler;
         }
 
         private static void RemoveUpdatedOverlay(Raycaster __instance)
         {
             // Remove listener from overlay update 
-            var SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
-            var handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
+            MethodInfo SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
+            Action<Unity_Overlay> handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
             XSOEventSystem.OnUpdatedOverlay -= handler;
         }
 

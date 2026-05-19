@@ -1,6 +1,7 @@
-﻿﻿using HarmonyLib;
+﻿﻿﻿﻿using HarmonyLib;
 using System;
 using System.IO;
+using System.Reflection;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -89,7 +90,7 @@ namespace xsoverlay_tweak.Patches
 
             // Use a shared static struct to avoid re-allocating 'new' on stack
             // We pass it by reference to the OpenVR API
-            var error = OpenVR.Input.GetDigitalActionData(handle, ref _sharedData, DigitalDataSize, 0);
+            EVRInputError error = OpenVR.Input.GetDigitalActionData(handle, ref _sharedData, DigitalDataSize, 0);
 
             // Compacted check: Error and Active state in one branch
             if (error == EVRInputError.None && _sharedData.bActive)
