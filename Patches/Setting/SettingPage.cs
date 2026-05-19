@@ -1,4 +1,4 @@
-﻿﻿using HarmonyLib;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -26,12 +26,14 @@ namespace xsoverlay_tweak.Patches.Setting
         public static void OnRequestCurrentSettings(string sender)
         {
             if (!sender.Equals("systemui_settings")) return;
-            
+
             Dictionary<string, object> settings = new()
             {
                 // RefreshRate
                 ["XSOverlayTweak.EnableRefreshRate"] = XConfig.EnableRefreshRate.Value,
                 ["XSOverlayTweak.RefreshRate"] = XConfig.RefreshRate.Value,
+                ["XSOverlayTweak.OnlyHoverOverlay"] = XConfig.OnlyHoverOverlay.Value,
+                ["XSOverlayTweak.OnlyInEditMod"] = XConfig.OnlyInEditMod.Value,
 
                 // Cursor
                 ["XSOverlayTweak.AlwayUpdateCursor"] = XConfig.AlwayUpdateCursor.Value,
@@ -70,6 +72,12 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.RefreshRate":
                     XConfig.RefreshRate.Value = int.Parse(value);
+                    break;
+                case "XSOverlayTweak.OnlyHoverOverlay":
+                    XConfig.OnlyHoverOverlay.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.OnlyInEditMod":
+                    XConfig.OnlyInEditMod.Value = bool.Parse(value);
                     break;
 
                 // Cursor

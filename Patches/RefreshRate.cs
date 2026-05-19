@@ -9,6 +9,7 @@ namespace xsoverlay_tweak.Patches
         private static float HMDRefreshRate = 90f;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
+        private static bool HoverAnyOverlay = false;
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
@@ -17,16 +18,47 @@ namespace xsoverlay_tweak.Patches
             if (__instance.HMDRefreshRate > 0)
                 HMDRefreshRate = __instance.HMDRefreshRate;
 
-            // Setting changed
+            // Listen to enable change
             XConfig.EnableRefreshRate.SettingChanged += (sender, args) =>
             {
                 AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
             };
 
+            // Listen to refresh rate change
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
             {
-                AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                if (IsEnable())
+                    AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
             };
+
+            // Listen to edit mode change
+            XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
+            {
+                if (IsEnable())
+                    if (XConfig.OnlyInEditMod.Value)
+                        AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+            };
+
+            // Listen to hovering overlay change
+            {
+                XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
+                {
+                    HoverAnyOverlay = true;
+
+                    if (IsEnable())
+                        if (XConfig.OnlyHoverOverlay.Value)
+                            AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                };
+
+                XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
+                {
+                    HoverAnyOverlay = false;
+
+                    if (IsEnable())
+                        if (XConfig.OnlyHoverOverlay.Value)
+                            AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                };
+            }
         }
 
         [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
@@ -34,6 +66,8 @@ namespace xsoverlay_tweak.Patches
         public static bool GetHMDRefreshRate(DeviceManager __instance)
         {
             if (!IsEnable()) return true;
+            if (!IsOnlyHoverOverlay()) return true;
+            if (!IsOnlyInEditMode()) return true;
 
             XSTools.ExecuteOnMainThread(delegate
             {
@@ -101,6 +135,16 @@ namespace xsoverlay_tweak.Patches
         private static bool IsEnable()
         {
             return XConfig.EnableRefreshRate.Value;
+        }
+
+        private static bool IsOnlyHoverOverlay()
+        {
+            return !XConfig.OnlyHoverOverlay.Value || HoverAnyOverlay;
+        }
+
+        private static bool IsOnlyInEditMode()
+        {
+            return !XConfig.OnlyInEditMod.Value || Overlay_Manager.Instance.editMode;
         }
     }
 }
