@@ -41,10 +41,9 @@ namespace xsoverlay_tweak.Patches
                 else
                 {
                     if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
-                        Object.Destroy(Data.Laser);
+                        Object.Destroy(Data.Laser.gameObject);
                     LaserDictionary.Remove(__instance);
                 }
-
             };
         }
 
@@ -105,19 +104,20 @@ namespace xsoverlay_tweak.Patches
 
         private static void CreateLaser(Raycaster instance)
         {
-            Unity_Overlay VisualCursorElementOverlay = (Unity_Overlay)AccessTools.Field(typeof(Raycaster), "VisualCursorElementOverlay").GetValue(instance);
-            Unity_Overlay laser = Object.Instantiate(VisualCursorElementOverlay);
+            GameObject VisualCursorElementPrefab = (GameObject)AccessTools.Field(typeof(Raycaster), "VisualCursorElementPrefab").GetValue(instance);
+            GameObject VisualCursorElement = Object.Instantiate(VisualCursorElementPrefab);
+            Unity_Overlay laser = VisualCursorElement.GetComponent<Unity_Overlay>();
 
-            Object.Destroy(laser.GetComponent<UI_RelativeTransformManipulator>());
+            VisualCursorElement.name = string.Format("Raycaster.{0}.{1}", instance.gameObject.name, "LaserPointer");
 
             laser.AutoUpdateOverlayTexture = false;
-            laser.name = VisualCursorElementOverlay.name.Replace("VisualCursor", "Laser");
-            laser.overlayName = VisualCursorElementOverlay.overlayName.Replace("VisualCursor", "Laser");
-            laser.overlayKey = VisualCursorElementOverlay.overlayKey.Replace("VisualCursor", "Laser");
+            laser.overlayName = VisualCursorElement.name;
+            laser.overlayKey = VisualCursorElement.name.ToLower();
             laser.overlayTexture = new Texture2D(1, 1, TextureFormat.RGB24, false);
             laser.overlay.overlayTexture = laser.overlayTexture;
 
-            LaserDictionary.Add(instance, new LaserData { Laser = laser, Distance = 1f, Distance_Last = 1f });
+            Object.Destroy(laser.GetComponent<UI_RelativeTransformManipulator>());
+            LaserDictionary.Add(instance, new LaserData { Laser = laser, Distance = 1f, Distance_Last = 0f });
         }
 
         // Wait one frame for UpdateRaycaster to update Distance
