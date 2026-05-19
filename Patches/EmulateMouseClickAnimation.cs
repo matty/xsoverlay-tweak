@@ -1,4 +1,6 @@
 ﻿using HarmonyLib;
+using UnityEngine;
+using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -7,10 +9,11 @@ namespace xsoverlay_tweak.Patches
     {
         [HarmonyPatch(nameof(Raycaster.HandleClicksForDesktopWindows))]
         [HarmonyPostfix]
-        public static void HandleClicksForDesktopWindows(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay)
+        public static void PostHandleClicksForDesktopWindows(Raycaster __instance, ref GameObject ___VisualCursorElementClickAnimation, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay)
         {
             if (!IsEnable()) return;
 
+            ___VisualCursorElementClickAnimation.transform.rotation = Quaternion.LookRotation(___VisualCursorElementClickAnimation.transform.position - Overlay_Manager.Instance.head.position);
             ___VisualCursorElementClickAnimationOverlay.gameObject.SetActive(value: true);
         }
 
