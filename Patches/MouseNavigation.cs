@@ -54,7 +54,7 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void RaycasterUpdate()
         {
-            IsDesktopHover = CurrentRaycaster.HoveringOverlay != null && CurrentRaycaster.HoveringOverlay.IsDesktopOrWindowCapture;
+            IsDesktopHover = CurrentRaycaster?.HoveringOverlay != null && CurrentRaycaster.HoveringOverlay.IsDesktopOrWindowCapture;
         }
 
         // SteamVR input listen
