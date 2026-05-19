@@ -149,8 +149,6 @@ namespace xsoverlay_tweak.Patches
                                     targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
                     }
 
-                    Plugin.Logger.LogError(targetFrameRate);
-
                     XSTools.ExecuteOnMainThread(delegate
                     {
                         Application.targetFrameRate = targetFrameRate;
@@ -242,7 +240,6 @@ namespace xsoverlay_tweak.Patches
 
         private static bool ShouldInEfficiencyMode()
         {
-            Plugin.Logger.LogError($"{IsEfficiencyModeEnable()}, {!Overlay_Manager.Instance.editMode}, {!IsHoverAnyOverlay}, {!IsNotificationVisible}");
             return IsEfficiencyModeEnable() && !Overlay_Manager.Instance.editMode && !IsHoverAnyOverlay && !IsNotificationVisible;
         }
     }
