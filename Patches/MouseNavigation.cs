@@ -1,7 +1,6 @@
-﻿﻿﻿﻿using HarmonyLib;
+﻿using HarmonyLib;
 using System;
 using System.IO;
-using System.Reflection;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -57,7 +56,7 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void RaycasterUpdate()
         {
-            IsDesktopHover = CurrentRaycaster?.HoveringOverlay != null && CurrentRaycaster.HoveringOverlay.IsDesktopOrWindowCapture;
+            IsDesktopHover = CurrentRaycaster?.HoveringOverlay && CurrentRaycaster.HoveringOverlay.IsDesktopOrWindowCapture;
         }
 
         // SteamVR input listen

@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null)
+            if (Overlay_Manager.Instance.editMode || __instance?.HoveringOverlay)
             {
                 __instance.IsActiveRaycaster = true;
 

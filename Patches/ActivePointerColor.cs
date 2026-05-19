@@ -38,7 +38,7 @@ namespace xsoverlay_tweak.Patches
                 return false;
             else if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
             {
-                if (__instance.HoveringOverlay != null)
+                if (__instance?.HoveringOverlay)
                     if (__instance.HoveringOverlay.IsDesktopOrWindowCapture || XConfig.ActivePointerWebView.Value)
                         return false;
             }
