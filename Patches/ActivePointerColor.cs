@@ -7,9 +7,9 @@ namespace xsoverlay_tweak.Patches
     [HarmonyPatch(typeof(Raycaster))]
     internal class ActivePointerColor
     {
-        [HarmonyPatch("UpdateHoveringOverlay")]
+        [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void UpdateHoveringOverlay(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
+        public static void SetActiveColor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -37,11 +37,7 @@ namespace xsoverlay_tweak.Patches
             if (PhysicalMouseDetector.IsPhysicalMovement)
                 return false;
             else if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
-            {
-                if (__instance?.HoveringOverlay)
-                    if (__instance.HoveringOverlay.IsDesktopOrWindowCapture || XConfig.ActivePointerWebView.Value)
-                        return false;
-            }
+                return false;
 
             return true;
         }

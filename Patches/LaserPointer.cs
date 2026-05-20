@@ -74,7 +74,7 @@ namespace xsoverlay_tweak.Patches
         // Change lasers position, rotation and length
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void UpdateRaycaster(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
+        public static void HandleLaserMovement(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -93,9 +93,9 @@ namespace xsoverlay_tweak.Patches
         }
 
         // ActivePointerColor
-        [HarmonyPatch("UpdateHoveringOverlay")]
+        [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void UpdateHoveringOverlay(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
+        public static void SetActiveColor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
