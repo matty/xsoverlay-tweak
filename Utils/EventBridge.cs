@@ -1,17 +1,23 @@
 ﻿using HarmonyLib;
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Collections;
+using UnityEngine;
 using XSOverlay;
+using XSOverlay.Websockets.API;
 
 namespace xsoverlay_tweak.Utils
 {
     internal class EventBridge
     {
-        private static CancellationTokenSource NotificationCancelToken;
+        private static Coroutine NotificationCoroutine;
 
         public static bool IsNotificationVisible = false;
         public static bool IsHoverAnyOverlay = false;
+
+        public static event Action<Objects.NotificationObject> OnQueueNotification;
+        public static event Action<Raycaster, Unity_Overlay> OnSwitchHoveringOverlay;
+        public static event Action<Raycaster> OnReleaseControlOfDesktopCursor;
+
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
@@ -22,16 +28,12 @@ namespace xsoverlay_tweak.Utils
             {
                 IsNotificationVisible = true;
 
-                // Cancel any previous notification timer
-                NotificationCancelToken?.Cancel();
-                NotificationCancelToken = new CancellationTokenSource();
-                CancellationToken token = NotificationCancelToken.Token;
+                if (NotificationCoroutine != null)
+                    Plugin.Instance.StopCoroutine(NotificationCoroutine);
 
-                Task.Delay(TimeSpan.FromSeconds(notify.timeout), token).ContinueWith(t =>
-                {
-                    if (!t.IsCanceled)
-                        IsNotificationVisible = false;
-                });
+                NotificationCoroutine = Plugin.Instance.StartCoroutine(NotificationTimer(notify.timeout));
+
+                OnQueueNotification?.Invoke(notify);
             };
 
             // Listen to hovering overlay change
@@ -39,13 +41,23 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
                 {
                     IsHoverAnyOverlay = true;
+                    OnSwitchHoveringOverlay?.Invoke(raycaster, overlay);
                 };
 
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = false;
+                    OnReleaseControlOfDesktopCursor?.Invoke(raycaster);
                 };
             }
+
+        }
+
+        private static IEnumerator NotificationTimer(float timeout)
+        {
+            yield return new WaitForSecondsRealtime(timeout);
+            IsNotificationVisible = false;
+            NotificationCoroutine = null;
         }
     }
 }
