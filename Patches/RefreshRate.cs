@@ -69,8 +69,6 @@ namespace xsoverlay_tweak.Patches
                     if (EfficiencyMode.ShouldInEfficiencyMode())
                         targetFrameRate = XConfig.InactiveRefreshRate.Value;
 
-                    Plugin.Logger.LogError(targetFrameRate);
-
                     XSTools.ExecuteOnMainThread(delegate
                     {
                         Application.targetFrameRate = targetFrameRate;

@@ -68,7 +68,8 @@ namespace xsoverlay_tweak
             DashboardWrist = cfg.Bind("Dashboard", "DashboardWrist", true, "Allow Wrist Overlay to be displayed over SteamVR Dashboard.");
             Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Allow Keyboard Overlay to be displayed over SteamVR Dashboard.");
 
-            EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Enable efficiency mode to reduce CPU usage when not interacting with Overlay.");
+            // Optimization
+            EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Put XSOverlay in Windows Efficiency Mode to reduce CPU usage when not interacting with Overlay.");
             InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The refresh rate for XSOverlay rendering when in Efficiency Mode.");
 
             // About
