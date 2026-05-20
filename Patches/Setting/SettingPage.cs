@@ -33,7 +33,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.EnableRefreshRate"] = XConfig.EnableRefreshRate.Value,
                 ["XSOverlayTweak.RefreshRate"] = XConfig.RefreshRate.Value,
                 ["XSOverlayTweak.OnlyHoverOverlay"] = XConfig.OnlyHoverOverlay.Value,
-                ["XSOverlayTweak.OnlyInEditMod"] = XConfig.OnlyInEditMod.Value,
+                ["XSOverlayTweak.OnlyInLayoutMod"] = XConfig.OnlyInLayoutMod.Value,
                 ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
 
                 // Cursor
@@ -77,8 +77,8 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.OnlyHoverOverlay":
                     XConfig.OnlyHoverOverlay.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.OnlyInEditMod":
-                    XConfig.OnlyInEditMod.Value = bool.Parse(value);
+                case "XSOverlayTweak.OnlyInLayoutMod":
+                    XConfig.OnlyInLayoutMod.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.EfficiencyMode":
                     XConfig.EfficiencyMode.Value = bool.Parse(value);

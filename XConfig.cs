@@ -7,7 +7,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> EnableRefreshRate;
         public static ConfigEntry<int> RefreshRate;
         public static ConfigEntry<bool> OnlyHoverOverlay;
-        public static ConfigEntry<bool> OnlyInEditMod;
+        public static ConfigEntry<bool> OnlyInLayoutMod;
         public static ConfigEntry<bool> EfficiencyMode;
 
         public static ConfigEntry<bool> AlwayUpdateCursor;
@@ -33,7 +33,7 @@ namespace xsoverlay_tweak
             EnableRefreshRate = cfg.Bind("RefreshRate", "EnableRefreshRate", false, "Overriding the XSOverlay render refresh rate.");
             RefreshRate = cfg.Bind("RefreshRate", "RefreshRate", -1, "The target frame rate for XSOverlay rendering.\nHigher values improve responsiveness but increase CPU usage.\nSet to 500 for unlimited.");
             OnlyHoverOverlay = cfg.Bind("RefreshRate", "OnlyHoverOverlay", true, "Only apply overriding refresh rate when hovering any Overlay.");
-            OnlyInEditMod = cfg.Bind("RefreshRate", "OnlyInEditMod", true, "Only apply overriding refresh rate in Edit Mode.");
+            OnlyInLayoutMod = cfg.Bind("RefreshRate", "OnlyInLayoutMod", true, "Only apply overriding refresh rate in Layout Mode.");
             EfficiencyMode = cfg.Bind("RefreshRate", "EfficiencyMode", true, "Enable efficiency mode to reduce CPU usage when not interacting with Overlay.");
 
             // Cursor

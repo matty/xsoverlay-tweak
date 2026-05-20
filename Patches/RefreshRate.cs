@@ -35,7 +35,7 @@ namespace xsoverlay_tweak.Patches
             XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
             {
                 if (IsEnable())
-                    if (XConfig.OnlyInEditMod.Value)
+                    if (XConfig.OnlyInLayoutMod.Value)
                         GetHMDRefreshRate.Invoke(__instance, null);
             };
 
@@ -96,10 +96,8 @@ namespace xsoverlay_tweak.Patches
                 {
                     int targetFrameRate = HMDRefreshRate;
 
-                    if (IsEnable())
-                        if (IsOnlyHoverOverlay())
-                            if (IsOnlyInEditMode())
-                                targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
+                    if (IsEnable() && IsOnlyHoverOverlay() && IsOnlyInLayoutMode())
+                        targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
 
                     if (EfficiencyMode.IsInEfficiencyMode)
                         targetFrameRate = 15;
@@ -178,9 +176,9 @@ namespace xsoverlay_tweak.Patches
             return !XConfig.OnlyHoverOverlay.Value || EventBridge.IsHoverAnyOverlay;
         }
 
-        private static bool IsOnlyInEditMode()
+        private static bool IsOnlyInLayoutMode()
         {
-            return !XConfig.OnlyInEditMod.Value || Overlay_Manager.Instance.editMode;
+            return !XConfig.OnlyInLayoutMod.Value || Overlay_Manager.Instance.editMode;
         }
 
         private static bool IsEfficiencyModeEnable()
