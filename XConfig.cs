@@ -25,6 +25,13 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> MouseNavigation;
         public static ConfigEntry<bool> MouseNavigationUseModifiedKey;
 
+        public static ConfigEntry<bool> DashboardNotification;
+        public static ConfigEntry<bool> DashboardPointer;
+        public static ConfigEntry<bool> DashboardSettings;
+        public static ConfigEntry<bool> DashboardWindow;
+        public static ConfigEntry<bool> DashboardWrist;
+        public static ConfigEntry<bool> Dashboardkeyboard;
+
         public static ConfigEntry<bool> UpdateNotification;
 
         public static void AllConfig(ConfigFile cfg)
@@ -53,6 +60,13 @@ namespace xsoverlay_tweak
             // Mouse Navigation
             MouseNavigation = cfg.Bind("Mouse Navigation", "MouseNavigation", false, "Custom keybindings for Mouse Forward/Back navigation.\nConfiguration by press \"Bindings\" tab in XSOverlay settings to open SteamVR bindings menu.\nEdit the Current Binding and add a button for \"MouseBack/MouseForward\".");
             MouseNavigationUseModifiedKey = cfg.Bind("Mouse Navigation", "MouseNavigationUseModifiedKey", false, "Use Alt+Left/Right keyboard shortcuts for navigation instead of mouse clicks.\nThis targets the focused window instead of the hovered window.");
+
+            DashboardNotification = cfg.Bind("Dashboard", "DashboardNotification", true, "Allow Notification Overlay to be displayed over SteamVR Dashboard.");
+            DashboardPointer = cfg.Bind("Dashboard", "DashboardPointer", true, "Allow Pointer Overlay to be displayed over SteamVR Dashboard.");
+            DashboardSettings = cfg.Bind("Dashboard", "DashboardSettings", true, "Allow Settings Overlay to be displayed over SteamVR Dashboard.");
+            DashboardWindow = cfg.Bind("Dashboard", "DashboardWindow", false, "Allow Window Overlay to be displayed over SteamVR Dashboard.");
+            DashboardWrist = cfg.Bind("Dashboard", "DashboardWrist", true, "Allow Wrist Overlay to be displayed over SteamVR Dashboard.");
+            Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Allow Keyboard Overlay to be displayed over SteamVR Dashboard.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");

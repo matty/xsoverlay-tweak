@@ -48,7 +48,17 @@ function InjectKBOSCTab() {
                 ]
             },
             {
-                name: 'About', priority: 5, settings: [
+                name: 'Dashboard Overlay', priority: 5, settings: [
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardNotification', name: 'Dashboard Notification', description: 'Allow Notification Overlay to be displayed over SteamVR Dashboard.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardPointer', name: 'Dashboard Pointer', description: 'Allow Pointer Overlay to be displayed over SteamVR Dashboard.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardSettings', name: 'Dashboard Settings', description: 'Allow Settings Overlay to be displayed over SteamVR Dashboard.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWindow', name: 'Dashboard Window', description: 'Allow Window Overlay to be displayed over SteamVR Dashboard.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWrist', name: 'Dashboard Wrist', description: 'Allow Wrist Overlay to be displayed over SteamVR Dashboard.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.Dashboardkeyboard', name: 'Dashboard Keyboard', description: 'Allow Keyboard Overlay to be displayed over SteamVR Dashboard.', default: false },
+                ]
+            },
+            {
+                name: 'About', priority: 6, settings: [
                     { type: Ui.ComponentType.Text, description: '<br>Version: <<Version>>'},
                     { type: Ui.ComponentType.Button, id: 'XSOverlayTweak.CheckForUpdate', name: 'Check for Updates', description: 'Check for the latest version of XSOverlay Tweak.', default: true },
                     { type: Ui.ComponentType.Button, id: 'XSOverlayTweak.OpenGitHub', name: 'Open GitHub', description: 'Visit the XSOverlay Tweak GitHub page.', default: true },

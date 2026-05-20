@@ -23,6 +23,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(EventBridge));
 
         harmony.PatchAll(typeof(Patches.RefreshRate));
+        harmony.PatchAll(typeof(Patches.EfficiencyMode));
 
         harmony.PatchAll(typeof(Patches.AlwayUpdateCursor));
         harmony.PatchAll(typeof(Patches.AlwaysHideCursor));
@@ -36,8 +37,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.LaserPointer));
         harmony.PatchAll(typeof(Patches.EmulateMouseClickAnimation));
 
-        harmony.PatchAll(typeof(Patches.RefreshRate));
-        harmony.PatchAll(typeof(Patches.EfficiencyMode));
+        harmony.PatchAll(typeof(Patches.SteamDashboard));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 

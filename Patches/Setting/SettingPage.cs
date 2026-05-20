@@ -54,6 +54,14 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.MouseNavigation"] = XConfig.MouseNavigation.Value,
                 ["XSOverlayTweak.MouseNavigationUseModifiedKey"] = XConfig.MouseNavigationUseModifiedKey.Value,
 
+                // Dashboard Overlay
+                ["XSOverlayTweak.DashboardNotification"] = XConfig.DashboardNotification.Value,
+                ["XSOverlayTweak.DashboardPointer"] = XConfig.DashboardPointer.Value,
+                ["XSOverlayTweak.DashboardSettings"] = XConfig.DashboardSettings.Value,
+                ["XSOverlayTweak.DashboardWindow"] = XConfig.DashboardWindow.Value,
+                ["XSOverlayTweak.DashboardWrist"] = XConfig.DashboardWrist.Value,
+                ["XSOverlayTweak.Dashboardkeyboard"] = XConfig.Dashboardkeyboard.Value,
+
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
             };
 
@@ -126,6 +134,26 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.MouseNavigationUseModifiedKey.Value = bool.Parse(value);
                     break;
 
+                // Dashboard Overlay
+                case "XSOverlayTweak.DashboardNotification":
+                    XConfig.DashboardNotification.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.DashboardPointer":
+                    XConfig.DashboardPointer.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.DashboardSettings":
+                    XConfig.DashboardSettings.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.DashboardWindow":
+                    XConfig.DashboardWindow.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.DashboardWrist":
+                    XConfig.DashboardWrist.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.Dashboardkeyboard":
+                    XConfig.Dashboardkeyboard.Value = bool.Parse(value);
+                    break;
+
                 // About
                 case "XSOverlayTweak.CheckForUpdate":
                     Task.Run(Utils.Update.CheckForUpdate);
@@ -164,7 +192,6 @@ namespace xsoverlay_tweak.Patches.Setting
                     });
                 }
             };
-
         }
     }
 }
