@@ -30,7 +30,6 @@ namespace xsoverlay_tweak.Patches.Setting
             Dictionary<string, object> settings = new()
             {
                 // RefreshRate
-                ["XSOverlayTweak.EnableRefreshRate"] = XConfig.EnableRefreshRate.Value,
                 ["XSOverlayTweak.RefreshRate"] = XConfig.RefreshRate.Value,
                 ["XSOverlayTweak.OnlyHoverOverlay"] = XConfig.OnlyHoverOverlay.Value,
                 ["XSOverlayTweak.OnlyInLayoutMod"] = XConfig.OnlyInLayoutMod.Value,
@@ -80,9 +79,6 @@ namespace xsoverlay_tweak.Patches.Setting
             switch (name)
             {
                 // RefreshRate
-                case "XSOverlayTweak.EnableRefreshRate":
-                    XConfig.EnableRefreshRate.Value = bool.Parse(value);
-                    break;
                 case "XSOverlayTweak.RefreshRate":
                     XConfig.RefreshRate.Value = int.Parse(value);
                     break;

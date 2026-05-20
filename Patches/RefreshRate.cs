@@ -18,12 +18,6 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void Start(DeviceManager __instance)
         {
-            // Listen to Refresh Rate enable change
-            XConfig.EnableRefreshRate.SettingChanged += (sender, args) =>
-            {
-                GetHMDRefreshRate.Invoke(__instance, null);
-            };
-
             // Listen to refresh rate change
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
             {
@@ -168,7 +162,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsEnable()
         {
-            return XConfig.EnableRefreshRate.Value;
+            return XConfig.RefreshRate.Value != DeviceManager.Instance.HMDRefreshRate;
         }
 
         private static bool IsOnlyHoverOverlay()
