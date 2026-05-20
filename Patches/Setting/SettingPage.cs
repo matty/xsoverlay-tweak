@@ -34,7 +34,6 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.RefreshRate"] = XConfig.RefreshRate.Value,
                 ["XSOverlayTweak.OnlyHoverOverlay"] = XConfig.OnlyHoverOverlay.Value,
                 ["XSOverlayTweak.OnlyInLayoutMod"] = XConfig.OnlyInLayoutMod.Value,
-                ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
 
                 // Cursor
                 ["XSOverlayTweak.AlwayUpdateCursor"] = XConfig.AlwayUpdateCursor.Value,
@@ -62,6 +61,11 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.DashboardWrist"] = XConfig.DashboardWrist.Value,
                 ["XSOverlayTweak.Dashboardkeyboard"] = XConfig.Dashboardkeyboard.Value,
 
+                // Optimization
+                ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
+                ["XSOverlayTweak.InactiveRefreshRate"] = XConfig.InactiveRefreshRate.Value,
+
+                // About
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
             };
 
@@ -87,9 +91,6 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.OnlyInLayoutMod":
                     XConfig.OnlyInLayoutMod.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.EfficiencyMode":
-                    XConfig.EfficiencyMode.Value = bool.Parse(value);
                     break;
 
                 // Cursor
@@ -154,6 +155,13 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.Dashboardkeyboard.Value = bool.Parse(value);
                     break;
 
+                case "XSOverlayTweak.EfficiencyMode":
+                    XConfig.EfficiencyMode.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.InactiveRefreshRate":
+                    XConfig.InactiveRefreshRate.Value = int.Parse(value);
+                    break;
+
                 // About
                 case "XSOverlayTweak.CheckForUpdate":
                     Task.Run(Utils.Update.CheckForUpdate);
@@ -178,6 +186,7 @@ namespace xsoverlay_tweak.Patches.Setting
             string jsContent = reader.ReadToEnd();
 
             jsContent = jsContent.Replace("<<Version>>", MyPluginInfo.PLUGIN_VERSION);
+            jsContent = jsContent.Replace("<<HMDRefreshRate>>", DeviceManager.Instance.HMDRefreshRate.ToString());
 
             string jsCode = $"(function() {{ {jsContent} }})();";
 

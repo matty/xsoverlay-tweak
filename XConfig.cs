@@ -4,11 +4,9 @@ namespace xsoverlay_tweak
 {
     internal class XConfig
     {
-        public static ConfigEntry<bool> EnableRefreshRate;
         public static ConfigEntry<int> RefreshRate;
         public static ConfigEntry<bool> OnlyHoverOverlay;
         public static ConfigEntry<bool> OnlyInLayoutMod;
-        public static ConfigEntry<bool> EfficiencyMode;
 
         public static ConfigEntry<bool> AlwayUpdateCursor;
         public static ConfigEntry<bool> AlwaysHideCursor;
@@ -32,16 +30,18 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> DashboardWrist;
         public static ConfigEntry<bool> Dashboardkeyboard;
 
+        public static ConfigEntry<bool> EfficiencyMode;
+        public static ConfigEntry<int> InactiveRefreshRate;
+
+
         public static ConfigEntry<bool> UpdateNotification;
 
         public static void AllConfig(ConfigFile cfg)
         {
             // RefreshRate
-            EnableRefreshRate = cfg.Bind("RefreshRate", "EnableRefreshRate", false, "Overriding the XSOverlay render refresh rate.");
             RefreshRate = cfg.Bind("RefreshRate", "RefreshRate", -1, "The target frame rate for XSOverlay rendering.\nHigher values improve responsiveness but increase CPU usage.\nSet to 500 for unlimited.");
             OnlyHoverOverlay = cfg.Bind("RefreshRate", "OnlyHoverOverlay", true, "Only apply overriding refresh rate when hovering any Overlay.");
             OnlyInLayoutMod = cfg.Bind("RefreshRate", "OnlyInLayoutMod", true, "Only apply overriding refresh rate in Layout Mode.");
-            EfficiencyMode = cfg.Bind("RefreshRate", "EfficiencyMode", true, "Enable efficiency mode to reduce CPU usage when not interacting with Overlay.");
 
             // Cursor
             AlwayUpdateCursor = cfg.Bind("Cursor", "AlwayUpdateCursor", true, "Reduces cursor latency by sending cursor position data from the Pointer before the desktop frame is captured.\nWithout this, the cursor often appears to lag one frame behind the Pointer position.");
@@ -67,6 +67,9 @@ namespace xsoverlay_tweak
             DashboardWindow = cfg.Bind("Dashboard", "DashboardWindow", false, "Allow Window Overlay to be displayed over SteamVR Dashboard.");
             DashboardWrist = cfg.Bind("Dashboard", "DashboardWrist", true, "Allow Wrist Overlay to be displayed over SteamVR Dashboard.");
             Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Allow Keyboard Overlay to be displayed over SteamVR Dashboard.");
+
+            EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Enable efficiency mode to reduce CPU usage when not interacting with Overlay.");
+            InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The refresh rate for XSOverlay rendering when in Efficiency Mode.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");
