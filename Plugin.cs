@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Threading.Tasks;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak;
 
@@ -19,6 +20,10 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
         XConfig.AllConfig(Config);
 
+        harmony.PatchAll(typeof(EventBridge));
+
+        harmony.PatchAll(typeof(Patches.RefreshRate));
+
         harmony.PatchAll(typeof(Patches.AlwayUpdateCursor));
         harmony.PatchAll(typeof(Patches.AlwaysHideCursor));
         harmony.PatchAll(typeof(Patches.PhysicalMouseDetector));
@@ -32,6 +37,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.EmulateMouseClickAnimation));
 
         harmony.PatchAll(typeof(Patches.RefreshRate));
+        harmony.PatchAll(typeof(Patches.EfficiencyMode));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 

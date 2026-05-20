@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Reflection;
 using UnityEngine;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
@@ -10,13 +8,11 @@ namespace xsoverlay_tweak.Patches
 {
     internal class RefreshRate
     {
+        private static readonly MethodInfo GetHMDRefreshRate = AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate");
+
         private static int HMDRefreshRate = 90;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
-        private static bool IsHoverAnyOverlay = false;
-        private static CancellationTokenSource NotificationCancelToken;
-        private static bool IsNotificationVisible = false;
-        private static bool IsInEfficiencyMode = false;
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
@@ -25,81 +21,55 @@ namespace xsoverlay_tweak.Patches
             // Listen to Refresh Rate enable change
             XConfig.EnableRefreshRate.SettingChanged += (sender, args) =>
             {
-                GetHMDRefreshRate();
+                GetHMDRefreshRate.Invoke(__instance, null);
             };
 
             // Listen to refresh rate change
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
             {
                 if (IsEnable())
-                    GetHMDRefreshRate();
+                    GetHMDRefreshRate.Invoke(__instance, null);
             };
 
             // Listen to edit mode change
             XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
             {
-                if (IsEfficiencyModeEnable())
-                {
-                    if (isEditMode) // Smooth overlay fadeout
-                        GetHMDRefreshRate();
-                }
-                else if (IsEnable())
+                if (IsEnable())
                     if (XConfig.OnlyInEditMod.Value)
-                        GetHMDRefreshRate();
-            };
-
-            // Listen to notification push
-            XSOEventSystem.OnQueueNotification += (notify) =>
-            {
-                if (IsEfficiencyModeEnable())
-                {
-                    IsNotificationVisible = true;
-                    GetHMDRefreshRate();
-
-                    // Cancel any previous notification timer
-                    NotificationCancelToken?.Cancel();
-                    NotificationCancelToken = new CancellationTokenSource();
-                    CancellationToken token = NotificationCancelToken.Token;
-
-                    Task.Delay(TimeSpan.FromSeconds(notify.timeout), token).ContinueWith(t =>
-                    {
-                        if (!t.IsCanceled)
-                            IsNotificationVisible = false;
-                    });
-                }
+                        GetHMDRefreshRate.Invoke(__instance, null);
             };
 
             // Listen to hovering overlay change
             {
                 XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
                 {
-                    IsHoverAnyOverlay = true;
+                    EventBridge.IsHoverAnyOverlay = true;
 
                     if (IsEnable())
                         if (XConfig.OnlyHoverOverlay.Value)
-                            AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                            GetHMDRefreshRate.Invoke(__instance, null);
 
                     if (IsEfficiencyModeEnable())
-                        AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                        GetHMDRefreshRate.Invoke(__instance, null);
                 };
 
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
-                    IsHoverAnyOverlay = false;
+                    EventBridge.IsHoverAnyOverlay = false;
 
                     if (IsEnable())
                         if (XConfig.OnlyHoverOverlay.Value)
-                            AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                            GetHMDRefreshRate.Invoke(__instance, null);
 
                     if (IsEfficiencyModeEnable())
-                        AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(__instance, null);
+                        GetHMDRefreshRate.Invoke(__instance, null);
                 };
             }
         }
 
         [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
         [HarmonyPrefix]
-        public static bool GetHMDRefreshRate(DeviceManager __instance, ref Unity_SteamVR_Handler ___svr, ref bool ___HMDRefreshRateDetermined, ref int ___OldRefreshRate, ref int ___HMDRefreshRate)
+        public static bool PatchHMDRefreshRate(DeviceManager __instance, ref Unity_SteamVR_Handler ___svr, ref bool ___HMDRefreshRateDetermined, ref int ___OldRefreshRate, ref int ___HMDRefreshRate)
         {
             if (___svr.isSteamVRConnected)
             {
@@ -126,28 +96,13 @@ namespace xsoverlay_tweak.Patches
                 {
                     int targetFrameRate = HMDRefreshRate;
 
-                    if (ShouldInEfficiencyMode())
-                    {
-                        IsInEfficiencyMode = true;
-                        Application.runInBackground = false;
-                        EfficiencyModeController.SetEfficiencyMode(true);
+                    if (IsEnable())
+                        if (IsOnlyHoverOverlay())
+                            if (IsOnlyInEditMode())
+                                targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
 
+                    if (EfficiencyMode.IsInEfficiencyMode)
                         targetFrameRate = 15;
-                    }
-                    else
-                    {
-                        if (IsInEfficiencyMode)
-                        {
-                            IsInEfficiencyMode = false;
-                            Application.runInBackground = true;
-                            EfficiencyModeController.SetEfficiencyMode(false);
-                        }
-
-                        if (IsEnable())
-                            if (IsOnlyHoverOverlay())
-                                if (IsOnlyInEditMode())
-                                    targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
-                    }
 
                     XSTools.ExecuteOnMainThread(delegate
                     {
@@ -213,24 +168,14 @@ namespace xsoverlay_tweak.Patches
             return false;
         }
 
-        private static void GetHMDRefreshRate()
-        {
-            AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate").Invoke(DeviceManager.Instance, null);
-        }
-
         private static bool IsEnable()
         {
             return XConfig.EnableRefreshRate.Value;
         }
 
-        private static bool IsEfficiencyModeEnable()
-        {
-            return XConfig.EfficiencyMode.Value;
-        }
-
         private static bool IsOnlyHoverOverlay()
         {
-            return !XConfig.OnlyHoverOverlay.Value || IsHoverAnyOverlay;
+            return !XConfig.OnlyHoverOverlay.Value || EventBridge.IsHoverAnyOverlay;
         }
 
         private static bool IsOnlyInEditMode()
@@ -238,9 +183,9 @@ namespace xsoverlay_tweak.Patches
             return !XConfig.OnlyInEditMod.Value || Overlay_Manager.Instance.editMode;
         }
 
-        private static bool ShouldInEfficiencyMode()
+        private static bool IsEfficiencyModeEnable()
         {
-            return IsEfficiencyModeEnable() && !Overlay_Manager.Instance.editMode && !IsHoverAnyOverlay && !IsNotificationVisible;
+            return XConfig.EfficiencyMode.Value;
         }
     }
 }

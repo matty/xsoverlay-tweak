@@ -1,8 +1,71 @@
-﻿using System;
+﻿using HarmonyLib;
+using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using UnityEngine;
+using XSOverlay;
+using xsoverlay_tweak.Utils;
 
-namespace xsoverlay_tweak.Utils
+namespace xsoverlay_tweak.Patches
 {
+    internal class EfficiencyMode
+    {
+        private static readonly MethodInfo GetHMDRefreshRate = AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate");
+
+        public static bool IsInEfficiencyMode = false;
+
+        [HarmonyPatch(typeof(DeviceManager), "Start")]
+        [HarmonyPostfix]
+        public static void Start(DeviceManager __instance)
+        {
+            // Listen to notification push
+            XSOEventSystem.OnQueueNotification += (notify) =>
+            {
+                if (IsEfficiencyModeEnable())
+                    GetHMDRefreshRate.Invoke(__instance, null);
+            };
+
+            // Listen to edit mode change
+            XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
+            {
+                if (IsEfficiencyModeEnable())
+                {
+                    if (isEditMode) // Smooth overlay fadeout
+                        GetHMDRefreshRate.Invoke(__instance, null);
+                }
+            };
+        }
+
+        [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
+        [HarmonyPostfix]
+        public static void PatchHMDRefreshRate()
+        {
+            Plugin.Logger.LogError(EventBridge.IsNotificationVisible);
+            if (ShouldInEfficiencyMode())
+            {
+                IsInEfficiencyMode = true;
+                Application.runInBackground = false;
+                EfficiencyModeController.SetEfficiencyMode(true);
+            }
+            else if (IsInEfficiencyMode)
+            {
+                IsInEfficiencyMode = false;
+                Application.runInBackground = true;
+                EfficiencyModeController.SetEfficiencyMode(false);
+            }
+        }
+
+        private static bool IsEfficiencyModeEnable()
+        {
+            return XConfig.EfficiencyMode.Value;
+        }
+
+        private static bool ShouldInEfficiencyMode()
+        {
+            return IsEfficiencyModeEnable() && !Overlay_Manager.Instance.editMode && !EventBridge.IsHoverAnyOverlay && !EventBridge.IsNotificationVisible;
+        }
+    }
+
     internal class EfficiencyModeController
     {
         // --- Windows API Imports ---
