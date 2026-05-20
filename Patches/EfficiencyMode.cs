@@ -18,37 +18,13 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void Start(DeviceManager __instance)
         {
-            // Listen to notification push
-            XSOEventSystem.OnQueueNotification += (notify) =>
-            {
-                if (IsEfficiencyModeEnable())
-                    GetHMDRefreshRate.Invoke(__instance, null);
-            };
-
             // Listen to edit mode change
             XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
             {
                 if (IsEfficiencyModeEnable())
-                {
                     if (isEditMode) // Smooth overlay fadeout
                         GetHMDRefreshRate.Invoke(__instance, null);
-                }
             };
-
-            // Listen to hovering overlay change
-            {
-                XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
-                {
-                    if (IsEfficiencyModeEnable())
-                        GetHMDRefreshRate.Invoke(__instance, null);
-                };
-
-                XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
-                {
-                    if (IsEfficiencyModeEnable())
-                        GetHMDRefreshRate.Invoke(__instance, null);
-                };
-            }
         }
 
         [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]

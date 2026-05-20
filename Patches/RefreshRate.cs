@@ -28,26 +28,10 @@ namespace xsoverlay_tweak.Patches
             // Listen to edit mode change
             XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
             {
-                if (IsRefreshRateEnable() && XConfig.OnlyInLayoutMod.Value && !EfficiencyMode.IsEfficiencyModeEnable())
-                    GetHMDRefreshRate.Invoke(__instance, null);
+                if (IsRefreshRateEnable() && XConfig.OnlyInLayoutMod.Value)
+                    if (!EfficiencyMode.IsEfficiencyModeEnable()) // Smooth overlay fadeout
+                        GetHMDRefreshRate.Invoke(__instance, null);
             };
-
-            // Listen to hovering overlay change
-            {
-                EventBridge.OnSwitchHoveringOverlay += (raycaster, overlay) =>
-                {
-                    if (IsRefreshRateEnable())
-                        if (XConfig.OnlyHoverOverlay.Value)
-                            GetHMDRefreshRate.Invoke(__instance, null);
-                };
-
-                EventBridge.OnReleaseControlOfDesktopCursor += (raycaster) =>
-                {
-                    if (IsRefreshRateEnable())
-                        if (XConfig.OnlyHoverOverlay.Value)
-                            GetHMDRefreshRate.Invoke(__instance, null);
-                };
-            }
         }
 
         [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
@@ -151,7 +135,7 @@ namespace xsoverlay_tweak.Patches
             return false;
         }
 
-        private static bool IsRefreshRateEnable()
+        public static bool IsRefreshRateEnable()
         {
             return XConfig.RefreshRate.Value != DeviceManager.Instance.HMDRefreshRate;
         }

@@ -1,9 +1,8 @@
 ﻿using HarmonyLib;
-using System;
 using System.Collections;
+using System.Reflection;
 using UnityEngine;
 using XSOverlay;
-using XSOverlay.Websockets.API;
 
 namespace xsoverlay_tweak.Utils
 {
@@ -14,14 +13,11 @@ namespace xsoverlay_tweak.Utils
         public static bool IsNotificationVisible = false;
         public static bool IsHoverAnyOverlay = false;
 
-        public static event Action<Objects.NotificationObject> OnQueueNotification;
-        public static event Action<Raycaster, Unity_Overlay> OnSwitchHoveringOverlay;
-        public static event Action<Raycaster> OnReleaseControlOfDesktopCursor;
-
+        private static readonly MethodInfo GetHMDRefreshRate = AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate");
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
-        public static void Start()
+        public static void Start(DeviceManager __instance)
         {
             // Listen to notification push
             XSOEventSystem.OnQueueNotification += (notify) =>
@@ -30,10 +26,9 @@ namespace xsoverlay_tweak.Utils
 
                 if (NotificationCoroutine != null)
                     Plugin.Instance.StopCoroutine(NotificationCoroutine);
-
                 NotificationCoroutine = Plugin.Instance.StartCoroutine(NotificationTimer(notify.timeout));
 
-                OnQueueNotification?.Invoke(notify);
+                GetHMDRefreshRate.Invoke(__instance, null);
             };
 
             // Listen to hovering overlay change
@@ -41,13 +36,19 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
                 {
                     IsHoverAnyOverlay = true;
-                    OnSwitchHoveringOverlay?.Invoke(raycaster, overlay);
+                    GetHMDRefreshRate.Invoke(__instance, null);
+                };
+
+                XSOEventSystem.OnTakeControlOfDesktopCursor += (raycaster) =>
+                {
+                    IsHoverAnyOverlay = true;
+                    GetHMDRefreshRate.Invoke(__instance, null);
                 };
 
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = false;
-                    OnReleaseControlOfDesktopCursor?.Invoke(raycaster);
+                    GetHMDRefreshRate.Invoke(__instance, null);
                 };
             }
 
