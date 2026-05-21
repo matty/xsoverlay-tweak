@@ -32,6 +32,7 @@ namespace xsoverlay_tweak
 
         public static ConfigEntry<bool> EfficiencyMode;
         public static ConfigEntry<int> InactiveRefreshRate;
+        public static ConfigEntry<bool> WristOverPosition;
 
 
         public static ConfigEntry<bool> UpdateNotification;
@@ -71,6 +72,7 @@ namespace xsoverlay_tweak
             // Optimization
             EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Put XSOverlay in Windows Efficiency Mode to reduce CPU usage when not interacting with Overlay.");
             InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The refresh rate for XSOverlay rendering when in Efficiency Mode.");
+            WristOverPosition = cfg.Bind("Optimization", "WristOverPosition", true, "Allow to move Wrist Overlay over limited postion.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");

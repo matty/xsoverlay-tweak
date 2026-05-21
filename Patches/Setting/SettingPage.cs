@@ -63,6 +63,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 // Optimization
                 ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
                 ["XSOverlayTweak.InactiveRefreshRate"] = XConfig.InactiveRefreshRate.Value,
+                ["XSOverlayTweak.WristOverPosition"] = XConfig.WristOverPosition.Value,
 
                 // About
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
@@ -151,11 +152,15 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.Dashboardkeyboard.Value = bool.Parse(value);
                     break;
 
+                // Optimization
                 case "XSOverlayTweak.EfficiencyMode":
                     XConfig.EfficiencyMode.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.InactiveRefreshRate":
                     XConfig.InactiveRefreshRate.Value = int.Parse(value);
+                    break;
+                case "XSOverlayTweak.WristOverPosition":
+                    XConfig.WristOverPosition.Value = bool.Parse(value);
                     break;
 
                 // About
