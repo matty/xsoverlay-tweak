@@ -85,19 +85,28 @@ namespace xsoverlay_tweak.Patches
             {
                 if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
                 {
+                    Vector3 CurrentRayPosition = ___CurrentRayPosition;
+                    Vector3 CurrentRayDirection = ___CurrentRayDirection;
                     Vector3 RayHitPoint = ___RayHitPoint - (___CurrentRayDirection * 0.015f);
 
-                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(___CurrentRayPosition, RayHitPoint) : 0.5f;
-                    Data.Laser.transform.position = ___CurrentRayPosition + (___CurrentRayDirection * (Data.Distance / 2));
+                    // Aniti laser UseCursorSmoothing
+                    if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
+                    {
+                        CurrentRayPosition = __instance.transform.position;
+                        CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
+                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.015f);
+                    }
 
-                    Data.Laser.transform.up = ___CurrentRayDirection;
+                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
+                    Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
+
+                    Data.Laser.transform.up = CurrentRayDirection;
                     if (!IsRightHand(__instance))
                         Data.Laser.transform.Rotate(0, -45, 0, Space.Self);
 
                     if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
                         UpdateLaserLength(__instance);
                 }
-
             }
         }
 
