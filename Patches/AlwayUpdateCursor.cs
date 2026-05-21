@@ -9,12 +9,9 @@ namespace xsoverlay_tweak.Patches
     internal class AlwayUpdateCursor
     {
         private delegate void SyncedUpdateDelegate(Raycaster instance, Unity_Overlay overlay);
-        private struct HandData
-        {
-            public Raycaster Instance;
-            public SyncedUpdateDelegate SyncedOverlayUpdate;
-        }
-        private static readonly List<HandData> _handArray = [];
+        private static readonly SyncedUpdateDelegate SyncedOverlayUpdate = AccessTools.MethodDelegate<SyncedUpdateDelegate>(AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate"));
+
+        private static readonly List<Raycaster> RaycasterInstances = [];
         private static readonly Unity_Overlay EmptyOverlay = new();
 
         [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("Start")]
@@ -24,11 +21,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsController(__instance)) return;
 
             // Add to Update loop array
-            _handArray.Add(new HandData
-            {
-                Instance = __instance,
-                SyncedOverlayUpdate = AccessTools.MethodDelegate<SyncedUpdateDelegate>(AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate"))
-            });
+            RaycasterInstances.Add(__instance);
 
             // Setting changed
             XConfig.AlwayUpdateCursor.SettingChanged += (sender, args) =>
@@ -67,8 +60,8 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
 
             // Invoke the delegate stored in the array
-            foreach (HandData data in _handArray)
-                data.SyncedOverlayUpdate?.Invoke(data.Instance, EmptyOverlay);
+            foreach (Raycaster __instance in RaycasterInstances)
+                SyncedOverlayUpdate.Invoke(__instance, EmptyOverlay);
         }
 
         private static void AddUpdatedOverlay(Raycaster __instance)
