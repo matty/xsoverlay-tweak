@@ -17,6 +17,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> ActivePointerWebView;
         public static ConfigEntry<int> PointerScaleMultiply;
         public static ConfigEntry<bool> PointerDoubleClickDelay;
+        public static ConfigEntry<bool> PointerActiveClick;
         public static ConfigEntry<bool> EmulateMouseClickAnimation;
         public static ConfigEntry<bool> LaserPointer;
 
@@ -56,6 +57,7 @@ namespace xsoverlay_tweak
             ActivePointerWebView = cfg.Bind("Pointer", "ActivePointerWebView", true, "Apply the inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture.");
             PointerScaleMultiply = cfg.Bind("Pointer", "PointerScaleMultiply", 100, "Multiplier for the Pointer scale relative to the XSOverlay setting.");
             PointerDoubleClickDelay = cfg.Bind("Pointer", "PointerDoubleClickDelay", true, "Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.");
+            PointerActiveClick = cfg.Bind("Pointer", "PointerActiveClick", false, "Click non-active hand's pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.");
             EmulateMouseClickAnimation = cfg.Bind("Pointer", "EmulateMouseClickAnimation", true, "Apply Pointer click animation for Input Method > Emulate Mouse.");
             LaserPointer = cfg.Bind("Pointer", "Laser Pointer", true, "Draw a Laser Pointer from the VR controllers to mimic the SteamVR dashboard for more accurate targeting.");
 

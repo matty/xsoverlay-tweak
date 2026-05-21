@@ -45,6 +45,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.ActivePointerWebView"] = XConfig.ActivePointerWebView.Value,
                 ["XSOverlayTweak.PointerScaleMultiply"] = XConfig.PointerScaleMultiply.Value,
                 ["XSOverlayTweak.PointerDoubleClickDelay"] = XConfig.PointerDoubleClickDelay.Value,
+                ["XSOverlayTweak.PointerActiveClick"] = XConfig.PointerActiveClick.Value,
                 ["XSOverlayTweak.EmulateMouseClickAnimation"] = XConfig.EmulateMouseClickAnimation.Value,
                 ["XSOverlayTweak.LaserPointer"] = XConfig.LaserPointer.Value,
 
@@ -117,6 +118,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.PointerDoubleClickDelay":
                     XConfig.PointerDoubleClickDelay.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.PointerActiveClick":
+                    XConfig.PointerActiveClick.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.EmulateMouseClickAnimation":
                     XConfig.EmulateMouseClickAnimation.Value = bool.Parse(value);

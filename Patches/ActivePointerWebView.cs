@@ -38,7 +38,8 @@ namespace xsoverlay_tweak.Patches
             {
                 TakeControlOverCursorIfNotInControlDelegate(__instance);
 
-                return false;
+                if (!XConfig.PointerActiveClick.Value)
+                    return false;
             }
 
             return true;
