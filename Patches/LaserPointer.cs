@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (Overlay_Manager.Instance.editMode || __instance?.HoveringOverlay)
+            if (Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null)
             {
                 __instance.IsActiveRaycaster = true;
 
@@ -85,7 +85,10 @@ namespace xsoverlay_tweak.Patches
 
                 Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(___CurrentRayPosition, RayHitPoint) : 0.5f;
                 Data.Laser.transform.position = ___CurrentRayPosition + (___CurrentRayDirection * (Data.Distance / 2));
+
                 Data.Laser.transform.up = ___CurrentRayDirection;
+                if (!IsRightHand(__instance))
+                    Data.Laser.transform.Rotate(0, -45, 0, Space.Self);
 
                 if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
                     UpdateLaserLength(__instance);
@@ -143,6 +146,11 @@ namespace xsoverlay_tweak.Patches
                 Data.Laser.overlay.overlayWidthInMeters = 0.002f;
                 Data.Distance_Last = Data.Distance;
             }
+        }
+
+        private static bool IsRightHand(Raycaster __instance)
+        {
+            return __instance.HapticDeviceName == Raycaster.HapticDevice.Right;
         }
 
         private static bool IsEnable()
