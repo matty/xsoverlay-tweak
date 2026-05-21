@@ -87,14 +87,14 @@ namespace xsoverlay_tweak.Patches
                 {
                     Vector3 CurrentRayPosition = ___CurrentRayPosition;
                     Vector3 CurrentRayDirection = ___CurrentRayDirection;
-                    Vector3 RayHitPoint = ___RayHitPoint - (___CurrentRayDirection * 0.015f);
+                    Vector3 RayHitPoint = ___RayHitPoint;
 
-                    // Aniti laser UseCursorSmoothing
+                    // Anti laser UseCursorSmoothing by Desktop
                     if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
                     {
                         CurrentRayPosition = __instance.transform.position;
                         CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
-                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.015f);
+                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
                     }
 
                     Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
