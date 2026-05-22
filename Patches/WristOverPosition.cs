@@ -10,7 +10,7 @@ namespace xsoverlay_tweak.Patches
         private static Quaternion rotation = Quaternion.identity;
         private static Unity_Overlay wrist;
 
-        // On move
+        //** Pre OnMove
         [HarmonyPatch(typeof(Raycaster), "Drop")]
         [HarmonyPrefix]
         public static bool PreDrop(Raycaster __instance)
@@ -21,12 +21,22 @@ namespace xsoverlay_tweak.Patches
                 if (__instance.HeldOverlay.IsWristOverlay)
                 {
                     wrist = __instance.HeldOverlay;
-                    position = __instance.HeldOverlay.transform.position;
+
+                    Transform transform = XSettingsManager.Instance.WristDefaultPointLeft;
+
+                    if (Vector3.Distance(__instance.HeldOverlay.transform.position, transform.position) > 0.075f * 3f)
+                    {
+                        Vector3 vector = __instance.HeldOverlay.transform.position - transform.position;
+                        position = transform.transform.position + vector.normalized * 0.075f * 3f;
+                    }
+                    else
+                        position = __instance.HeldOverlay.transform.position;
                 }
 
             return true;
         }
 
+        //** Post OnMove
         [HarmonyPatch(typeof(Raycaster), "Drop")]
         [HarmonyPostfix]
         public static void PostDrop(Raycaster __instance)
@@ -41,19 +51,29 @@ namespace xsoverlay_tweak.Patches
             }
         }
 
-        // On load
+        //?? Pre OnLoad
         [HarmonyPatch(typeof(XSettingsManager), "LoadWristOffsets")]
         [HarmonyPrefix]
         public static bool PreLoadWristOffsets(XSettingsManager __instance)
         {
             if (!IsEnable()) return true;
 
-            position = __instance.Settings.WristOffsets;
+            Transform transform = XSettingsManager.Instance.WristDefaultPointLeft;
+
+            if (Vector3.Distance(__instance.Settings.WristOffsets, transform.position) > 0.075f * 3f)
+            {
+                Vector3 vector = __instance.Settings.WristOffsets - transform.position;
+                position = transform.transform.position + vector.normalized * 0.075f * 3f;
+            }
+            else
+                position = __instance.Settings.WristOffsets;
+
             rotation = Quaternion.Euler(__instance.Settings.WristRotation); ;
 
             return true;
         }
 
+        //?? Post OnLoad
         [HarmonyPatch(typeof(XSettingsManager), "LoadWristOffsets")]
         [HarmonyPostfix]
         public static void PostDLoadWristOffsets(XSettingsManager __instance)
