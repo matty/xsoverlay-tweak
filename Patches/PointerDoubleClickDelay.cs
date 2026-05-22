@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using XSOverlay;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -29,7 +30,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
 
             // Only lock if this CurrentRaycaster is the one currently providing input
-            if (DesktopCursorManager.Instance.GetCurrentInputDevice() == __instance)
+            if (EventBridge.IsActiveHand(__instance))
             {
                 RaycasterState state = InstanceState.GetOrCreateValue(__instance);
 

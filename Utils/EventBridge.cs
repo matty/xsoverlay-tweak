@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using XSOverlay;
+using xsoverlay_tweak.Patches;
 
 namespace xsoverlay_tweak.Utils
 {
@@ -54,11 +55,21 @@ namespace xsoverlay_tweak.Utils
 
         }
 
-        private static IEnumerator NotificationTimer(float timeout)
+        public static IEnumerator NotificationTimer(float timeout)
         {
             yield return new WaitForSecondsRealtime(timeout);
             IsNotificationVisible = false;
             NotificationCoroutine = null;
+        }
+
+        public static bool IsActiveHand(Raycaster __instance)
+        {
+            if (PhysicalMouseDetector.IsPhysicalMovement)
+                return false;
+            else if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
+                return false;
+
+            return true;
         }
     }
 }

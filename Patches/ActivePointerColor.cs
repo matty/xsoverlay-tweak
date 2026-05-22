@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using uWindowCapture;
 using XSOverlay;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -19,7 +20,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (!IsActiveHand(__instance))
+            if (!EventBridge.IsActiveHand(__instance))
                 ___VisualCursorElementOverlay.colorTint = Color.red;
             else if (!__instance.HoveringOverlay.IsLocked)
                 ___VisualCursorElementOverlay.colorTint = XSettingsManager.Instance.Settings.AccentColor;
@@ -32,7 +33,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (!IsActiveHand(__instance))
+            if (!EventBridge.IsActiveHand(__instance))
                 if (___VisualCursorElementOverlay.opacity.Equals(1))
                     ___VisualCursorElementOverlay.opacity = XConfig.ActivePointerOpacity.Value / 100f;
         }
@@ -43,7 +44,7 @@ namespace xsoverlay_tweak.Patches
         public static bool HandleClicksForDesktopWindows(Raycaster __instance)
         {
             if (XConfig.PointerActiveClick.Value)
-                if (!IsActiveHand(__instance))
+                if (!EventBridge.IsActiveHand(__instance))
                 {
                     TakeControlOverCursorIfNotInControlDelegate(__instance);
 
@@ -52,16 +53,6 @@ namespace xsoverlay_tweak.Patches
 
                     __instance.CanClickDesktopCursor = true;
                 }
-
-            return true;
-        }
-
-        private static bool IsActiveHand(Raycaster __instance)
-        {
-            if (PhysicalMouseDetector.IsPhysicalMovement)
-                return false;
-            else if (DesktopCursorManager.Instance.GetCurrentInputDevice() != __instance)
-                return false;
 
             return true;
         }

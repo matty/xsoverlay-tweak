@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -16,9 +17,7 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return true;
             if (!IsHand(__instance)) return true;
 
-            bool IsActiveHand = DesktopCursorManager.Instance.GetCurrentInputDevice() == __instance;
-
-            canCursorInteract = canCursorInteract && IsActiveHand;
+            canCursorInteract = canCursorInteract && EventBridge.IsActiveHand(__instance);
 
             return true;
         }
@@ -31,10 +30,8 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return true;
             if (!IsHand(__instance)) return true;
 
-            bool IsActive = DesktopCursorManager.Instance.GetCurrentInputDevice() == __instance;
-
             // Become active hand and skip sending touch event to webview
-            if (!IsActive)
+            if (!EventBridge.IsActiveHand(__instance))
             {
                 TakeControlOverCursorIfNotInControlDelegate(__instance);
 
