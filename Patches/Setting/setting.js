@@ -23,22 +23,22 @@ function InjectKBOSCTab() {
             },
             {
                 name: 'Cursor', priority: 2, settings: [
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwayUpdateCursor', name: 'Always Update Cursor', description: 'Reduces Windows Cursor latency by sending position from the Pointer before the desktop frame is captured.<br>Without this, Windows Cursor often appears to lag one frame behind the Pointer position.', default: false },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwaysHideCursor', name: 'Always Hide Cursor', description: 'Forcefully hide the system cursor in Window Capture Overlay.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwayUpdateCursor', name: 'Always Update', description: 'Reduces Windows Cursor latency by sending position from the Pointer before the desktop frame is captured.<br>Without this, Windows Cursor often appears to lag one frame behind the Pointer position.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwaysHideCursor', name: 'Always Hide', description: 'Forcefully hide the system cursor in Window Capture Overlay.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PhysicalMouseDetector', name: 'Physical Mouse Detector', description: 'Release the Pointer control when physical mouse movement is detected.<br>Pointer click to regain control.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.MouseSmoothSpeed', name: 'Mouse Smoothing', description: 'Window overlay cursor smoothing.', default: 10.0, options: [0.1, 30.0, 0.1], unit: '%' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.MouseSmoothSpeed', name: 'Mouse Smoothing', description: 'Window Capture Overlay cursor smoothing.', default: 10.0, options: [0.1, 30.0, 0.1], unit: '%' },
                 ]
             },
             {
                 name: 'Pointer', priority: 3, settings: [
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerColor', name: 'Active Pointer Highlight', description: 'Highlight the non-active hand\'s pointer in red for easier identification.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerColor', name: 'Active Highlight', description: 'Highlight the non-active hand\'s pointer in red for easier identification.', default: true },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.ActivePointerOpacity', name: 'Inactive Opacity', description: 'Set the opacity of the non-active hand\'s pointer.', default: 50, options: [0, 100, 10], unit: '%' },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerWebView', name: 'Active Pointer WebViews', description: 'Apply the Inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerWebView', name: 'Active WebViews', description: 'Apply the Inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture.', default: true },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the XSOverlay setting.', default: 100, options: [100, 1000, 50], unit: '%' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Pointer Active Click', description: 'Click non-active hand\'s pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Active Click', description: 'Click non-active hand\'s pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Apply Pointer click animation for Input Method > Emulate Mouse.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser Pointer', description: 'Draw a Laser Pointer from the VR controllers to mimic the SteamVR Dashboard for more accurate targeting.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser', description: 'Draw a Laser Pointer from the VR controllers to mimic the SteamVR Dashboard for more accurate targeting.', default: true },
                 ]
             },
             {
