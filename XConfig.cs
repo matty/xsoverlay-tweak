@@ -49,7 +49,7 @@ namespace xsoverlay_tweak
 
             // Cursor
             AlwayUpdateCursor = cfg.Bind("Cursor", "AlwayUpdateCursor", true, "Reduces cursor latency by sending cursor position data from the Pointer before the desktop frame is captured.\nWithout this, the cursor often appears to lag one frame behind the Pointer position.");
-            AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hide the system cursor in Window Capture overlays.");
+            AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hide the system cursor in Window Capture Overlays.");
             PhysicalMouseDetector = cfg.Bind("Cursor", "PhysicalMouseDetector", true, "Release the Pointer control when physical mouse movement is detected.\nPointer click to regain control.");
             MouseSmoothSpeed = cfg.Bind("Cursor", "CursorSmoothSpeed", 10f, "Window overlay cursor smooth speed.");
 
@@ -61,7 +61,7 @@ namespace xsoverlay_tweak
             PointerDoubleClickDelay = cfg.Bind("Pointer", "PointerDoubleClickDelay", true, "Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.");
             PointerActiveClick = cfg.Bind("Pointer", "PointerActiveClick", false, "Click non-active hand's pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.");
             EmulateMouseClickAnimation = cfg.Bind("Pointer", "EmulateMouseClickAnimation", true, "Apply Pointer click animation for Input Method > Emulate Mouse.");
-            LaserPointer = cfg.Bind("Pointer", "Laser Pointer", true, "Draw a Laser Pointer from the VR controllers to mimic the SteamVR dashboard for more accurate targeting.");
+            LaserPointer = cfg.Bind("Pointer", "Laser Pointer", true, "Draw a Laser Pointer from the VR controllers to mimic the SteamVR Dashboard for more accurate targeting.");
 
             // Mouse Navigation
             MouseNavigation = cfg.Bind("Mouse Navigation", "MouseNavigation", false, "Custom keybindings for Mouse Forward/Back navigation.\nConfiguration by press \"Bindings\" tab in XSOverlay settings to open SteamVR bindings menu.\nEdit the Current Binding and add a button for \"MouseBack/MouseForward\".");

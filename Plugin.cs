@@ -23,7 +23,6 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(EventBridge));
 
         harmony.PatchAll(typeof(Patches.RefreshRate));
-        harmony.PatchAll(typeof(Patches.EfficiencyMode));
 
         harmony.PatchAll(typeof(Patches.AlwayUpdateCursor));
         harmony.PatchAll(typeof(Patches.AlwaysHideCursor));
@@ -32,15 +31,17 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.MouseSmoothSpeed));
 
         harmony.PatchAll(typeof(Patches.ActivePointerColor));
-        harmony.PatchAll(typeof(Patches.PointerDoubleClickDelay));
-        harmony.PatchAll(typeof(Patches.PointerScaleMultiply));
         harmony.PatchAll(typeof(Patches.ActivePointerWebView));
-        harmony.PatchAll(typeof(Patches.LaserPointer));
+        harmony.PatchAll(typeof(Patches.PointerScaleMultiply));
+        harmony.PatchAll(typeof(Patches.PointerDoubleClickDelay));
         harmony.PatchAll(typeof(Patches.EmulateMouseClickAnimation));
+        harmony.PatchAll(typeof(Patches.LaserPointer));
 
         harmony.PatchAll(typeof(Patches.SteamDashboard));
-        harmony.PatchAll(typeof(Patches.WebViewFix));
+
+        harmony.PatchAll(typeof(Patches.EfficiencyMode));
         harmony.PatchAll(typeof(Patches.WristOverPosition));
+        harmony.PatchAll(typeof(Patches.WebViewFix));
         harmony.PatchAll(typeof(Patches.WebViewWiderScroll));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));

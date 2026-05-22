@@ -24,7 +24,7 @@ function InjectKBOSCTab() {
             {
                 name: 'Cursor', priority: 2, settings: [
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwayUpdateCursor', name: 'Always Update Cursor', description: 'Reduces cursor latency by sending cursor position data from the Pointer before the desktop frame is captured.<br>Without this, the cursor often appears to lag one frame behind the Pointer position.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwaysHideCursor', name: 'Always Hide Cursor', description: 'Forcefully hide the system cursor in Window Capture overlays.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwaysHideCursor', name: 'Always Hide Cursor', description: 'Forcefully hide the system cursor in Window Capture Overlays.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PhysicalMouseDetector', name: 'Physical Mouse Detector', description: 'Release the Pointer control when physical mouse movement is detected.<br>Pointer click to regain control.', default: true },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.MouseSmoothSpeed', name: 'Mouse Smoothing', description: 'Window overlay cursor smoothing.', default: 10.0, options: [0.1, 30.0, 0.1], unit: '%' },
                 ]
@@ -38,7 +38,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Pointer Active Click', description: 'Click non-active hand\'s pointer to become <b>Active Hand</b> and <b>Mouse Click</b> at the same time for two-hand clicking.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Apply Pointer click animation for Input Method > Emulate Mouse.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser Pointer', description: 'Draw a <b>Laser Pointer</b> from the VR controllers to mimic the SteamVR dashboard for more accurate targeting.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser Pointer', description: 'Draw a <b>Laser Pointer</b> from the VR controllers to mimic the <b>SteamVR Dashboard </b>for more accurate targeting.', default: true },
                 ]
             },
             {
@@ -49,12 +49,12 @@ function InjectKBOSCTab() {
             },
             {
                 name: 'Dashboard Overlay', priority: 5, settings: [
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardNotification', name: 'Dashboard Notification', description: 'Allow Notification Overlay to be displayed over SteamVR Dashboard.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardPointer', name: 'Dashboard Pointer', description: 'Allow Pointer Overlay to be displayed over SteamVR Dashboard.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardSettings', name: 'Dashboard Settings', description: 'Allow Settings Overlay to be displayed over SteamVR Dashboard.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWindow', name: 'Dashboard Window', description: 'Allow Window Overlay to be displayed over SteamVR Dashboard.', default: false },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWrist', name: 'Dashboard Wrist', description: 'Allow Wrist Overlay to be displayed over SteamVR Dashboard.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.Dashboardkeyboard', name: 'Dashboard Keyboard', description: 'Allow Keyboard Overlay to be displayed over SteamVR Dashboard.<br><b>* Incompatible with Keyboard OSC mod.<b>', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardNotification', name: 'Dashboard Notification', description: 'Allow Notification Overlay to be displayed over <b>SteamVR Dashboard</b>.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardPointer', name: 'Dashboard Pointer', description: 'Allow Pointer Overlay to be displayed over <b>SteamVR Dashboard</b>.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardSettings', name: 'Dashboard Settings', description: 'Allow Settings Overlay to be displayed over <b>SteamVR Dashboard</b>.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWindow', name: 'Dashboard Window', description: 'Allow Window Overlay to be displayed over <b>SteamVR Dashboard</b>.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWrist', name: 'Dashboard Wrist', description: 'Allow Wrist Overlay to be displayed over <b>SteamVR Dashboard</b>.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.Dashboardkeyboard', name: 'Dashboard Keyboard', description: 'Allow Keyboard Overlay to be displayed over <b>SteamVR Dashboard</b>.<br><b>* Incompatible with Keyboard OSC mod.<b>', default: false },
                 ]
             },
             {

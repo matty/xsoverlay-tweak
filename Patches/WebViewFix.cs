@@ -12,12 +12,21 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void OnSwitchHoveringOverlay()
         {
-            XSOEventSystem.OnSwitchHoveringOverlay += (hover, overlay) =>
+            XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
             {
                 if (!IsEnable()) return;
 
-                if (overlay?.WebViewHandler && overlay.IsPluginApplication && !overlay.IsDesktopOrWindowCapture)
-                    overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+                if (overlay != null) // Swith in
+                {
+                    if (IsWebView(overlay))
+                        overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+                }
+                else // Switch out
+                {
+                    Unity_Overlay CachedHoveringOverlay = (Unity_Overlay)AccessTools.Field(typeof(Raycaster), "CachedHoveringOverlay").GetValue(raycaster);
+                    if (IsWebView(CachedHoveringOverlay))
+                        CachedHoveringOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(false);
+                }
             };
         }
 
@@ -60,7 +69,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsWebView(Unity_Overlay overlay)
         {
-            string overlayName = overlay.overlayName;
+            string overlayName = overlay?.overlayName ?? "";
             return overlay.WebViewHandler != null && overlay.IsPluginApplication && !overlay.IsDesktopOrWindowCapture && !overlayName.Equals("wrist") && !overlayName.Equals("notification");
         }
 
