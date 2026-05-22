@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
@@ -7,6 +9,7 @@ namespace xsoverlay_tweak.Patches
     internal class WebViewFix
     {
         private static readonly List<Unity_Overlay> DisabledOverlays = [];
+        private static Coroutine StopingCoroutine;
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
@@ -16,55 +19,55 @@ namespace xsoverlay_tweak.Patches
             {
                 if (!IsEnable()) return;
 
-                if (overlay != null) // Swith in
-                {
-                    if (IsWebView(overlay))
-                        overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
-                }
-                else // Switch out
-                {
-                    Unity_Overlay CachedHoveringOverlay = (Unity_Overlay)AccessTools.Field(typeof(Raycaster), "CachedHoveringOverlay").GetValue(raycaster);
-                    if (IsWebView(CachedHoveringOverlay))
-                        CachedHoveringOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(false);
-                }
+                if (StopingCoroutine != null)
+                    Plugin.Instance.StopCoroutine(StopingCoroutine);
+                StopingCoroutine = Plugin.Instance.StartCoroutine(StopingDelay(overlay));
+
+                if (overlay != null && IsWebView(overlay))
+                    overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
+        //!! Not work by clicking
+        /*[HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
-        public static bool Pre(Raycaster __instance)
+        public static bool ClickWebView(Raycaster __instance)
         {
             if (!IsEnable()) return true;
 
-            foreach (Unity_Overlay overlay in Overlay_Manager.Instance.AllSceneOverlays)
-                if (IsWebView(overlay))
-                    if (overlay != __instance.HoveringOverlay)
-                    {
-                        overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(false);
-                        DisabledOverlays.Add(overlay);
-                    }
+            Plugin.Logger.LogError(__instance.HoveringOverlay.overlayName);
+            if (IsWebView(__instance.HoveringOverlay))
+            {
+                if (StopingCoroutine != null)
+                    Plugin.Instance.StopCoroutine(StopingCoroutine);
+                StopingCoroutine = Plugin.Instance.StartCoroutine(StopingDelay(__instance.HoveringOverlay));
 
-            foreach (Unity_Overlay overlay in Overlay_Manager.Instance.AllSceneOverlays)
-                if (IsWebView(overlay))
-                    if (overlay == __instance.HoveringOverlay)
-                        overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+                __instance.HoveringOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+            }
 
             return true;
-        }
+        }*/
 
         [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPostfix]
-        public static void Post()
+        public static void WindowSettingsSwitch(Raycaster __instance)
         {
             if (!IsEnable()) return;
 
-            foreach (Unity_Overlay item in DisabledOverlays)
-            {
-                if (item.overlayName.Equals("window.settings"))
-                    item.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
-            }
+            if (__instance.HoveringOverlay.overlayName.Equals("window.toolbar"))
+                foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
+                    if (allOverlay.overlayName.Equals("window.settings"))
+                        allOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+        }
 
-            DisabledOverlays.Clear();
+        private static IEnumerator StopingDelay(Unity_Overlay overlay)
+        {
+            yield return new WaitForSecondsRealtime(0.17f);
+
+            foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
+                if (IsWebView(allOverlay))
+                    if (allOverlay != overlay)
+                        allOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(false);
         }
 
         private static bool IsWebView(Unity_Overlay overlay)
