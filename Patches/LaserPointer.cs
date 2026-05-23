@@ -101,7 +101,7 @@ namespace xsoverlay_tweak.Patches
                     Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
 
                     Data.Laser.transform.up = CurrentRayDirection;
-                    Data.Laser.transform.Rotate(0, 180 * __instance.transform.rotation.y, 0, Space.Self);
+                    Data.Laser.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
 
                     if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
                         UpdateLaserLength(__instance);
