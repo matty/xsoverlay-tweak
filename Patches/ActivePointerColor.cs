@@ -39,7 +39,7 @@ namespace xsoverlay_tweak.Patches
         }
 
         // XConfig.PointerActiveClick
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleClicksForDesktopWindows")]
+        [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
         public static bool HandleClicksForDesktopWindows(Raycaster __instance)
         {

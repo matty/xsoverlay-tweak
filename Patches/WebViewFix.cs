@@ -11,7 +11,7 @@ namespace xsoverlay_tweak.Patches
         private static readonly List<Unity_Overlay> DisabledOverlays = [];
         private static Coroutine StopingCoroutine;
 
-        [HarmonyPatch(typeof(DeviceManager), "Start")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
         public static void OnSwitchHoveringOverlay()
         {

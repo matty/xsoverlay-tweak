@@ -10,7 +10,7 @@ namespace xsoverlay_tweak.Patches
     {
         private static readonly List<OverlayWebView> WebViews = [];
 
-        [HarmonyPatch(typeof(DeviceManager), "Start")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
         public static void Start()
         {

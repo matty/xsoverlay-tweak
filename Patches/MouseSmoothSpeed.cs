@@ -7,7 +7,7 @@ namespace xsoverlay_tweak.Patches
     {
         private static List<Raycaster> Instances = [];
 
-        [HarmonyPatch(typeof(DeviceManager)), HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
         public static void Start()
         {
@@ -18,7 +18,7 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(Raycaster), "Start")]
         [HarmonyPostfix]
         public static void Start(Raycaster __instance)
         {

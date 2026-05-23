@@ -1,6 +1,5 @@
-﻿﻿using HarmonyLib;
+﻿using HarmonyLib;
 using System;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using XSOverlay;
@@ -8,13 +7,14 @@ using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
 {
+    [HarmonyPatch(typeof(DeviceManager))]
     internal class EfficiencyMode
     {
         private static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
 
         public static bool IsInEfficiencyMode = false;
 
-        [HarmonyPatch(typeof(DeviceManager), "Start")]
+        [HarmonyPatch("Start")]
         [HarmonyPostfix]
         public static void Start(DeviceManager __instance)
         {
@@ -27,7 +27,7 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
+        [HarmonyPatch("GetHMDRefreshRate")]
         [HarmonyPostfix]
         public static void PatchHMDRefreshRate()
         {

@@ -23,7 +23,7 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleClicksForDesktopWindows")]
+        [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
         public static bool HandleClicksForDesktopWindows(Raycaster __instance)
         {
@@ -38,7 +38,7 @@ namespace xsoverlay_tweak.Patches
             return true;
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleTouchInputForDesktopWindows")]
+        [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
         [HarmonyPrefix]
         public static bool HandleTouchInputForDesktopWindows(Raycaster __instance)
         {
@@ -53,7 +53,7 @@ namespace xsoverlay_tweak.Patches
             return true;
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("HandleTouchInputForWebApplications")]
+        [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
         public static bool HandleTouchInputForWebApplications(Raycaster __instance)
         {

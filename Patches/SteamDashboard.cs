@@ -8,7 +8,7 @@ namespace xsoverlay_tweak.Patches
     {
         private static readonly Dictionary<string, Unity_Overlay> OverlayDictionary = [];
 
-        [HarmonyPatch(typeof(DeviceManager), "Start")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
         public static void DeviceManagerStart()
         {

@@ -14,7 +14,7 @@ namespace xsoverlay_tweak.Patches
         private static readonly List<Raycaster> RaycasterInstances = [];
         private static readonly Unity_Overlay EmptyOverlay = new();
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(Raycaster), "Start")]
         [HarmonyPostfix]
         public static void Start(Raycaster __instance)
         {
@@ -33,7 +33,7 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("SubscribeToEvents"), HarmonyPatch("UnsubscribeFromEvents")]
+        [HarmonyPatch(typeof(Raycaster), "SubscribeToEvents")]
         [HarmonyPostfix]
         public static void SubscribeToEvents(Raycaster __instance)
         {
@@ -43,7 +43,7 @@ namespace xsoverlay_tweak.Patches
             RemoveUpdatedOverlay(__instance);
         }
 
-        [HarmonyPatch(typeof(Raycaster)), HarmonyPatch("UnsubscribeFromEvents")]
+        [HarmonyPatch(typeof(Raycaster), "UnsubscribeFromEvents")]
         [HarmonyPostfix]
         public static void UnsubscribeFromEvents(Raycaster __instance)
         {
@@ -53,7 +53,7 @@ namespace xsoverlay_tweak.Patches
             RemoveUpdatedOverlay(__instance);
         }
 
-        [HarmonyPatch(typeof(UpdateDateTime)), HarmonyPatch("Update")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Update")]
         [HarmonyPostfix]
         public static void Update()
         {

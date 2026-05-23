@@ -78,7 +78,7 @@ namespace xsoverlay_tweak.Patches.Setting
             ServerClientBridge.Instance.Api.SendMessage("UpdateSettings", data, null, sender);
         }
 
-        [HarmonyPatch(typeof(XSettingsManager)), HarmonyPatch(nameof(XSettingsManager.SetSetting))]
+        [HarmonyPatch(typeof(XSettingsManager), nameof(XSettingsManager.SetSetting))]
         [HarmonyPrefix]
         public static bool SetSetting(string name, string value, string value1, bool sendAnalytics = true)
         {
