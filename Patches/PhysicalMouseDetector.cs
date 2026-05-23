@@ -23,39 +23,9 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
+        [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows"), HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows"), HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
         public static bool ClickToRegainControl(Raycaster __instance)
-        {
-            if (IsPhysicalMovement)
-            {
-                IsPhysicalMovement = false;
-                TakeControlOverCursorIfNotInControlDelegate(__instance);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
-        [HarmonyPrefix]
-        public static bool TouchToRegainControl(Raycaster __instance)
-        {
-            if (IsPhysicalMovement)
-            {
-                IsPhysicalMovement = false;
-                TakeControlOverCursorIfNotInControlDelegate(__instance);
-
-                return false;
-            }
-
-            return true;
-        }
-
-        [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
-        [HarmonyPrefix]
-        public static bool TouchWebViewToRegainControl(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {

@@ -33,20 +33,9 @@ namespace xsoverlay_tweak.Patches
             };
         }
 
-        [HarmonyPatch(typeof(Raycaster), "SubscribeToEvents")]
+        [HarmonyPatch(typeof(Raycaster), "SubscribeToEvents"), HarmonyPatch(typeof(Raycaster), "UnsubscribeFromEvents")]
         [HarmonyPostfix]
         public static void RemoveSubscribeToEvents(Raycaster __instance)
-        {
-            if (!IsEnable()) return;
-            if (!IsController(__instance)) return;
-
-
-            RemoveUpdatedOverlay(__instance);
-        }
-
-        [HarmonyPatch(typeof(Raycaster), "UnsubscribeFromEvents")]
-        [HarmonyPostfix]
-        public static void RemoveUnsubscribeFromEvents(Raycaster __instance)
         {
             if (!IsEnable()) return;
             if (!IsController(__instance)) return;
