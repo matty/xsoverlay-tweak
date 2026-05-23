@@ -62,7 +62,7 @@ namespace xsoverlay_tweak.Patches
 
         private static IEnumerator StopingDelay(Unity_Overlay overlay)
         {
-            yield return new WaitForSecondsRealtime(0.17f);
+            yield return new WaitForSecondsRealtime(0.22f);
 
             foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
                 if (IsWebView(allOverlay))
