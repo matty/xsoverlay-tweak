@@ -16,7 +16,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
-        public static void Start(DeviceManager __instance)
+        public static void InitializeEvents(DeviceManager __instance)
         {
             // Listen to refresh rate change
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
@@ -79,10 +79,9 @@ namespace xsoverlay_tweak.Patches
             return false;
         }
 
-        // Fix Push/Pull speed
         [HarmonyPatch(typeof(Raycaster), "Grab")]
         [HarmonyPostfix]
-        public static void Grab(ref float ___GrabbedDistance)
+        public static void FixPushPullSpeed(ref float ___GrabbedDistance)
         {
             if (!IsRefreshRateEnable()) return;
 
@@ -96,10 +95,9 @@ namespace xsoverlay_tweak.Patches
             }
         }
 
-        // Fix Scrolling speed
         [HarmonyPatch(typeof(Raycaster), "HandleScrolling")]
         [HarmonyPrefix]
-        public static bool HandleScrolling(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref int ___ScrollClicksPerSecond, ref float ____tickAccumulator, ref Vector2 ___CursorUVNormalized)
+        public static bool FixScrollingSpeed(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref int ___ScrollClicksPerSecond, ref float ____tickAccumulator, ref Vector2 ___CursorUVNormalized)
         {
             if (!IsRefreshRateEnable()) return true;
 

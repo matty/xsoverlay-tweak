@@ -54,7 +54,7 @@ namespace xsoverlay_tweak.Patches
         // Is active hand hover desktop overlay
         [HarmonyPatch(typeof(Raycaster), "Update")]
         [HarmonyPostfix]
-        public static void RaycasterUpdate()
+        public static void CheckIfHoveringDesktop()
         {
             IsDesktopHover = CurrentRaycaster?.HoveringOverlay && CurrentRaycaster.HoveringOverlay.IsDesktopOrWindowCapture;
         }
@@ -62,7 +62,7 @@ namespace xsoverlay_tweak.Patches
         // SteamVR input listen
         [HarmonyPatch(typeof(MouseInputDevice), "Update")]
         [HarmonyPostfix]
-        public static void MouseInputDeviceUpdate()
+        public static void SteamVRKeuBindingListener()
         {
             if (!IsEnable()) return;
 

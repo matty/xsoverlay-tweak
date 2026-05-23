@@ -10,7 +10,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
-        public static void DeviceManagerStart()
+        public static void InitializeEvents()
         {
             XConfig.DashboardNotification.SettingChanged += RefreshAll;
             XConfig.DashboardPointer.SettingChanged += RefreshAll;

@@ -35,17 +35,18 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "SubscribeToEvents")]
         [HarmonyPostfix]
-        public static void SubscribeToEvents(Raycaster __instance)
+        public static void RemoveSubscribeToEvents(Raycaster __instance)
         {
             if (!IsEnable()) return;
             if (!IsController(__instance)) return;
+
 
             RemoveUpdatedOverlay(__instance);
         }
 
         [HarmonyPatch(typeof(Raycaster), "UnsubscribeFromEvents")]
         [HarmonyPostfix]
-        public static void UnsubscribeFromEvents(Raycaster __instance)
+        public static void RemoveUnsubscribeFromEvents(Raycaster __instance)
         {
             if (!IsEnable()) return;
             if (!IsController(__instance)) return;
@@ -55,7 +56,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(UpdateDateTime), "Update")]
         [HarmonyPostfix]
-        public static void Update()
+        public static void DoAlwayUpdateCursor()
         {
             if (!IsEnable()) return;
 

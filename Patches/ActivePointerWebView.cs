@@ -12,7 +12,7 @@ namespace xsoverlay_tweak.Patches
         // Add additional check for Pointer hover WebView event of inactive hand
         [HarmonyPatch("OnCursorPluginApplication")]
         [HarmonyPrefix]
-        public static bool OnCursorPluginApplication(Raycaster __instance, ref bool canCursorInteract, ref bool ___IsWebViewTouchEventDown)
+        public static bool ApplyInactiveFeatureHandToWebView(Raycaster __instance, ref bool canCursorInteract, ref bool ___IsWebViewTouchEventDown)
         {
             if (!IsEnable()) return true;
             if (!IsHand(__instance)) return true;
@@ -25,7 +25,7 @@ namespace xsoverlay_tweak.Patches
         // Listen for Pointer click WebView to become active hand
         [HarmonyPatch("HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
-        public static bool HandleTouchInputForWebApplications(Raycaster __instance)
+        public static bool HandlePressOnWebViewTriggerToBecomeActive(Raycaster __instance)
         {
             if (!IsEnable()) return true;
             if (!IsHand(__instance)) return true;

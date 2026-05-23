@@ -25,7 +25,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleClicksForDesktopWindows(Raycaster __instance)
+        public static bool ClickToRegainControl(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {
@@ -40,7 +40,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleTouchInputForDesktopWindows(Raycaster __instance)
+        public static bool TouchToRegainControl(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {
@@ -55,7 +55,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
-        public static bool HandleTouchInputForWebApplications(Raycaster __instance)
+        public static bool TouchWebViewToRegainControl(Raycaster __instance)
         {
             if (IsPhysicalMovement)
             {
@@ -70,7 +70,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "SyncedOverlayUpdate")]
         [HarmonyPrefix]
-        public static bool SyncedOverlayUpdate()
+        public static bool BlockSeningNewCursorPostion()
         {
             return !IsPhysicalMovement;
         }

@@ -9,7 +9,7 @@ namespace xsoverlay_tweak.Patches
     {
         [HarmonyPatch(nameof(Raycaster.HandleClicksForDesktopWindows))]
         [HarmonyPostfix]
-        public static void PostHandleClicksForDesktopWindows(Raycaster __instance, ref GameObject ___VisualCursorElementClickAnimation, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay)
+        public static void ShowAnimationWhenClicksForDesktopWindows(Raycaster __instance, ref GameObject ___VisualCursorElementClickAnimation, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay)
         {
             if (!IsEnable()) return;
 

@@ -21,7 +21,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(WindowComponentManager), "OnSwitchHoveringOverlay")]
         [HarmonyPostfix]
-        public static void OnSwitchHoveringOverlay()
+        public static void HideCursorForHoveringOverlay()
         {
             if (!IsEnable()) return;
 

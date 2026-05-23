@@ -18,7 +18,7 @@ namespace xsoverlay_tweak.Utils
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
-        public static void Start(DeviceManager __instance)
+        public static void InitializeEvents(DeviceManager __instance)
         {
             // Listen to notification push
             XSOEventSystem.OnQueueNotification += (notify) =>

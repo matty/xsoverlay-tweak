@@ -16,7 +16,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
-        public static void Start(DeviceManager __instance)
+        public static void InitializeEvents(DeviceManager __instance)
         {
             // Listen to edit mode change
             XSOEventSystem.OnToggleLayoutMode += (isEditMode) =>
@@ -29,7 +29,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("GetHMDRefreshRate")]
         [HarmonyPostfix]
-        public static void PatchHMDRefreshRate()
+        public static void DetermineShouldEfficiencyMode()
         {
             if (ShouldInEfficiencyMode())
             {

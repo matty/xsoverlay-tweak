@@ -28,7 +28,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("DetermineCursorVisibility")]
         [HarmonyPostfix]
-        public static void DetermineCursorVisibility(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
+        public static void DetermineInactiveHandOpacity(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -38,10 +38,9 @@ namespace xsoverlay_tweak.Patches
                     ___VisualCursorElementOverlay.opacity = XConfig.ActivePointerOpacity.Value / 100f;
         }
 
-        // XConfig.PointerActiveClick
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleClicksForDesktopWindows(Raycaster __instance)
+        public static bool HandlePressTriggerOnWindowCaptureToBecomeActiveHandAndClick(Raycaster __instance)
         {
             if (XConfig.PointerActiveClick.Value)
                 if (!EventBridge.IsActiveHand(__instance))

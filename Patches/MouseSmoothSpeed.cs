@@ -9,7 +9,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
-        public static void Start()
+        public static void SettingChangingListener()
         {
             XConfig.MouseSmoothSpeed.SettingChanged += (sender, args) =>
             {
@@ -20,7 +20,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Raycaster), "Start")]
         [HarmonyPostfix]
-        public static void Start(Raycaster __instance)
+        public static void ApplyMouseSmoothSpeed(Raycaster __instance)
         {
             Instances.Add(__instance);
             AccessTools.Field(typeof(Raycaster), "InterpolationSpeed").SetValue(__instance, XConfig.MouseSmoothSpeed.Value);

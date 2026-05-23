@@ -12,7 +12,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
-        public static void Start()
+        public static void InitializeEvents()
         {
             // Listen to edit mode change
             XConfig.WebViewWiderScroll.SettingChanged += (sender, args) =>
