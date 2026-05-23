@@ -36,7 +36,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
-        public static void Start(Raycaster __instance)
+        public static void StartRaycasterInstance(Raycaster __instance)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -58,7 +58,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
-        public static void Update(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay, ref Texture2D ___CursorIcon)
+        public static void ChangePointerTextureToWindowsCursor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay, ref Texture2D ___CursorIcon)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -124,7 +124,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("SetVisualCursorTransform")]
         [HarmonyPostfix]
-        public static void SetCursorFacingToScreen(Raycaster __instance, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
+        public static void CursorParallelToCurveoverlay(Raycaster __instance, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -132,14 +132,17 @@ namespace xsoverlay_tweak.Patches
             if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
                 if (Data.IsCursor)
                 {
-                    // Convert the SteamVR intersection normal (Overlay Local Space) to Unity World Space.
-                    Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, -rayHitResults.vNormal.v2);
+                    // vNormal is the local surface normal from SteamVR.
+                    Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
                     Vector3 worldNormal = __instance.HoveringOverlay.transform.TransformDirection(localNormal);
 
-                    // Align the cursor's forward axis (+Z) to point into the surface (away from the normal).
-                    // This makes the cursor's face parallel to the hit point face.
-                    // We use the overlay's 'up' vector to keep the cursor oriented correctly relative to the window.
-                    ___VisualCursorElement.transform.rotation = Quaternion.LookRotation(-worldNormal, __instance.HoveringOverlay.transform.up);
+                    worldNormal.x = -worldNormal.x; // Mirror X in world space to align with Unity's coordinate system for the cursor plate.
+
+                    // Calculate the tilt required to stay parallel to the curved surface at this specific point.
+                    Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
+
+                    // Apply the surface tilt to the overlay's base world rotation.
+                    ___VisualCursorElement.transform.rotation = __instance.HoveringOverlay.transform.rotation * surfaceTilt;
                 }
         }
 
