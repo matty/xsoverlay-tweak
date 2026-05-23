@@ -1,21 +1,26 @@
 ﻿using HarmonyLib;
+using System.Collections;
 
 namespace xsoverlay_tweak.Patches
 {
     [HarmonyPatch(typeof(WindowComponentManager))]
     internal class AlwaysHideCursor
     {
-        // Cache the private field once for high-speed access
-        private static readonly AccessTools.FieldRef<WindowComponentManager, bool> WindowCursorRef = AccessTools.FieldRefAccess<WindowComponentManager, bool>("WindowCanShowDesktopCursor");
-
-        [HarmonyPatch("OnSwitchHoveringOverlay")]
+        [HarmonyPatch("OnSwitchHoveringOverlay"), HarmonyPatch("SetupWindow")]
         [HarmonyPostfix]
-        public static void CheckShowCursorPrefix(WindowComponentManager __instance)
+        public static void StartHide(WindowComponentManager __instance, ref bool ___WindowCanShowDesktopCursor)
         {
             if (!IsEnable()) return;
 
-            // Set the private boolean to false every frame before the original method checks it
-            WindowCursorRef(__instance) = false;
+            ___WindowCanShowDesktopCursor = true; // SteamVR Dashboard Desktop make cursor reappear
+            Plugin.Instance.StartCoroutine(HideDelay(__instance));
+        }
+
+        private static IEnumerator HideDelay(WindowComponentManager __instance)
+        {
+            yield return null;
+
+            AccessTools.Field(typeof(WindowComponentManager), "WindowCanShowDesktopCursor").SetValue(__instance, false);
         }
 
         private static bool IsEnable()
