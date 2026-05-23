@@ -119,7 +119,11 @@ namespace xsoverlay_tweak.Patches
 
             if (XConfig.ActivePointerColor.Value)
                 if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
+                {
                     Data.Laser.colorTint = ___VisualCursorElementOverlay.colorTint;
+                    Data.Laser.overlay.overlayColor = ___VisualCursorElementOverlay.colorTint;
+                    Data.Laser.overlay.overlayRenderModelColor = ___VisualCursorElementOverlay.colorTint;
+                }
         }
 
         private static void CreateLaser(Raycaster instance)
@@ -158,13 +162,10 @@ namespace xsoverlay_tweak.Patches
                 Data.Laser.overlayTexture = Data.Texture;
                 Data.Laser.overlay.overlayTexture = Data.Texture;
                 Data.Laser.overlay.overlayWidthInMeters = 0.002f;
+                Data.Laser.isDashboardOverlay = false;
+
                 Data.Distance_Last = Data.Distance;
             }
-        }
-
-        private static bool IsRightHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName == Raycaster.HapticDevice.Right;
         }
 
         private static bool IsEnable()
@@ -175,6 +176,11 @@ namespace xsoverlay_tweak.Patches
         private static bool IsHand(Raycaster __instance)
         {
             return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
+        }
+
+        private static bool IsRightHand(Raycaster __instance)
+        {
+            return __instance.HapticDeviceName == Raycaster.HapticDevice.Right;
         }
     }
 }
