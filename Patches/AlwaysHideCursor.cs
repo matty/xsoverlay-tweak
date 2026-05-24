@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections;
+using UnityEngine;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -18,7 +19,7 @@ namespace xsoverlay_tweak.Patches
 
         private static IEnumerator HideDelay(WindowComponentManager __instance)
         {
-            yield return null;
+            yield return new WaitForSecondsRealtime(0.05f);
 
             AccessTools.Field(typeof(WindowComponentManager), "WindowCanShowDesktopCursor").SetValue(__instance, false);
         }
