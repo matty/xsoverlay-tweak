@@ -112,7 +112,7 @@ namespace xsoverlay_tweak.Patches
         // ActivePointerColor
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void SetActiveColor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
+        public static void SetActiveColor(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -120,9 +120,20 @@ namespace xsoverlay_tweak.Patches
             if (XConfig.ActivePointerColor.Value)
                 if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
                 {
-                    Data.Laser.colorTint = ___VisualCursorElementOverlay.colorTint;
-                    Data.Laser.overlay.overlayColor = ___VisualCursorElementOverlay.colorTint;
-                    Data.Laser.overlay.overlayRenderModelColor = ___VisualCursorElementOverlay.colorTint;
+                    if (___VisualCursorElement.activeSelf)
+                    {
+                        Data.Laser.colorTint = ___VisualCursorElementOverlay.colorTint;
+                        Data.Laser.overlay.overlayColor = ___VisualCursorElementOverlay.colorTint;
+                        Data.Laser.overlay.overlayRenderModelColor = ___VisualCursorElementOverlay.colorTint;
+                        Data.Laser.opacity = ___VisualCursorElementOverlay.opacity;
+                    }
+                    else
+                    {
+                        Data.Laser.colorTint = Color.gray;
+                        Data.Laser.overlay.overlayColor = Color.gray;
+                        Data.Laser.overlay.overlayRenderModelColor = Color.gray;
+                        Data.Laser.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+                    }
                 }
         }
 
