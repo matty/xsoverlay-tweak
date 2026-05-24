@@ -38,6 +38,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WristOverPosition;
         public static ConfigEntry<bool> WebViewFix;
         public static ConfigEntry<bool> WebViewWiderScroll;
+        public static ConfigEntry<bool> OverlayCurveAutoRefresh;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -82,6 +83,7 @@ namespace xsoverlay_tweak
             WristOverPosition = cfg.Bind("Optimization", "WristOverPosition", true, "Triple allow position radius of Wrist Overlay.");
             WebViewFix = cfg.Bind("Optimization", "WebViewFix", true, "Fix the WebView UI element unclickable for some reason.");
             WebViewWiderScroll = cfg.Bind("Optimization", "WebViewWiderScroll", true, "Make WebView scrollbar wider.");
+            OverlayCurveAutoRefresh = cfg.Bind("Optimization", "OverlayCurveAutoRefresh", true, "Auto apply Overlay Curve setting to any behavior without grabbing Overlay to see a change. For example, when the Overlay Curve setting changes, Overlay Scaling and Overlay Spawning are affected.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");

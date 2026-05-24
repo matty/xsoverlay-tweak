@@ -62,6 +62,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.DashboardWindow"] = XConfig.DashboardWindow.Value,
                 ["XSOverlayTweak.DashboardWrist"] = XConfig.DashboardWrist.Value,
                 ["XSOverlayTweak.Dashboardkeyboard"] = XConfig.Dashboardkeyboard.Value,
+                ["XSOverlayTweak.OverlayCurveAutoRefresh"] = XConfig.OverlayCurveAutoRefresh.Value,
 
                 // Optimization
                 ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
@@ -181,6 +182,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.WebViewWiderScroll":
                     XConfig.WebViewWiderScroll.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.OverlayCurveAutoRefresh":
+                    XConfig.OverlayCurveAutoRefresh.Value = bool.Parse(value);
                     break;
 
                 // About
