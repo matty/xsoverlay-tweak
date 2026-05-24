@@ -70,6 +70,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.WristOverPosition"] = XConfig.WristOverPosition.Value,
                 ["XSOverlayTweak.WebViewFix"] = XConfig.WebViewFix.Value,
                 ["XSOverlayTweak.WebViewWiderScroll"] = XConfig.WebViewWiderScroll.Value,
+                ["XSOverlayTweak.OverlayRollFlickerFix"] = XConfig.OverlayRollFlickerFix.Value,
 
                 // About
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
@@ -185,6 +186,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.OverlayCurveAutoRefresh":
                     XConfig.OverlayCurveAutoRefresh.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.OverlayRollFlickerFix":
+                    XConfig.OverlayRollFlickerFix.Value = bool.Parse(value);
                     break;
 
                 // About

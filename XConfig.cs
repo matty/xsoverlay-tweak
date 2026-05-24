@@ -39,6 +39,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WebViewFix;
         public static ConfigEntry<bool> WebViewWiderScroll;
         public static ConfigEntry<bool> OverlayCurveAutoRefresh;
+        public static ConfigEntry<bool> OverlayRollFlickerFix;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -84,6 +85,7 @@ namespace xsoverlay_tweak
             WebViewFix = cfg.Bind("Optimization", "WebViewFix", true, "Fix the WebView UI element unclickable for some reason.");
             WebViewWiderScroll = cfg.Bind("Optimization", "WebViewWiderScroll", true, "Make WebView scrollbar wider.");
             OverlayCurveAutoRefresh = cfg.Bind("Optimization", "OverlayCurveAutoRefresh", true, "Auto apply Overlay Curve setting to any behavior without grabbing Overlay to see a change. For example, when the Overlay Curve setting changes, Overlay Scaling and Overlay Spawning are affected.");
+            OverlayRollFlickerFix = cfg.Bind("Optimization", "OverlayRollFlickerFix", true, "Fix Window Capture Overlay invisible for some reason while rolling at a specific angle.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");
