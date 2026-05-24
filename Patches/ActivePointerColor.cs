@@ -11,7 +11,6 @@ namespace xsoverlay_tweak.Patches
     internal class ActivePointerColor
     {
         private static readonly Action<Raycaster> TakeControlOverCursorIfNotInControlDelegate = AccessTools.MethodDelegate<Action<Raycaster>>(AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl"));
-        private static readonly Func<Raycaster, RayCastResult?> GetDesktopCoordinateDelegate = AccessTools.MethodDelegate<Func<Raycaster, RayCastResult?>>(AccessTools.Method(typeof(Raycaster), "GetDesktopCoordinate"));
 
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
@@ -47,7 +46,7 @@ namespace xsoverlay_tweak.Patches
                 {
                     TakeControlOverCursorIfNotInControlDelegate(__instance);
 
-                    RayCastResult? desktopCoordinate = GetDesktopCoordinateDelegate(__instance);
+                    RayCastResult? desktopCoordinate = EventBridge.GetDesktopCoordinateDelegate(__instance);
                     MouseOperations.SetCursorPosition((int)desktopCoordinate.Value.desktopCoord.x, (int)desktopCoordinate.Value.desktopCoord.y);
 
                     __instance.CanClickDesktopCursor = true;

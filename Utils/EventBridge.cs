@@ -14,7 +14,7 @@ namespace xsoverlay_tweak.Utils
         public static bool IsNotificationVisible = false;
         public static bool IsHoverAnyOverlay = false;
 
-        private static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
+        public static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System;
 using UnityEngine;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
@@ -8,8 +7,6 @@ namespace xsoverlay_tweak.Patches
 {
     internal class RefreshRate
     {
-        private static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
-
         private static int HMDRefreshRate = 90;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
@@ -22,7 +19,7 @@ namespace xsoverlay_tweak.Patches
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
             {
                 if (IsRefreshRateEnable())
-                    GetHMDRefreshRateDelegate(__instance);
+                    EventBridge.GetHMDRefreshRateDelegate(__instance);
             };
 
             // Listen to edit mode change
@@ -30,7 +27,7 @@ namespace xsoverlay_tweak.Patches
             {
                 if (IsRefreshRateEnable() && XConfig.OnlyInLayoutMod.Value)
                     if (!EfficiencyMode.IsEfficiencyModeEnable()) // Smooth overlay fadeout
-                        GetHMDRefreshRateDelegate(__instance);
+                        EventBridge.GetHMDRefreshRateDelegate(__instance);
             };
         }
 

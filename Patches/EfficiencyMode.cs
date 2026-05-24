@@ -10,8 +10,6 @@ namespace xsoverlay_tweak.Patches
     [HarmonyPatch(typeof(DeviceManager))]
     internal class EfficiencyMode
     {
-        private static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
-
         public static bool IsInEfficiencyMode = false;
 
         [HarmonyPatch("Start")]
@@ -23,7 +21,7 @@ namespace xsoverlay_tweak.Patches
             {
                 if (IsEfficiencyModeEnable())
                     if (isEditMode) // Smooth overlay fadeout
-                        GetHMDRefreshRateDelegate(__instance);
+                        EventBridge.GetHMDRefreshRateDelegate(__instance);
             };
         }
 
