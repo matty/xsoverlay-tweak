@@ -37,10 +37,10 @@ namespace xsoverlay_tweak.Patches
         [HarmonyPostfix]
         public static void StartRaycasterInstance(Raycaster __instance)
         {
-            if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            CursorDictionary.Add(__instance, new());
+            if (IsEnable())
+                CursorDictionary.Add(__instance, new());
 
             XConfig.WindowsCursorPointer.SettingChanged += (Event, Args) =>
             {
