@@ -39,7 +39,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WebViewFix;
         public static ConfigEntry<bool> WebViewWiderScroll;
         public static ConfigEntry<bool> OverlayCurveAutoRefresh;
-        public static ConfigEntry<bool> OverlayRollFlickerFix;
+        public static ConfigEntry<bool> OverlayRollCurveFix;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -52,15 +52,15 @@ namespace xsoverlay_tweak
 
             // Cursor
             AlwayUpdateCursor = cfg.Bind("Cursor", "AlwayUpdateCursor", false, "Reduces Windows Cursor latency by sending position from the Pointer before the desktop frame is captured.\nWithout this, Windows Cursor often appears to lag one frame behind the Pointer position.");
-            AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hide the system cursor in Window Capture Overlay.");
+            AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hide the system cursor in Capture Overlay.");
             PhysicalMouseDetector = cfg.Bind("Cursor", "PhysicalMouseDetector", true, "Release the Pointer control when physical mouse movement is detected.\nPointer click to regain control.");
-            MouseSmoothSpeed = cfg.Bind("Cursor", "CursorSmoothSpeed", 10f, "Window Capture Overlay cursor smoothing.");
-            WindowsCursorPointer = cfg.Bind("Pointer", "WindowsCursorPointer", true, "Hide Capture Windows Cursor and using Windows Cursor image as the Window Capture Pointer to mimic the SteamVR Dashboard.");
+            MouseSmoothSpeed = cfg.Bind("Cursor", "CursorSmoothSpeed", 10f, "Capture Overlay cursor smoothing.");
+            WindowsCursorPointer = cfg.Bind("Pointer", "WindowsCursorPointer", true, "Hide Capture Overlay Cursor and using Windows Cursor image as the Capture Overlay Pointer to mimic the SteamVR Dashboard.");
 
             // Pointer
             ActivePointerColor = cfg.Bind("Pointer", "ActivePointerColor", true, "Highlight the non-active hand's pointer in red for easier identification.");
             ActivePointerOpacity = cfg.Bind("Pointer", "ActivePointerOpacity", 50, "Set the opacity of the non-active hand's pointer.");
-            ActivePointerWebView = cfg.Bind("Pointer", "ActivePointerWebView", true, "Apply the inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture.");
+            ActivePointerWebView = cfg.Bind("Pointer", "ActivePointerWebView", true, "Apply the inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture Overlay.");
             PointerScaleMultiply = cfg.Bind("Pointer", "PointerScaleMultiply", 100, "Multiplier for the Pointer scale relative to the XSOverlay setting.");
             PointerDoubleClickDelay = cfg.Bind("Pointer", "PointerDoubleClickDelay", true, "Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.");
             PointerActiveClick = cfg.Bind("Pointer", "PointerActiveClick", false, "Click non-active hand's pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.");
@@ -85,7 +85,7 @@ namespace xsoverlay_tweak
             WebViewFix = cfg.Bind("Optimization", "WebViewFix", true, "Fix the WebView UI element unclickable for some reason.");
             WebViewWiderScroll = cfg.Bind("Optimization", "WebViewWiderScroll", true, "Make WebView scrollbar wider.");
             OverlayCurveAutoRefresh = cfg.Bind("Optimization", "OverlayCurveAutoRefresh", true, "Auto apply Overlay Curve setting to any behavior without grabbing Overlay to see a change. For example, when the Overlay Curve setting changes, Overlay Scaling and Overlay Spawning are affected.");
-            OverlayRollFlickerFix = cfg.Bind("Optimization", "OverlayRollFlickerFix", true, "Fix Window Capture Overlay invisible for some reason while rolling at a specific angle.");
+            OverlayRollCurveFix = cfg.Bind("Optimization", "OverlayRollFlickerFix", true, "Fix the Capture Overlay to be invisible when the Curve and Angle are changing at the same time.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");
