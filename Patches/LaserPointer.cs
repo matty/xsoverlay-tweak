@@ -3,6 +3,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using XSOverlay;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -120,12 +121,12 @@ namespace xsoverlay_tweak.Patches
             if (XConfig.ActivePointerColor.Value)
                 if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
                 {
-                    if (___VisualCursorElement.activeSelf)
+                    if (___VisualCursorElement.activeSelf) // Hover any Overlay
                     {
-                        Data.Laser.colorTint = ___VisualCursorElementOverlay.colorTint;
-                        Data.Laser.overlay.overlayColor = ___VisualCursorElementOverlay.colorTint;
-                        Data.Laser.overlay.overlayRenderModelColor = ___VisualCursorElementOverlay.colorTint;
-                        Data.Laser.opacity = ___VisualCursorElementOverlay.opacity;
+                        Data.Laser.colorTint = EventBridge.IsActiveHand(__instance) ? ___VisualCursorElementOverlay.colorTint : Color.red;
+                        Data.Laser.opacity = EventBridge.IsActiveHand(__instance) ? 1f : (XConfig.ActivePointerOpacity.Value / 100f);
+                        Data.Laser.overlay.overlayColor = Data.Laser.colorTint;
+                        Data.Laser.overlay.overlayRenderModelColor = Data.Laser.colorTint;
                     }
                     else
                     {
@@ -150,7 +151,7 @@ namespace xsoverlay_tweak.Patches
             laser.overlayKey = VisualCursorElement.name.ToLower();
 
             Object.Destroy(laser.GetComponent<UI_RelativeTransformManipulator>());
-            LaserDictionary.Add(instance, new LaserData { Laser = laser, Texture = new(1, 1, TextureFormat.RGB24, false), Distance = 1f, Distance_Last = 1f });
+            LaserDictionary.Add(instance, new LaserData { Laser = laser, Texture = new(1, 250, TextureFormat.RGB24, false), Distance = 1f, Distance_Last = 1f });
             Plugin.Instance.StartCoroutine(UpdateLaserLengthDelay(instance));
         }
 
