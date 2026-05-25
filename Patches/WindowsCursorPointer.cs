@@ -94,14 +94,14 @@ namespace xsoverlay_tweak.Patches
 
                                 ScaleByDistanceRef(Data.RelativeTransform) = false;
 
-                                float width = hoveringOverlay.renderTexWidthOverride;
-                                float height = hoveringOverlay.renderTexHeightOverride;
-                                float NormalizationAspect = height / width;
+                                float Width = hoveringOverlay.renderTexWidthOverride;
+                                float Height = hoveringOverlay.renderTexHeightOverride;
+                                float num3 = hoveringOverlay.widthInMeters;
 
-                                if (height < width)
-                                    NormalizationAspect = width / height;
+                                if (Height > Width)
+                                    num3 *= Height / Width;
 
-                                float widthInMeters = (0.012f * (Data.CursorTexture.width / 32f)) * NormalizationAspect * PointerScaleMultiply.GetScale();
+                                float widthInMeters = (0.015f * (Data.CursorTexture.width / 32f)) * num3 * PointerScaleMultiply.GetScale();
                                 ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
                                 ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
                                 ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
