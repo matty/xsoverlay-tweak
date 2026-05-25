@@ -19,7 +19,8 @@ namespace xsoverlay_tweak.Patches
             mouseDetector.PhysicalMouseMoved += (x, y) =>
             {
                 if (IsEnable())
-                    IsPhysicalMovement = true;
+                    if (EventBridge.IsHoverAnyOverlay)
+                        IsPhysicalMovement = true;
             };
         }
 
