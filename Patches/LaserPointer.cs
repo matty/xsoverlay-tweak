@@ -16,6 +16,7 @@ namespace xsoverlay_tweak.Patches
             public Texture2D Texture = new(1, 250, TextureFormat.RGB24, false);
             public float Distance = 1f;
             public float Distance_Last = 1f;
+            public Vector3 RayHitPoint_last = new();
         }
 
         private static readonly ConditionalWeakTable<Raycaster, LaserData> LaserDictionary = new();
@@ -85,30 +86,33 @@ namespace xsoverlay_tweak.Patches
             {
                 // Handle movement
                 PointerDoubleClickDelay.InstanceState.TryGetValue(__instance, out PointerDoubleClickDelay.RaycasterState state);
-                if (state == null || state.ClickedTimer.IsReady) // PointerDoubleClickDelay
+
+                Vector3 CurrentRayPosition = ___CurrentRayPosition;
+                Vector3 CurrentRayDirection = ___CurrentRayDirection;
+                Vector3 RayHitPoint = ___RayHitPoint;
+
+                // Anti laser UseCursorSmoothing by Desktop
+                if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
                 {
-
-                    Vector3 CurrentRayPosition = ___CurrentRayPosition;
-                    Vector3 CurrentRayDirection = ___CurrentRayDirection;
-                    Vector3 RayHitPoint = ___RayHitPoint;
-
-                    // Anti laser UseCursorSmoothing by Desktop
-                    if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
-                    {
-                        CurrentRayPosition = __instance.transform.position;
-                        CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
-                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
-                    }
-
-                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
-                    Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
-
-                    Data.Laser.transform.up = CurrentRayDirection;
-                    Data.Laser.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
-
-                    if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
-                        UpdateLaserLength(__instance);
+                    CurrentRayPosition = __instance.transform.position;
+                    CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
+                    RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
                 }
+
+                Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
+
+                if (state == null || state.ClickedTimer.IsReady)
+                    Data.RayHitPoint_last = RayHitPoint;
+
+                else // Lock RayHitPoint in place on click delay
+                    CurrentRayDirection = -(CurrentRayPosition - Data.RayHitPoint_last).normalized;
+
+                Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
+                Data.Laser.transform.up = CurrentRayDirection;
+                Data.Laser.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
+
+                if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
+                    UpdateLaserLength(__instance);
 
                 // Handle active color
                 {
