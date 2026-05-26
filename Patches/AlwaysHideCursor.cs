@@ -28,7 +28,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsEnable()
         {
-            return XConfig.AlwaysHideCursor.Value || XConfig.WindowsCursorPointer.Value;
+            return XConfig.AlwaysHideCursor.Value || WindowsCursorPointer.IsEnable();
         }
     }
 }
