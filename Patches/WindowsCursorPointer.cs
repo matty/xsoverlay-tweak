@@ -31,7 +31,8 @@ namespace xsoverlay_tweak.Patches
         }
         private static readonly ConditionalWeakTable<Raycaster, CursorData> CursorDictionary = new();
 
-        private static readonly AccessTools.FieldRef<UI_RelativeTransformManipulator, bool> ScaleByDistanceRef = AccessTools.FieldRefAccess<UI_RelativeTransformManipulator, bool>("ScaleByDistance");
+        private static readonly AccessTools.FieldRef<UI_RelativeTransformManipulator, bool> ScaleByDistance_Ref = AccessTools.FieldRefAccess<UI_RelativeTransformManipulator, bool>("ScaleByDistance");
+        private static readonly AccessTools.FieldRef<Raycaster, bool> CursorLocked_Ref = AccessTools.FieldRefAccess<Raycaster, bool>("CursorLocked");
 
         [HarmonyPatch("Start")]
         [HarmonyPostfix]
@@ -92,7 +93,7 @@ namespace xsoverlay_tweak.Patches
                                 if (Data.RelativeTransform == null)
                                     Data.RelativeTransform = ___VisualCursorElementOverlay.GetComponent<UI_RelativeTransformManipulator>();
 
-                                ScaleByDistanceRef(Data.RelativeTransform) = false;
+                                ScaleByDistance_Ref(Data.RelativeTransform) = false;
 
                                 float Width = hoveringOverlay.renderTexWidthOverride;
                                 float Height = hoveringOverlay.renderTexHeightOverride;
@@ -108,22 +109,23 @@ namespace xsoverlay_tweak.Patches
                                 ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
                             }
                         }
-                        else if
-                            (Data.IsCursor) ResetToDefaultCursor(___VisualCursorElementOverlay, ___CursorIcon, Data);
+                        else if (Data.IsCursor)
+                            ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
                     }
                     finally { }
                 }
                 else if (Data.IsCursor)
-                    ResetToDefaultCursor(___VisualCursorElementOverlay, ___CursorIcon, Data);
+                    ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
             }
         }
 
-        private static void ResetToDefaultCursor(Unity_Overlay visualOverlay, Texture2D defaultIcon, CursorData data)
+        private static void ResetToDefaultCursor(Raycaster instance, Unity_Overlay visualOverlay, Texture2D defaultIcon, CursorData data)
         {
             data.IsCursor = false;
             if (data.RelativeTransform != null)
-                ScaleByDistanceRef(data.RelativeTransform) = true;
+                ScaleByDistance_Ref(data.RelativeTransform) = true;
 
+            CursorLocked_Ref(instance) = true;
             visualOverlay.AutoUpdateOverlayTexture = true;
             visualOverlay.overlayTexture = defaultIcon;
         }
