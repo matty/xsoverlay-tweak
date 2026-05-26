@@ -13,10 +13,11 @@ namespace xsoverlay_tweak.Patches
         private class LaserData
         {
             public Unity_Overlay Laser;
-            public Texture2D Texture;
-            public float Distance;
-            public float Distance_Last;
+            public Texture2D Texture = new(1, 250, TextureFormat.RGB24, false);
+            public float Distance = 1f;
+            public float Distance_Last = 1f;
         }
+
         private static readonly ConditionalWeakTable<Raycaster, LaserData> LaserDictionary = new();
 
         // Create laser overlay
@@ -75,17 +76,18 @@ namespace xsoverlay_tweak.Patches
         // Change lasers position, rotation and length
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void HandleLaserMovement(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
+        public static void HandleLaserMovement(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            PointerDoubleClickDelay.InstanceState.TryGetValue(__instance, out PointerDoubleClickDelay.RaycasterState state);
-
-            if (state == null || state.ClickedTimer.IsReady) // PointerDoubleClickDelay
+            if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
             {
-                if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
+                // Handle movement
+                PointerDoubleClickDelay.InstanceState.TryGetValue(__instance, out PointerDoubleClickDelay.RaycasterState state);
+                if (state == null || state.ClickedTimer.IsReady) // PointerDoubleClickDelay
                 {
+
                     Vector3 CurrentRayPosition = ___CurrentRayPosition;
                     Vector3 CurrentRayDirection = ___CurrentRayDirection;
                     Vector3 RayHitPoint = ___RayHitPoint;
@@ -107,35 +109,32 @@ namespace xsoverlay_tweak.Patches
                     if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
                         UpdateLaserLength(__instance);
                 }
-            }
-        }
 
-        // ActivePointerColor
-        [HarmonyPatch("UpdateRaycaster")]
-        [HarmonyPostfix]
-        public static void SetActiveColor(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay)
-        {
-            if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
-
-            if (XConfig.ActivePointerColor.Value)
-                if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
+                // Handle active color
                 {
                     if (___VisualCursorElement.activeSelf) // Hover any Overlay
                     {
-                        Data.Laser.colorTint = EventBridge.IsActiveHand(__instance) ? ___VisualCursorElementOverlay.colorTint : Color.red;
-                        Data.Laser.opacity = EventBridge.IsActiveHand(__instance) ? 1f : (XConfig.ActivePointerOpacity.Value / 100f);
-                        Data.Laser.overlay.overlayColor = Data.Laser.colorTint;
-                        Data.Laser.overlay.overlayRenderModelColor = Data.Laser.colorTint;
+                        if (!ActivePointerColor.IsEnable() || EventBridge.IsActiveHand(__instance))
+                        {
+                            Data.Laser.colorTint = XSettingsManager.Instance.Settings.AccentColor;
+                            Data.Laser.opacity = 1f;
+                        }
+                        else
+                        {
+                            Data.Laser.colorTint = Color.red;
+                            Data.Laser.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+                        }
                     }
                     else
                     {
                         Data.Laser.colorTint = Color.gray;
-                        Data.Laser.overlay.overlayColor = Color.gray;
-                        Data.Laser.overlay.overlayRenderModelColor = Color.gray;
                         Data.Laser.opacity = XConfig.ActivePointerOpacity.Value / 100f;
                     }
+
+                    Data.Laser.overlay.overlayColor = Data.Laser.colorTint;
+                    Data.Laser.overlay.overlayRenderModelColor = Data.Laser.colorTint;
                 }
+            }
         }
 
         private static void CreateLaser(Raycaster instance)
@@ -151,7 +150,7 @@ namespace xsoverlay_tweak.Patches
             laser.overlayKey = VisualCursorElement.name.ToLower();
 
             Object.Destroy(laser.GetComponent<UI_RelativeTransformManipulator>());
-            LaserDictionary.Add(instance, new LaserData { Laser = laser, Texture = new(1, 250, TextureFormat.RGB24, false), Distance = 1f, Distance_Last = 1f });
+            LaserDictionary.Add(instance, new LaserData { Laser = laser });
             Plugin.Instance.StartCoroutine(UpdateLaserLengthDelay(instance));
         }
 

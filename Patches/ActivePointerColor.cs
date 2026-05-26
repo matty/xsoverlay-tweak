@@ -55,7 +55,7 @@ namespace xsoverlay_tweak.Patches
             return true;
         }
 
-        private static bool IsEnable()
+        public static bool IsEnable()
         {
             return XConfig.ActivePointerColor.Value;
         }
