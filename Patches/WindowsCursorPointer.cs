@@ -66,7 +66,7 @@ namespace xsoverlay_tweak.Patches
             if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
             {
                 Unity_Overlay hoveringOverlay = __instance.HoveringOverlay;
-                if (EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && hoveringOverlay != null && hoveringOverlay.IsDesktopCapture && !EventBridge.IsOverlayWebView(hoveringOverlay))
+                if (EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && hoveringOverlay != null && hoveringOverlay.IsDesktopCapture && hoveringOverlay.overlayName.Contains("XSOverlay Window"))
                 {
                     try
                     {
