@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿﻿using HarmonyLib;
 using System;
 using System.IO;
 using System.Linq;
@@ -62,7 +62,7 @@ namespace xsoverlay_tweak.Patches
         // SteamVR input listen
         [HarmonyPatch(typeof(MouseInputDevice), "Update")]
         [HarmonyPostfix]
-        public static void SteamVRKeuBindingListener()
+        public static void SteamVRKeyBindingListener()
         {
             if (!IsEnable()) return;
 

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
@@ -9,8 +8,7 @@ namespace xsoverlay_tweak.Patches
 {
     internal class WebViewFix
     {
-        private static readonly List<Unity_Overlay> DisabledOverlays = [];
-        private static Coroutine StopingCoroutine;
+        private static Coroutine StoppingCoroutine;
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
@@ -20,9 +18,9 @@ namespace xsoverlay_tweak.Patches
             {
                 if (!IsEnable()) return;
 
-                if (StopingCoroutine != null)
-                    Plugin.Instance.StopCoroutine(StopingCoroutine);
-                StopingCoroutine = Plugin.Instance.StartCoroutine(StopingDelay(overlay));
+                if (StoppingCoroutine != null)
+                    Plugin.Instance.StopCoroutine(StoppingCoroutine);
+                StoppingCoroutine = Plugin.Instance.StartCoroutine(StoppingDelay(overlay));
 
                 if (overlay != null && EventBridge.IsOverlayWebView(overlay))
                     overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
@@ -61,10 +59,9 @@ namespace xsoverlay_tweak.Patches
                         allOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
         }
 
-        private static IEnumerator StopingDelay(Unity_Overlay overlay)
+        private static IEnumerator StoppingDelay(Unity_Overlay overlay)
         {
             yield return new WaitForSecondsRealtime(0.22f);
-
             foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
                 if (EventBridge.IsOverlayWebView(allOverlay))
                     if (allOverlay != overlay)
