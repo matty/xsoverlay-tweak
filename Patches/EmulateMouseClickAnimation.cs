@@ -19,7 +19,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsEnable()
         {
-            return XConfig.EmulateMouseClickAnimation.Value;
+            return XConfig.EmulateMouseClickAnimation.Value && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿using HarmonyLib;
+﻿using HarmonyLib;
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -170,7 +170,7 @@ namespace xsoverlay_tweak.Patches
 
         public static bool IsEnable()
         {
-            return XConfig.WindowsCursorPointer.Value;
+            return XConfig.WindowsCursorPointer.Value && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
         }
 
         private static bool IsHand(Raycaster __instance)

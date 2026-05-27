@@ -72,7 +72,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsEnable()
         {
-            return XConfig.AlwayUpdateCursor.Value;
+            return XConfig.AlwayUpdateCursor.Value && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
         }
         private static bool IsController(Raycaster __instance)
         {

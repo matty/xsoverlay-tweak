@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections;
 using UnityEngine;
+using XSOverlay;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -28,7 +29,7 @@ namespace xsoverlay_tweak.Patches
 
         private static bool IsEnable()
         {
-            return XConfig.AlwaysHideCursor.Value || WindowsCursorPointer.IsEnable();
+            return (XConfig.AlwaysHideCursor.Value || WindowsCursorPointer.IsEnable()) && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
         }
     }
 }
