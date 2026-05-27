@@ -41,6 +41,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> OverlayCurveAutoRefresh;
         public static ConfigEntry<bool> OverlayRollCurveFix;
         public static ConfigEntry<bool> PinBlockInputNonEditMode;
+        public static ConfigEntry<bool> DefaultCaptureOverlayTexture;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -88,6 +89,7 @@ namespace xsoverlay_tweak
             OverlayCurveAutoRefresh = cfg.Bind("Optimization", "OverlayCurveAutoRefresh", true, "Auto apply Overlay Curve setting to any behavior without grabbing Overlay to see a change. For example, when the Overlay Curve setting changes, Overlay Scaling and Overlay Spawning are affected.");
             OverlayRollCurveFix = cfg.Bind("Optimization", "OverlayRollFlickerFix", true, "Fix the Capture Overlay to be invisible when the Curve and Angle are changing at the same time.");
             PinBlockInputNonEditMode = cfg.Bind("Optimization", "BlockInputNonEditMode", true, "Non Layout Mode, block input Capture Overlay will no longer be available to hover.");
+            DefaultCaptureOverlayTexture = cfg.Bind("Optimization", "DefaultCaptureOverlayTexture", true, "Capture Overlay starts with a white screen before getting captured in the next frame to prevent a new spawn Overlay from being invisible.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");

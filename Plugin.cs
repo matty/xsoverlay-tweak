@@ -47,6 +47,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.OverlayCurveAutoRefresh));
         harmony.PatchAll(typeof(Patches.OverlayRollCurveFix));
         harmony.PatchAll(typeof(Patches.PinBlockInputNonEditMode));
+        harmony.PatchAll(typeof(Patches.DefaultCaptureOverlayTexture));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 
