@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches
             if (IsEnable())
                 CreateLaser(__instance);
 
-            // Listen for hovering state changes to update laser length immediately when hovering something new
+            // Listen for hovering DoubleClickDelayState changes to update laser length immediately when hovering something new
             XSOEventSystem.OnSwitchHoveringOverlay += (hovering, overlay) =>
             {
                 if (IsEnable())
@@ -62,22 +62,21 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null)
-            {
-                __instance.IsActiveRaycaster = true;
+            if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
+                if (Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null)
+                {
+                    __instance.IsActiveRaycaster = true;
 
-                if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
                     Data.Laser.gameObject.SetActive(true);
-            }
-            else
-                if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
+                }
+                else
                     Data.Laser.gameObject.SetActive(false);
         }
 
         // Change lasers position, rotation and length
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
-        public static void HandleLaserMovement(Raycaster __instance, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
+        public static void HandleLaserMovement(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -85,34 +84,33 @@ namespace xsoverlay_tweak.Patches
             if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
             {
                 // Handle movement
-                PointerDoubleClickDelay.InstanceState.TryGetValue(__instance, out PointerDoubleClickDelay.RaycasterState state);
-
-                Vector3 CurrentRayPosition = ___CurrentRayPosition;
-                Vector3 CurrentRayDirection = ___CurrentRayDirection;
-                Vector3 RayHitPoint = ___RayHitPoint;
-
-                // Anti laser UseCursorSmoothing by Desktop
-                if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
                 {
-                    CurrentRayPosition = __instance.transform.position;
-                    CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
-                    RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
+                    Vector3 CurrentRayPosition = ___CurrentRayPosition;
+                    Vector3 CurrentRayDirection = ___CurrentRayDirection;
+                    Vector3 RayHitPoint = ___RayHitPoint;
+
+                    // Anti laser UseCursorSmoothing by Desktop
+                    if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
+                    {
+                        CurrentRayPosition = __instance.transform.position;
+                        CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
+                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
+                    }
+
+                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
+
+                    if (PointerDoubleClickDelay.IsEnable() && ___InputDevice.ClickFreezeActive) // PointerDoubleClickDelay lock RayHitPoint in place
+                        CurrentRayDirection = -(CurrentRayPosition - Data.RayHitPoint_last).normalized;
+                    else
+                        Data.RayHitPoint_last = RayHitPoint;
+
+                    Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
+                    Data.Laser.transform.up = CurrentRayDirection;
+                    Data.Laser.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
+
+                    if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
+                        UpdateLaserLength(__instance);
                 }
-
-                Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
-
-                if (state == null || state.ClickedTimer.IsReady)
-                    Data.RayHitPoint_last = RayHitPoint;
-
-                else // Lock RayHitPoint in place on click delay
-                    CurrentRayDirection = -(CurrentRayPosition - Data.RayHitPoint_last).normalized;
-
-                Data.Laser.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
-                Data.Laser.transform.up = CurrentRayDirection;
-                Data.Laser.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
-
-                if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
-                    UpdateLaserLength(__instance);
 
                 // Handle active color
                 {
