@@ -52,17 +52,18 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnTakeControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = true;
-                    Plugin.Instance.StopCoroutine(CurrentHoveringOverlayCoroutine);
-
                     GetHMDRefreshRateDelegate(__instance);
+
+                    if (CurrentHoveringOverlayCoroutine != null)
+                        Plugin.Instance.StopCoroutine(CurrentHoveringOverlayCoroutine);
                 };
 
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = false;
-                    CurrentHoveringOverlayCoroutine = Plugin.Instance.StartCoroutine(ClearCurrentHoveringOverlayTimer());
-
                     GetHMDRefreshRateDelegate(__instance);
+
+                    CurrentHoveringOverlayCoroutine = Plugin.Instance.StartCoroutine(ClearCurrentHoveringOverlayTimer());
                 };
             }
         }
