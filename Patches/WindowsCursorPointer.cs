@@ -68,12 +68,13 @@ namespace xsoverlay_tweak.Patches
                 Unity_Overlay hoveringOverlay = __instance.HoveringOverlay;
                 if (hoveringOverlay != null && EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && hoveringOverlay.IsDesktopCapture && hoveringOverlay.overlayName.IndexOf("XSOverlay Window", StringComparison.Ordinal) >= 0)
                 {
-                    ___VisualCursorElementOverlay.AutoUpdateOverlayTexture = false;
-                    ___VisualCursorElementOverlay.colorTint = Color.white;
-
                     CURSORINFO ci = new() { cbSize = CURSORINFO_SIZE };
+
                     if (GetCursorInfo(out ci) && (ci.flags & CURSOR_SHOWING) != 0)
                     {
+                        ___VisualCursorElementOverlay.AutoUpdateOverlayTexture = false;
+                        ___VisualCursorElementOverlay.colorTint = Color.white;
+
                         // Only update the texture if the cursor handle has actually changed
                         if (ci.hCursor != Data.LastCursorHandle || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture)
                         {
