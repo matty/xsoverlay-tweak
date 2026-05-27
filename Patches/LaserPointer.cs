@@ -116,7 +116,7 @@ namespace xsoverlay_tweak.Patches
                 {
                     if (___VisualCursorElement.activeSelf) // Hover any Overlay
                     {
-                        if (!ActivePointerColor.IsEnable() || EventBridge.IsActiveHand(__instance))
+                        if (!ActivePointerColor.IsEnable() || EventBridge.IsActiveHand(__instance) || EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
                         {
                             Data.Laser.colorTint = XSettingsManager.Instance.Settings.AccentColor;
                             Data.Laser.opacity = 1f;

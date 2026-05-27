@@ -16,10 +16,10 @@ namespace xsoverlay_tweak.Patches
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
-            if (!EventBridge.IsActiveHand(__instance))
-                ___VisualCursorElementOverlay.colorTint = Color.red;
-            else if (__instance.HoveringOverlay != null && !__instance.HoveringOverlay.IsLocked)
+            if (EventBridge.IsActiveHand(__instance) || EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
                 ___VisualCursorElementOverlay.colorTint = XSettingsManager.Instance.Settings.AccentColor;
+            else if (__instance.HoveringOverlay != null && !__instance.HoveringOverlay.IsLocked)
+                ___VisualCursorElementOverlay.colorTint = Color.red;
         }
 
         [HarmonyPatch("DetermineCursorVisibility")]
@@ -30,8 +30,9 @@ namespace xsoverlay_tweak.Patches
             if (!IsHand(__instance)) return;
 
             if (!EventBridge.IsActiveHand(__instance))
-                if (___VisualCursorElementOverlay.opacity.Equals(1))
+                if (___VisualCursorElementOverlay.opacity.Equals(1) && !EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
                     ___VisualCursorElementOverlay.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+
         }
 
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows"), HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
