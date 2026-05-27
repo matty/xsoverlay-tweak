@@ -50,6 +50,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.PointerActiveClick"] = XConfig.PointerActiveClick.Value,
                 ["XSOverlayTweak.EmulateMouseClickAnimation"] = XConfig.EmulateMouseClickAnimation.Value,
                 ["XSOverlayTweak.LaserPointer"] = XConfig.LaserPointer.Value,
+                ["XSOverlayTweak.LaserPointerMouseSmoothDisable"] = XConfig.LaserPointerMouseSmoothDisable.Value,
 
                 // Mouse Navigation
                 ["XSOverlayTweak.MouseNavigation"] = XConfig.MouseNavigation.Value,
@@ -142,6 +143,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.LaserPointer":
                     XConfig.LaserPointer.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.LaserPointerMouseSmoothDisable":
+                    XConfig.LaserPointerMouseSmoothDisable.Value = bool.Parse(value);
                     break;
 
                 // Mouse Navigation

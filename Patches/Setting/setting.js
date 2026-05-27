@@ -40,6 +40,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Active Click', description: 'Click non-active hand\'s pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Apply Pointer click animation for Input Method > Emulate Mouse.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointer', name: 'Laser', description: 'Draw a Laser Pointer from the VR controllers to mimic the SteamVR Dashboard for more accurate targeting.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LaserPointerMouseSmoothDisable', name: 'Laser Mouse Smooth Disable', description: 'Mouse smoothing will not apply to laser movement.', default: true },
                 ]
             },
             {

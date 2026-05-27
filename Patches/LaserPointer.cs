@@ -89,8 +89,8 @@ namespace xsoverlay_tweak.Patches
                     Vector3 CurrentRayDirection = ___CurrentRayDirection;
                     Vector3 RayHitPoint = ___RayHitPoint;
 
-                    // Anti laser UseCursorSmoothing by Desktop
-                    if (__instance?.HoveringOverlay?.UseCursorSmoothing == true)
+                    // Capture overlay UseCursorSmoothing
+                    if (XConfig.LaserPointerMouseSmoothDisable.Value && __instance?.HoveringOverlay?.UseCursorSmoothing == true)
                     {
                         CurrentRayPosition = __instance.transform.position;
                         CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
