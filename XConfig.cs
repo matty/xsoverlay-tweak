@@ -42,6 +42,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> OverlayRollCurveFix;
         public static ConfigEntry<bool> PinBlockInputNonEditMode;
         public static ConfigEntry<bool> DefaultCaptureOverlayTexture;
+        public static ConfigEntry<float> PullTriggerClickThreshold;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -90,6 +91,7 @@ namespace xsoverlay_tweak
             OverlayRollCurveFix = cfg.Bind("Optimization", "OverlayRollFlickerFix", true, "Fix the Capture Overlay to be invisible when the Curve and Angle are changing at the same time.");
             PinBlockInputNonEditMode = cfg.Bind("Optimization", "BlockInputNonEditMode", true, "Non Layout Mode, block input Capture Overlay will no longer be available to hover.");
             DefaultCaptureOverlayTexture = cfg.Bind("Optimization", "DefaultCaptureOverlayTexture", true, "Capture Overlay starts with a white screen before getting captured in the next frame to prevent a new spawn Overlay from being invisible.");
+            PullTriggerClickThreshold = cfg.Bind("Optimization", "PullTriggerClickThreshold", 0.5f, "Trigger pull threshold to Left Click using Trigger Value from SteamVR Input. More value means more pull range trigger to begin Left Click.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");

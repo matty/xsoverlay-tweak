@@ -69,6 +69,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OverlayRollCurveFix', name: 'Overlay Roll Curve Fix', description: 'Fix the Capture Overlay to be invisible when the Curve and Angle are changing at the same time.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PinBlockInputNonEditMode', name: 'Pin + Block Input Non Layout Mode', description: 'Non Layout Mode, Pin + Block Input Capture Overlay will no longer be available to hover.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DefaultCaptureOverlayTexture', name: 'Default Capture Overlay Texture', description: 'Capture Overlay starts with a white screen before getting captured in the next frame to prevent a new spawn Overlay from being invisible.', default: true },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PullTriggerClickThreshold', name: 'Pull Trigger Click Threshold', description: 'Trigger pull threshold to Left Click using Trigger Value from SteamVR Input. More value means more pull range trigger to begin Left Click.', default: 0.5, options: [0.1, 1.0, 0.1], unit: 'Unit' },
                 ]
             },
             {
