@@ -19,7 +19,7 @@ namespace xsoverlay_tweak.Patches
             XConfig.RefreshRate.SettingChanged += (sender, args) =>
             {
                 if (IsRefreshRateEnable())
-                    EventBridge.GetHMDRefreshRateDelegate(__instance);
+                    EventBridge.GetHMDRefreshRate(__instance);
             };
 
             // Listen to edit mode change
@@ -27,7 +27,7 @@ namespace xsoverlay_tweak.Patches
             {
                 if (IsRefreshRateEnable() && XConfig.OnlyInLayoutMod.Value)
                     if (!EfficiencyMode.IsEfficiencyModeEnable()) // Smooth overlay fadeout
-                        EventBridge.GetHMDRefreshRateDelegate(__instance);
+                        EventBridge.GetHMDRefreshRate(__instance);
             };
         }
 

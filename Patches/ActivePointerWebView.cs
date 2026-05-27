@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System;
 using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches
@@ -7,8 +6,6 @@ namespace xsoverlay_tweak.Patches
     [HarmonyPatch(typeof(Raycaster))]
     internal class ActivePointerWebView
     {
-        private static readonly Action<Raycaster> TakeControlOverCursorIfNotInControlDelegate = AccessTools.MethodDelegate<Action<Raycaster>>(AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl"));
-
         // Add additional check for Pointer hover WebView event of inactive hand
         [HarmonyPatch("OnCursorPluginApplication")]
         [HarmonyPrefix]
@@ -31,9 +28,9 @@ namespace xsoverlay_tweak.Patches
             if (!IsHand(__instance)) return true;
 
             // Become active hand and skip sending touch event to webview
-            if (!EventBridge.IsActiveHand(__instance))
+            if (!EventBridge.IsActiveHand(__instance) && EventBridge.IsOverlayWebView(__instance.HoveringOverlay))
             {
-                TakeControlOverCursorIfNotInControlDelegate(__instance);
+                EventBridge.TakeControlOverCursorIfNotInControl(__instance);
 
                 if (!XConfig.PointerActiveClick.Value)
                     return false;

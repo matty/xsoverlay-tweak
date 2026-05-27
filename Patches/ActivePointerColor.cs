@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System;
 using UnityEngine;
 using uWindowCapture;
 using XSOverlay;
@@ -10,8 +9,6 @@ namespace xsoverlay_tweak.Patches
     [HarmonyPatch(typeof(Raycaster))]
     internal class ActivePointerColor
     {
-        private static readonly Action<Raycaster> TakeControlOverCursorIfNotInControlDelegate = AccessTools.MethodDelegate<Action<Raycaster>>(AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl"));
-
         [HarmonyPatch("UpdateRaycaster")]
         [HarmonyPostfix]
         public static void SetActiveColor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
@@ -44,9 +41,9 @@ namespace xsoverlay_tweak.Patches
             if (XConfig.PointerActiveClick.Value)
                 if (!EventBridge.IsActiveHand(__instance))
                 {
-                    TakeControlOverCursorIfNotInControlDelegate(__instance);
+                    EventBridge.TakeControlOverCursorIfNotInControl(__instance);
 
-                    RayCastResult? desktopCoordinate = EventBridge.GetDesktopCoordinateDelegate(__instance);
+                    RayCastResult? desktopCoordinate = EventBridge.GetDesktopCoordinate(__instance);
                     MouseOperations.SetCursorPosition((int)desktopCoordinate.Value.desktopCoord.x, (int)desktopCoordinate.Value.desktopCoord.y);
 
                     __instance.CanClickDesktopCursor = true;

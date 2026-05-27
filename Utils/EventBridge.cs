@@ -18,8 +18,9 @@ namespace xsoverlay_tweak.Utils
         private static Coroutine CurrentHoveringOverlayCoroutine;
         public static Unity_Overlay CurrentHoveringOverlay;
 
-        public static readonly Action<DeviceManager> GetHMDRefreshRateDelegate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
-        public static readonly Func<Raycaster, RayCastResult?> GetDesktopCoordinateDelegate = AccessTools.MethodDelegate<Func<Raycaster, RayCastResult?>>(AccessTools.Method(typeof(Raycaster), "GetDesktopCoordinate"));
+        public static readonly Action<Raycaster> TakeControlOverCursorIfNotInControl = AccessTools.MethodDelegate<Action<Raycaster>>(AccessTools.Method(typeof(Raycaster), "TakeControlOverCursorIfNotInControl"));
+        public static readonly Action<DeviceManager> GetHMDRefreshRate = AccessTools.MethodDelegate<Action<DeviceManager>>(AccessTools.Method(typeof(DeviceManager), "GetHMDRefreshRate"));
+        public static readonly Func<Raycaster, RayCastResult?> GetDesktopCoordinate = AccessTools.MethodDelegate<Func<Raycaster, RayCastResult?>>(AccessTools.Method(typeof(Raycaster), "GetDesktopCoordinate"));
 
         public static event Action InputMethodChanged;
 
@@ -37,7 +38,7 @@ namespace xsoverlay_tweak.Utils
                     Plugin.Instance.StopCoroutine(NotificationCoroutine);
                 NotificationCoroutine = Plugin.Instance.StartCoroutine(NotificationTimer(notify.timeout));
 
-                GetHMDRefreshRateDelegate(__instance);
+                GetHMDRefreshRate(__instance);
             };
 
             // Listen to hovering overlay change
@@ -46,13 +47,13 @@ namespace xsoverlay_tweak.Utils
                 {
                     IsHoverAnyOverlay = true;
                     CurrentHoveringOverlay = overlay;
-                    GetHMDRefreshRateDelegate(__instance);
+                    GetHMDRefreshRate(__instance);
                 };
 
                 XSOEventSystem.OnTakeControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = true;
-                    GetHMDRefreshRateDelegate(__instance);
+                    GetHMDRefreshRate(__instance);
 
                     if (CurrentHoveringOverlayCoroutine != null)
                         Plugin.Instance.StopCoroutine(CurrentHoveringOverlayCoroutine);
@@ -61,7 +62,7 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = false;
-                    GetHMDRefreshRateDelegate(__instance);
+                    GetHMDRefreshRate(__instance);
 
                     CurrentHoveringOverlayCoroutine = Plugin.Instance.StartCoroutine(ClearCurrentHoveringOverlayTimer());
                 };
@@ -102,6 +103,11 @@ namespace xsoverlay_tweak.Utils
         {
             string overlayName = overlay?.overlayName ?? "";
             return overlay.WebViewHandler != null && overlay.IsPluginApplication && !overlay.IsDesktopOrWindowCapture && !overlayName.Equals("wrist") && !overlayName.Equals("notification");
+        }
+
+        public static bool IsOverlayKeyboard(Unity_Overlay overlay)
+        {
+            return overlay != null && overlay.overlayName.Equals("keyboard");
         }
 
         private static IEnumerator ClearCurrentHoveringOverlayTimer()
