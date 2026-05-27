@@ -128,7 +128,7 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch("SetVisualCursorTransform")]
         [HarmonyPostfix]
-        public static void CursorParallelToCurveoverlay(Raycaster __instance, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
+        public static void CursorParallelToCurveoverlay(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
@@ -136,6 +136,8 @@ namespace xsoverlay_tweak.Patches
             if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
                 if (Data.IsCursor)
                 {
+                    PullTriggerPointerLock.InstanceState.TryGetValue(__instance, out PullTriggerPointerLock.RaycasterState DoubleClickDelayState);
+
                     // vNormal is the local surface normal from SteamVR.
                     Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
                     Vector3 worldNormal = __instance.HoveringOverlay.transform.TransformDirection(localNormal);
@@ -146,7 +148,8 @@ namespace xsoverlay_tweak.Patches
                     Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
 
                     // Apply the surface tilt to the overlay's base world rotation.
-                    ___VisualCursorElement.transform.rotation = __instance.HoveringOverlay.transform.rotation * surfaceTilt;
+                    if (!___InputDevice.ClickFreezeActive && (DoubleClickDelayState == null || !DoubleClickDelayState.IsBlock))
+                        ___VisualCursorElement.transform.rotation = __instance.HoveringOverlay.transform.rotation * surfaceTilt;
                 }
         }
 
