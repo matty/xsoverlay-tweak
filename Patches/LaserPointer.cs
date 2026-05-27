@@ -96,8 +96,11 @@ namespace xsoverlay_tweak.Patches
                     {
                         CurrentRayPosition = __instance.transform.position;
                         CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
-                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
                     }
+
+                    // Capture overlay backward hit point
+                    if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true)
+                        RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);
 
                     if (PointerDoubleClickDelay.IsEnable() && (___InputDevice.ClickFreezeActive || (DoubleClickDelayState != null && DoubleClickDelayState.IsBlock))) // PointerDoubleClickDelay lock RayHitPoint in place
                     {
