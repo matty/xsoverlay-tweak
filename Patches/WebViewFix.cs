@@ -16,16 +16,15 @@ namespace xsoverlay_tweak.Patches
         {
             XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
             {
-                if (!IsEnable()) return;
+                if (IsEnable())
+                    Plugin.Instance.StartCoroutine(RenderTargetOverlay(raycaster, overlay));
 
-                if (EventBridge.IsOverlayWebView(overlay))
-                {
-                    if (StoppingCoroutine != null)
-                        Plugin.Instance.StopCoroutine(StoppingCoroutine);
-                    StoppingCoroutine = Plugin.Instance.StartCoroutine(StoppingDelay(overlay));
+            };
 
-                    overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
-                }
+            XSOEventSystem.OnTakeControlOfDesktopCursor += (raycaster) =>
+            {
+                if (IsEnable())
+                    Plugin.Instance.StartCoroutine(RenderTargetOverlay(raycaster, raycaster.HoveringOverlay));
             };
         }
 
@@ -39,9 +38,9 @@ namespace xsoverlay_tweak.Patches
             Plugin.Logger.LogError(__instance.HoveringOverlay.overlayName);
             if (IsWebView(__instance.HoveringOverlay))
             {
-                if (StopingCoroutine != null)
-                    Plugin.Instance.StopCoroutine(StopingCoroutine);
-                StopingCoroutine = Plugin.Instance.StartCoroutine(StopingDelay(__instance.HoveringOverlay));
+                if (StoppingCoroutine != null)
+                    Plugin.Instance.StopCoroutine(StoppingCoroutine);
+                StoppingCoroutine = Plugin.Instance.StartCoroutine(StopingDelay(__instance.HoveringOverlay));
 
                 __instance.HoveringOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
             }
@@ -64,13 +63,30 @@ namespace xsoverlay_tweak.Patches
                     }
         }
 
+        private static IEnumerator RenderTargetOverlay(Raycaster raycaster, Unity_Overlay overlay)
+        {
+            yield return null; // Wait for DesktopCursorManager.TakeControl() to take active hand
+
+            if (EventBridge.IsActiveHand(raycaster) && EventBridge.IsOverlayWebView(overlay))
+            {
+                if (StoppingCoroutine != null)
+                    Plugin.Instance.StopCoroutine(StoppingCoroutine);
+                StoppingCoroutine = Plugin.Instance.StartCoroutine(StoppingDelay(overlay));
+
+                overlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+            }
+        }
+
         private static IEnumerator StoppingDelay(Unity_Overlay overlay)
         {
             yield return new WaitForSecondsRealtime(0.22f);
+
             foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
                 if (EventBridge.IsOverlayWebView(allOverlay))
                     if (allOverlay != overlay)
                         allOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(false);
+
+            StoppingCoroutine = null;
         }
 
         private static bool IsEnable()
