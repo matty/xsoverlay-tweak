@@ -73,6 +73,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PullTriggerPointerLock', name: 'Pull Trigger Pointer Lock', description: 'Pull the trigger to lock Pointer in place for easy double click instead of clicking to begin locking. Using Trigger Value from SteamVR Input and Double Click Delay frome setting.', default: true },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PullTriggerClickThreshold', name: 'Pull Trigger Click Threshold', description: 'Trigger pull threshold to Left Click. More value means more pull range trigger to begin Left Click. Using Trigger Value from SteamVR Input.', default: 0.5, options: [0.1, 1.0, 0.1], unit: 'Unit' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DoubleClickConfirm', name: 'Double Click Confirm', description: 'Make sure the double-click is always sent for the Emulate Mouse mode.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LoadLayoutScaleFix', name: 'Load Layout Scale Fix', description: 'Load layout will apply the scale from save data to Overlay scale.', default: true },
                 ]
             },
             {

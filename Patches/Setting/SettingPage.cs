@@ -77,6 +77,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.PullTriggerPointerLock"] = XConfig.PullTriggerPointerLock.Value,
                 ["XSOverlayTweak.PullTriggerClickThreshold"] = XConfig.PullTriggerClickThreshold.Value,
                 ["XSOverlayTweak.DoubleClickConfirm"] = XConfig.DoubleClickConfirm.Value,
+                ["XSOverlayTweak.LoadLayoutScaleFix"] = XConfig.LoadLayoutScaleFix.Value,
 
                 // About
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
@@ -213,6 +214,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.DoubleClickConfirm":
                     XConfig.DoubleClickConfirm.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.LoadLayoutScaleFix":
+                    XConfig.LoadLayoutScaleFix.Value = bool.Parse(value);
                     break;
 
                 // About

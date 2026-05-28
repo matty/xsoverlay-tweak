@@ -46,6 +46,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> PullTriggerPointerLock;
         public static ConfigEntry<float> PullTriggerClickThreshold;
         public static ConfigEntry<bool> DoubleClickConfirm;
+        public static ConfigEntry<bool> LoadLayoutScaleFix;
 
         public static ConfigEntry<bool> UpdateNotification;
 
@@ -98,6 +99,7 @@ namespace xsoverlay_tweak
             PullTriggerPointerLock = cfg.Bind("Optimization", "PullTriggerPointerLock", true, "Pull the trigger to lock Pointer in place for easy double click instead of clicking to begin locking. Using Trigger Value from SteamVR Input and Double Click Delay frome setting.");
             PullTriggerClickThreshold = cfg.Bind("Optimization", "PullTriggerClickThreshold", 0.5f, "Trigger pull threshold to Left Click. More value means more pull range trigger to begin Left Click. Using Trigger Value from SteamVR Input");
             DoubleClickConfirm = cfg.Bind("Optimization", "DoubleClickConfirm", true, "Make sure the double-click is always sent for the Emulate Mouse mode.");
+            LoadLayoutScaleFix = cfg.Bind("Optimization", "LoadLayoutScaleFix", true, "Load layout will apply the scale from save data to Overlay scale.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Receive update notification when update are available.");
