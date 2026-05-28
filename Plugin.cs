@@ -51,6 +51,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.PullTriggerClickThreshold));
         harmony.PatchAll(typeof(Patches.DefaultCaptureOverlayTexture));
         harmony.PatchAll(typeof(Patches.DoubleClickConfirm));
+        harmony.PatchAll(typeof(Patches.LoadLayoutNormalizeScaleFix));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 
