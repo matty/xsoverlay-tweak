@@ -16,7 +16,7 @@ function InjectKBOSCTab() {
         const SECTIONS = [
             {
                 name: 'Refresh Rate', priority: 1, settings: [
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.RefreshRate', name: 'Refresh Rate', description: 'The target frame rate for XSOverlay rendering.<br>Higher values improve responsiveness but increase CPU usage.<br><b>- Set to 500 for unlimited.</b>', default: <<HMDRefreshRate>>, options: [<<HMDRefreshRate>>, 500, 10], unit: 'FPS' },
+                    { type: Ui.ComponentType.Dropdown, id: 'XSOverlayTweak.RefreshRate', name: 'Refresh Rate', description: 'The target frame rate for XSOverlay rendering.<br>Higher values improve responsiveness but increase CPU usage.', default: <<HMDRefreshRate>>, options: ['60 FPS', '75 FPS', '90 FPS', '120 FPS', '144 FPS', '200 FPS', '240 FPS', '300 FPS', 'Unlimited'] },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OnlyHoverOverlay', name: 'Only Hover Overlay', description: 'Only apply overriding refresh rate when hovering any Overlay.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OnlyInLayoutMod', name: 'Only In Layout Mode', description: 'Only apply overriding refresh rate in Layout Mode.', default: true },
                 ]
@@ -26,7 +26,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwayUpdateCursor', name: 'Always Update', description: 'Reduces Windows Cursor latency by sending position from the Pointer before the desktop frame is captured.<br>Without this, Windows Cursor often appears to lag one frame behind the Pointer position.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.AlwaysHideCursor', name: 'Always Hide', description: 'Forcefully hide the system cursor in Capture Overlay.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PhysicalMouseDetector', name: 'Physical Mouse Detector', description: 'Release the Pointer control when physical mouse movement is detected.<br>Pointer click to regain control.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.MouseSmoothSpeed', name: 'Mouse Smoothing', description: 'Capture Overlay cursor smoothing.', default: 10.0, options: [0.1, 30.0, 0.1], unit: '%' },
+                    { type: Ui.ComponentType.Dropdown, id: 'XSOverlayTweak.MouseSmoothSpeed', name: 'Mouse Smoothing', description: 'Capture Overlay cursor smoothing.', default: 'Medium', options: ['Ultra Low', 'Very Low', 'Low', 'Medium', 'High', 'Very High'] },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WindowsCursorPointer', name: 'Windows Cursor Pointer', description: 'Hide Capture Overlay Cursor and using Windows Cursor image as the Capture Overlay Pointer to mimic the SteamVR Dashboard.', default: true },
                 ]
             },
@@ -35,7 +35,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerColor', name: 'Active Highlight', description: 'Highlight the non-active hand\'s pointer in red for easier identification.', default: true },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.ActivePointerOpacity', name: 'Inactive Opacity', description: 'Set the opacity of the non-active hand\'s pointer.', default: 50, options: [0, 100, 10], unit: '%' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerWebView', name: 'Active WebViews', description: 'Apply the Inactive Pointer feature to WebView Overlays such as Settings, Wrist, and others that is not Desktop or Window Capture Overlay.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the XSOverlay setting.', default: 100, options: [100, 1000, 50], unit: '%' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the XSOverlay setting.', default: 100, options: [100, 400, 25], unit: '%' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Apply a Double Click Delay from XSOverlay setting to the Pointer itself, not just the cursor.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Active Click', description: 'Click non-active hand\'s pointer to become Active Hand and Mouse Click at the same time for two-hand clicking.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Apply Pointer click animation for Input Method > Emulate Mouse.', default: true },

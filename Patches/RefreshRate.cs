@@ -61,7 +61,7 @@ namespace xsoverlay_tweak.Patches
                     int targetFrameRate = HMDRefreshRate;
 
                     if (IsRefreshRateEnable() && IsOnlyHoverOverlay() && IsOnlyInLayoutMode())
-                        targetFrameRate = XConfig.RefreshRate.Value.Equals(500) ? -1 : XConfig.RefreshRate.Value;
+                        targetFrameRate = GetFramrate(XConfig.RefreshRate.Value);
 
                     if (EfficiencyMode.ShouldInEfficiencyMode())
                         targetFrameRate = XConfig.InactiveRefreshRate.Value;
@@ -130,7 +130,7 @@ namespace xsoverlay_tweak.Patches
 
         public static bool IsRefreshRateEnable()
         {
-            return XConfig.RefreshRate.Value != DeviceManager.Instance.HMDRefreshRate;
+            return GetFramrate(XConfig.RefreshRate.Value) != DeviceManager.Instance.HMDRefreshRate;
         }
 
         private static bool IsOnlyHoverOverlay()
@@ -141,6 +141,40 @@ namespace xsoverlay_tweak.Patches
         private static bool IsOnlyInLayoutMode()
         {
             return !XConfig.OnlyInLayoutMod.Value || Overlay_Manager.Instance.editMode;
+        }
+
+        public static int GetFramrate(string speed)
+        {
+            return speed switch
+            {
+                "60 FPS" => 60,
+                "75 FPS" => 75,
+                "90 FPS" => 90,
+                "120 FPS" => 120,
+                "144 FPS" => 144,
+                "200 FPS" => 200,
+                "240 FPS" => 240,
+                "300 FPS" => 300,
+                "Unlimited" => -1,
+                _ => throw new System.NotImplementedException(),
+            };
+        }
+
+        public static string GetFramrate(int speed)
+        {
+            return speed switch
+            {
+                0 => "60 FPS",
+                1 => "75 FPS",
+                2 => "90 FPS",
+                3 => "120 FPS",
+                4 => "144 FPS",
+                5 => "200 FPS",
+                6 => "240 FPS",
+                7 => "300 FPS",
+                8 => "Unlimited",
+                _ => throw new System.NotImplementedException(),
+            };
         }
     }
 }

@@ -14,7 +14,7 @@ namespace xsoverlay_tweak.Patches
             XConfig.MouseSmoothSpeed.SettingChanged += (sender, args) =>
             {
                 foreach (var __instance in Instances)
-                    AccessTools.Field(typeof(Raycaster), "InterpolationSpeed").SetValue(__instance, XConfig.MouseSmoothSpeed.Value);
+                    AccessTools.Field(typeof(Raycaster), "InterpolationSpeed").SetValue(__instance, GetSpeed(XConfig.MouseSmoothSpeed.Value));
             };
         }
 
@@ -23,7 +23,35 @@ namespace xsoverlay_tweak.Patches
         public static void ApplyMouseSmoothSpeed(Raycaster __instance)
         {
             Instances.Add(__instance);
-            AccessTools.Field(typeof(Raycaster), "InterpolationSpeed").SetValue(__instance, XConfig.MouseSmoothSpeed.Value);
+            AccessTools.Field(typeof(Raycaster), "InterpolationSpeed").SetValue(__instance, GetSpeed(XConfig.MouseSmoothSpeed.Value));
+        }
+
+        public static float GetSpeed(string speed)
+        {
+            return speed switch
+            {
+                "Ultra Low" => 40f,
+                "Very Low" => 20f,
+                "Low" => 15f,
+                "Medium" => 10f,
+                "High" => 5f,
+                "Very High" => 0.01f,
+                _ => throw new System.NotImplementedException(),
+            };
+        }
+
+        public static string GetSpeed(int speed)
+        {
+            return speed switch
+            {
+                0 => "Ultra Low",
+                1 => "Very Low",
+                2 => "Low",
+                3 => "Medium",
+                4 => "High",
+                5 => "Very High",
+                _ => throw new System.NotImplementedException(),
+            };
         }
     }
 }

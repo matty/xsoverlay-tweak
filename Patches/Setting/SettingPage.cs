@@ -95,7 +95,7 @@ namespace xsoverlay_tweak.Patches.Setting
             {
                 // RefreshRate
                 case "XSOverlayTweak.RefreshRate":
-                    XConfig.RefreshRate.Value = int.Parse(value);
+                    XConfig.RefreshRate.Value = RefreshRate.GetFramrate(int.Parse(name));
                     break;
                 case "XSOverlayTweak.OnlyHoverOverlay":
                     XConfig.OnlyHoverOverlay.Value = bool.Parse(value);
@@ -115,7 +115,7 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.PhysicalMouseDetector.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.MouseSmoothSpeed":
-                    XConfig.MouseSmoothSpeed.Value = float.Parse(value);
+                    XConfig.MouseSmoothSpeed.Value = MouseSmoothSpeed.GetSpeed(int.Parse(value));
                     break;
 
                 // Pointer
@@ -243,7 +243,7 @@ namespace xsoverlay_tweak.Patches.Setting
             string jsContent = reader.ReadToEnd();
 
             jsContent = jsContent.Replace("<<Version>>", MyPluginInfo.PLUGIN_VERSION);
-            jsContent = jsContent.Replace("<<HMDRefreshRate>>", DeviceManager.Instance.HMDRefreshRate.ToString());
+            jsContent = jsContent.Replace("<<HMDRefreshRate>>", $"'{DeviceManager.Instance.HMDRefreshRate} FPS'");
 
             string jsCode = $"(function() {{ {jsContent} }})();";
 

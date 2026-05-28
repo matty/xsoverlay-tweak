@@ -4,14 +4,14 @@ namespace xsoverlay_tweak
 {
     internal class XConfig
     {
-        public static ConfigEntry<int> RefreshRate;
+        public static ConfigEntry<string> RefreshRate;
         public static ConfigEntry<bool> OnlyHoverOverlay;
         public static ConfigEntry<bool> OnlyInLayoutMod;
 
         public static ConfigEntry<bool> AlwayUpdateCursor;
         public static ConfigEntry<bool> AlwaysHideCursor;
         public static ConfigEntry<bool> PhysicalMouseDetector;
-        public static ConfigEntry<float> MouseSmoothSpeed;
+        public static ConfigEntry<string> MouseSmoothSpeed;
 
         public static ConfigEntry<bool> ActivePointerColor;
         public static ConfigEntry<int> ActivePointerOpacity;
@@ -53,7 +53,7 @@ namespace xsoverlay_tweak
         public static void AllConfig(ConfigFile cfg)
         {
             // RefreshRate
-            RefreshRate = cfg.Bind("RefreshRate", "RefreshRate", -1, "The target frame rate for XSOverlay rendering.\nHigher values improve responsiveness but increase CPU usage.\n- Set to 500 for unlimited.");
+            RefreshRate = cfg.Bind("RefreshRate", "RefreshRate", "Unknow", "The target frame rate for XSOverlay rendering.\nHigher values improve responsiveness but increase CPU usage.\n- Set to 500 for unlimited.");
             OnlyHoverOverlay = cfg.Bind("RefreshRate", "OnlyHoverOverlay", true, "Only apply overriding refresh rate when hovering any Overlay.");
             OnlyInLayoutMod = cfg.Bind("RefreshRate", "OnlyInLayoutMod", true, "Only apply overriding refresh rate in Layout Mode.");
 
@@ -61,7 +61,7 @@ namespace xsoverlay_tweak
             AlwayUpdateCursor = cfg.Bind("Cursor", "AlwayUpdateCursor", false, "Reduces Windows Cursor latency by sending position from the Pointer before the desktop frame is captured.\nWithout this, Windows Cursor often appears to lag one frame behind the Pointer position.");
             AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hide the system cursor in Capture Overlay.");
             PhysicalMouseDetector = cfg.Bind("Cursor", "PhysicalMouseDetector", true, "Release the Pointer control when physical mouse movement is detected.\nPointer click to regain control.");
-            MouseSmoothSpeed = cfg.Bind("Cursor", "MouseSmoothSpeed", 10f, "Capture Overlay cursor smoothing.");
+            MouseSmoothSpeed = cfg.Bind("Cursor", "MouseSmoothSpeed", "Medium", "Capture Overlay cursor smoothing.");
             WindowsCursorPointer = cfg.Bind("Pointer", "WindowsCursorPointer", true, "Hide Capture Overlay Cursor and using Windows Cursor image as the Capture Overlay Pointer to mimic the SteamVR Dashboard.");
 
             // Pointer

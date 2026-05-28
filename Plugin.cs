@@ -63,8 +63,8 @@ public class Plugin : BaseUnityPlugin
         Instance = this;
 
         // Set default refresh rate to HMD refresh rate if it's not set by user
-        if (XConfig.RefreshRate.Value == -1)
-            XConfig.RefreshRate.Value = DeviceManager.Instance.HMDRefreshRate;
+        if (XConfig.RefreshRate.Value == "Unknow")
+            XConfig.RefreshRate.Value = $"{DeviceManager.Instance.HMDRefreshRate} FPS";
 
         if (XConfig.UpdateNotification.Value)
             Task.Run(Utils.Update.CheckForUpdate);
