@@ -95,7 +95,7 @@ namespace xsoverlay_tweak.Patches.Setting
             {
                 // RefreshRate
                 case "XSOverlayTweak.RefreshRate":
-                    XConfig.RefreshRate.Value = RefreshRate.GetFramrate(int.Parse(name));
+                    XConfig.RefreshRate.Value = RefreshRate.GetFramrate(int.Parse(value));
                     break;
                 case "XSOverlayTweak.OnlyHoverOverlay":
                     XConfig.OnlyHoverOverlay.Value = bool.Parse(value);
@@ -244,6 +244,7 @@ namespace xsoverlay_tweak.Patches.Setting
 
             jsContent = jsContent.Replace("<<Version>>", MyPluginInfo.PLUGIN_VERSION);
             jsContent = jsContent.Replace("<<HMDRefreshRate>>", $"'{DeviceManager.Instance.HMDRefreshRate} FPS'");
+            jsContent = jsContent.Replace("<<RefreshRateList>>", string.Join(", ", RefreshRate.RefreshRateList));
 
             string jsCode = $"(function() {{ {jsContent} }})();";
 

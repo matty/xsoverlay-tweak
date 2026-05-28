@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Collections.Generic;
 using UnityEngine;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
@@ -10,6 +11,8 @@ namespace xsoverlay_tweak.Patches
         private static int HMDRefreshRate = 90;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
+
+        public static List<string> RefreshRateList = ["'60 FPS'", "'75 FPS'", "'90 FPS'", "'120 FPS'", "'144 FPS'", "'200 FPS'", "'240 FPS'", "'300 FPS'", "'Unlimited'"];
 
         [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
@@ -29,6 +32,24 @@ namespace xsoverlay_tweak.Patches
                     if (!EfficiencyMode.IsEfficiencyModeEnable()) // Smooth overlay fadeout
                         EventBridge.GetHMDRefreshRate(__instance);
             };
+        }
+
+        [HarmonyPatch(typeof(DeviceManager), "RegisterDevice")]
+        [HarmonyPostfix]
+        public static void WaitForHeadsetDetected(DeviceManager __instance, uint deviceId)
+        {
+            if (deviceId == __instance.PoseHandler.hmdIndex)
+            {
+                HMDRefreshRate = __instance.FetchHMDRefreshRate();
+
+                // Set default refresh rate to HMD refresh rate if it's not set by user
+                if (XConfig.RefreshRate.Value == "Unknow")
+                    XConfig.RefreshRate.Value = $"{HMDRefreshRate} FPS";
+
+                // Add HMDRefreshRate to RefreshRateList if not exist
+                if (!RefreshRateList.Exists(x => x.Equals($"'{HMDRefreshRate} FPS'")))
+                    RefreshRateList.Add($"'{HMDRefreshRate} FPS'");
+            }
         }
 
         [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
@@ -145,36 +166,15 @@ namespace xsoverlay_tweak.Patches
 
         public static int GetFramrate(string speed)
         {
-            return speed switch
-            {
-                "60 FPS" => 60,
-                "75 FPS" => 75,
-                "90 FPS" => 90,
-                "120 FPS" => 120,
-                "144 FPS" => 144,
-                "200 FPS" => 200,
-                "240 FPS" => 240,
-                "300 FPS" => 300,
-                "Unlimited" => -1,
-                _ => throw new System.NotImplementedException(),
-            };
+            if (speed.Equals("Unlimited"))
+                return -1;
+            else
+                return int.Parse(speed.Replace(" FPS", ""));
         }
 
         public static string GetFramrate(int speed)
         {
-            return speed switch
-            {
-                0 => "60 FPS",
-                1 => "75 FPS",
-                2 => "90 FPS",
-                3 => "120 FPS",
-                4 => "144 FPS",
-                5 => "200 FPS",
-                6 => "240 FPS",
-                7 => "300 FPS",
-                8 => "Unlimited",
-                _ => throw new System.NotImplementedException(),
-            };
+            return RefreshRateList[speed].Replace("'", "");
         }
     }
 }
