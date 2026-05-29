@@ -113,7 +113,7 @@ namespace xsoverlay_tweak.Patches
                             if (Height > Width)
                                 num3 *= Height / Width;
 
-                            float widthInMeters = (0.015f * (Data.CursorTexture.width / 32f)) * num3 * PointerScaleMultiply.GetScale();
+                            float widthInMeters = (0.012f * (Data.CursorTexture.width / 32f)) * num3 * PointerScaleMultiply.GetScale();
                             ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
                             ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
                             ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
