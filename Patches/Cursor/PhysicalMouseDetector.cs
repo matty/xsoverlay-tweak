@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using xsoverlay_tweak.Utils;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.Cursor
 {
     internal class PhysicalMouseDetector
     {

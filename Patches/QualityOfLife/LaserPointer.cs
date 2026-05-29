@@ -3,9 +3,10 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using XSOverlay;
+using xsoverlay_tweak.Patches.Pointer;
 using xsoverlay_tweak.Utils;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.QualityOfLife
 {
     [HarmonyPatch(typeof(Raycaster))]
     internal class LaserPointer

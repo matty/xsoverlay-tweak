@@ -8,6 +8,7 @@ using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
+using xsoverlay_tweak.Patches.Cursor;
 
 namespace xsoverlay_tweak.Patches.Setting
 {
@@ -49,8 +50,6 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.WindowsCursorPointer"] = XConfig.WindowsCursorPointer.Value,
                 ["XSOverlayTweak.PointerActiveClick"] = XConfig.PointerActiveClick.Value,
                 ["XSOverlayTweak.EmulateMouseClickAnimation"] = XConfig.EmulateMouseClickAnimation.Value,
-                ["XSOverlayTweak.LaserPointer"] = XConfig.LaserPointer.Value,
-                ["XSOverlayTweak.LaserPointerMouseSmoothDisable"] = XConfig.LaserPointerMouseSmoothDisable.Value,
 
                 // Mouse Navigation
                 ["XSOverlayTweak.MouseNavigation"] = XConfig.MouseNavigation.Value,
@@ -63,21 +62,27 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.DashboardWindow"] = XConfig.DashboardWindow.Value,
                 ["XSOverlayTweak.DashboardWrist"] = XConfig.DashboardWrist.Value,
                 ["XSOverlayTweak.Dashboardkeyboard"] = XConfig.Dashboardkeyboard.Value,
-                ["XSOverlayTweak.OverlayCurveAutoRefresh"] = XConfig.OverlayCurveAutoRefresh.Value,
 
                 // Optimization
                 ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
                 ["XSOverlayTweak.InactiveRefreshRate"] = XConfig.InactiveRefreshRate.Value,
-                ["XSOverlayTweak.WristOverPosition"] = XConfig.WristOverPosition.Value,
-                ["XSOverlayTweak.WebViewFix"] = XConfig.WebViewFix.Value,
-                ["XSOverlayTweak.WebViewWiderScroll"] = XConfig.WebViewWiderScroll.Value,
-                ["XSOverlayTweak.OverlayRollCurveFix"] = XConfig.OverlayRollCurveFix.Value,
-                ["XSOverlayTweak.PinBlockInputNonEditMode"] = XConfig.PinBlockInputNonEditMode.Value,
+
+                // Quality of Life
                 ["XSOverlayTweak.DefaultCaptureOverlayTexture"] = XConfig.DefaultCaptureOverlayTexture.Value,
-                ["XSOverlayTweak.PullTriggerPointerLock"] = XConfig.PullTriggerPointerLock.Value,
-                ["XSOverlayTweak.PullTriggerClickThreshold"] = XConfig.PullTriggerClickThreshold.Value,
                 ["XSOverlayTweak.DoubleClickConfirm"] = XConfig.DoubleClickConfirm.Value,
+                ["XSOverlayTweak.LaserPointer"] = XConfig.LaserPointer.Value,
+                ["XSOverlayTweak.LaserPointerMouseSmoothDisable"] = XConfig.LaserPointerMouseSmoothDisable.Value,
+                ["XSOverlayTweak.OverlayCurveAutoRefresh"] = XConfig.OverlayCurveAutoRefresh.Value,
+                ["XSOverlayTweak.PinBlockInputNonEditMode"] = XConfig.PinBlockInputNonEditMode.Value,
+                ["XSOverlayTweak.PullTriggerClickThreshold"] = XConfig.PullTriggerClickThreshold.Value,
+                ["XSOverlayTweak.PullTriggerPointerLock"] = XConfig.PullTriggerPointerLock.Value,
+                ["XSOverlayTweak.WebViewWiderScroll"] = XConfig.WebViewWiderScroll.Value,
+                ["XSOverlayTweak.WristOverPosition"] = XConfig.WristOverPosition.Value,
+
+                // Fix
                 ["XSOverlayTweak.LoadLayoutScaleFix"] = XConfig.LoadLayoutScaleFix.Value,
+                ["XSOverlayTweak.OverlayRollCurveFix"] = XConfig.OverlayRollCurveFix.Value,
+                ["XSOverlayTweak.WebViewFix"] = XConfig.WebViewFix.Value,
 
                 // About
                 ["XSOverlayTweak.UpdateNotification"] = XConfig.UpdateNotification.Value,
@@ -143,12 +148,6 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.EmulateMouseClickAnimation":
                     XConfig.EmulateMouseClickAnimation.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.LaserPointer":
-                    XConfig.LaserPointer.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.LaserPointerMouseSmoothDisable":
-                    XConfig.LaserPointerMouseSmoothDisable.Value = bool.Parse(value);
-                    break;
 
                 // Mouse Navigation
                 case "XSOverlayTweak.MouseNavigation":
@@ -185,39 +184,50 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.InactiveRefreshRate":
                     XConfig.InactiveRefreshRate.Value = int.Parse(value);
                     break;
-                case "XSOverlayTweak.WristOverPosition":
-                    XConfig.WristOverPosition.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.WebViewFix":
-                    XConfig.WebViewFix.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.WebViewWiderScroll":
-                    XConfig.WebViewWiderScroll.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.OverlayCurveAutoRefresh":
-                    XConfig.OverlayCurveAutoRefresh.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.OverlayRollCurveFix":
-                    XConfig.OverlayRollCurveFix.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.PinBlockInputNonEditMode":
-                    XConfig.PinBlockInputNonEditMode.Value = bool.Parse(value);
-                    break;
+
+                // Quality of Life
                 case "XSOverlayTweak.DefaultCaptureOverlayTexture":
                     XConfig.DefaultCaptureOverlayTexture.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.PullTriggerPointerLock":
-                    XConfig.PullTriggerPointerLock.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.PullTriggerClickThreshold":
-                    XConfig.PullTriggerClickThreshold.Value = float.Parse(value);
                     break;
                 case "XSOverlayTweak.DoubleClickConfirm":
                     XConfig.DoubleClickConfirm.Value = bool.Parse(value);
                     break;
+                case "XSOverlayTweak.LaserPointer":
+                    XConfig.LaserPointer.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.LaserPointerMouseSmoothDisable":
+                    XConfig.LaserPointerMouseSmoothDisable.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.OverlayCurveAutoRefresh":
+                    XConfig.OverlayCurveAutoRefresh.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.PinBlockInputNonEditMode":
+                    XConfig.PinBlockInputNonEditMode.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.PullTriggerClickThreshold":
+                    XConfig.PullTriggerClickThreshold.Value = float.Parse(value);
+                    break;
+                case "XSOverlayTweak.PullTriggerPointerLock":
+                    XConfig.PullTriggerPointerLock.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.WebViewWiderScroll":
+                    XConfig.WebViewWiderScroll.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.WristOverPosition":
+                    XConfig.WristOverPosition.Value = bool.Parse(value);
+                    break;
+
+                // Fix
                 case "XSOverlayTweak.LoadLayoutScaleFix":
                     XConfig.LoadLayoutScaleFix.Value = bool.Parse(value);
                     break;
+                case "XSOverlayTweak.OverlayRollCurveFix":
+                    XConfig.OverlayRollCurveFix.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.WebViewFix":
+                    XConfig.WebViewFix.Value = bool.Parse(value);
+                    break;
+
 
                 // About
                 case "XSOverlayTweak.CheckForUpdate":

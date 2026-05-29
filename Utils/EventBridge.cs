@@ -4,7 +4,7 @@ using System.Collections;
 using UnityEngine;
 using uWindowCapture;
 using XSOverlay;
-using xsoverlay_tweak.Patches;
+using xsoverlay_tweak.Patches.Cursor;
 
 namespace xsoverlay_tweak.Utils
 {

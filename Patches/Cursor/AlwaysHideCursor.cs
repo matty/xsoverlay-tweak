@@ -2,8 +2,9 @@
 using System.Collections;
 using UnityEngine;
 using XSOverlay;
+using xsoverlay_tweak.Patches.Pointer;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.Cursor
 {
     [HarmonyPatch(typeof(WindowComponentManager))]
     internal class AlwaysHideCursor

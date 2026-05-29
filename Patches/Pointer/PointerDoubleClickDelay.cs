@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using XSOverlay;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.Pointer
 {
     [HarmonyPatch(typeof(Raycaster))]
     internal class PointerDoubleClickDelay

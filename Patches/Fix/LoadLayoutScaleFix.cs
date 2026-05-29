@@ -1,9 +1,9 @@
 ﻿using HarmonyLib;
 using System.Runtime.CompilerServices;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.Fix
 {
-    internal class LoadLayoutNormalizeScaleFix
+    internal class LoadLayoutScaleFix
     {
         private class OverlayData
         {

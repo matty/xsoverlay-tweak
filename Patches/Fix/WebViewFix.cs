@@ -4,7 +4,7 @@ using UnityEngine;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.Fix
 {
     internal class WebViewFix
     {

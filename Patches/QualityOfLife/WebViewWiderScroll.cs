@@ -4,7 +4,7 @@ using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
 
-namespace xsoverlay_tweak.Patches
+namespace xsoverlay_tweak.Patches.QualityOfLife
 {
     internal class WebViewWiderScroll
     {

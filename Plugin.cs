@@ -24,34 +24,37 @@ public class Plugin : BaseUnityPlugin
 
         harmony.PatchAll(typeof(Patches.RefreshRate));
 
-        harmony.PatchAll(typeof(Patches.AlwayUpdateCursor));
-        harmony.PatchAll(typeof(Patches.AlwaysHideCursor));
-        harmony.PatchAll(typeof(Patches.PhysicalMouseDetector));
-        harmony.PatchAll(typeof(Patches.MouseNavigation));
-        harmony.PatchAll(typeof(Patches.MouseSmoothSpeed));
-        harmony.PatchAll(typeof(Patches.WindowsCursorPointer));
+        harmony.PatchAll(typeof(Patches.Cursor.AlwayUpdateCursor));
+        harmony.PatchAll(typeof(Patches.Cursor.AlwaysHideCursor));
+        harmony.PatchAll(typeof(Patches.Cursor.MouseSmoothSpeed));
+        harmony.PatchAll(typeof(Patches.Cursor.PhysicalMouseDetector));
 
-        harmony.PatchAll(typeof(Patches.ActivePointerColor));
-        harmony.PatchAll(typeof(Patches.ActivePointerWebView));
-        harmony.PatchAll(typeof(Patches.PointerScaleMultiply));
-        harmony.PatchAll(typeof(Patches.PointerDoubleClickDelay));
-        harmony.PatchAll(typeof(Patches.EmulateMouseClickAnimation));
-        harmony.PatchAll(typeof(Patches.LaserPointer));
+        harmony.PatchAll(typeof(Patches.MouseNavigation));
+
+        harmony.PatchAll(typeof(Patches.Pointer.ActivePointerColor));
+        harmony.PatchAll(typeof(Patches.Pointer.ActivePointerWebView));
+        harmony.PatchAll(typeof(Patches.Pointer.EmulateMouseClickAnimation));
+        harmony.PatchAll(typeof(Patches.Pointer.PointerDoubleClickDelay));
+        harmony.PatchAll(typeof(Patches.Pointer.PointerScaleMultiply));
+        harmony.PatchAll(typeof(Patches.Pointer.WindowsCursorPointer));
 
         harmony.PatchAll(typeof(Patches.SteamDashboard));
 
         harmony.PatchAll(typeof(Patches.EfficiencyMode));
-        harmony.PatchAll(typeof(Patches.WristOverPosition));
-        harmony.PatchAll(typeof(Patches.WebViewFix));
-        harmony.PatchAll(typeof(Patches.WebViewWiderScroll));
-        harmony.PatchAll(typeof(Patches.OverlayCurveAutoRefresh));
-        harmony.PatchAll(typeof(Patches.OverlayRollCurveFix));
-        harmony.PatchAll(typeof(Patches.PinBlockInputNonEditMode));
-        harmony.PatchAll(typeof(Patches.PullTriggerPointerLock));
-        harmony.PatchAll(typeof(Patches.PullTriggerClickThreshold));
-        harmony.PatchAll(typeof(Patches.DefaultCaptureOverlayTexture));
-        harmony.PatchAll(typeof(Patches.DoubleClickConfirm));
-        harmony.PatchAll(typeof(Patches.LoadLayoutNormalizeScaleFix));
+
+        harmony.PatchAll(typeof(Patches.QualityOfLife.DefaultCaptureOverlayTexture));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.DoubleClickConfirm));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.LaserPointer));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.OverlayCurveAutoRefresh));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.PinBlockInputNonEditMode));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.PullTriggerClickThreshold));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.PullTriggerPointerLock));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.WebViewWiderScroll));
+        harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
+
+        harmony.PatchAll(typeof(Patches.Fix.LoadLayoutScaleFix));
+        harmony.PatchAll(typeof(Patches.Fix.OverlayRollCurveFix));
+        harmony.PatchAll(typeof(Patches.Fix.WebViewFix));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 
