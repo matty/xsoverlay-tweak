@@ -32,13 +32,13 @@ function InjectKBOSCTab() {
             },
             {
                 name: 'Pointer', priority: 3, settings: [
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerColor', name: 'Active Highlight', description: 'Highlights the inactive hand\'s Pointer in red for easier identification.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.ActivePointerOpacity', name: 'Inactive Opacity', description: 'Sets the opacity level for the inactive hand\'s Pointer.', default: 50, options: [0, 100, 10], unit: '%' },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.ActivePointerWebView', name: 'Active WebViews', description: 'Applies the inactive Pointer features to WebView Overlay such as Settings, Wrist, and others.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the global XSOverlay setting.', default: 100, options: [100, 400, 25], unit: '%' },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Applies the Double Click Delay from XSOverlay settings to the physical Pointer itself, not just the cursor.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Active Click', description: 'Clicking the inactive hand\'s Pointer makes it the Active Hand and performs a Mouse Click simultaneously for two-hand interaction.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EmulateMouseClickAnimation', name: 'Emulate Mouse Click Animation', description: 'Enables the Pointer click visual animation for Input Method > Emulate Mouse.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.InactivePointerColor', name: 'Inactive Highlight', description: 'Highlights the inactive hand\'s Pointer in red for easier identification.', default: true },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.InactivePointerOpacity', name: 'Inactive Opacity', description: 'Sets the opacity level for the inactive hand\'s Pointer.', default: 50, options: [0, 100, 10], unit: '%' },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerActiveClick', name: 'Active Click', description: 'Clicking the inactive hand\'s Pointer makes it the Active Hand and performs a Mouse Click simultaneously for two-hand interaction.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.PointerDoubleClickDelay', name: 'Double Click Delay', description: 'Applies the Double Click Delay from XSOverlay settings to the physical Pointer itself, not just the cursor.', default: true },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PointerScaleMultiply', name: 'Scale Multiplier', description: 'Multiplier for the Pointer scale relative to the global XSOverlay setting.', default: 100, options: [100, 400, 25], unit: '%' },
                 ]
             },
             {

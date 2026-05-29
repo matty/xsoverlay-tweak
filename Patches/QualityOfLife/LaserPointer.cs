@@ -124,7 +124,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 {
                     if (___VisualCursorElement.activeSelf) // Hover any Overlay
                     {
-                        if (!ActivePointerColor.IsEnable() || EventBridge.IsActiveHand(__instance) || EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
+                        if (!InactivePointerColor.IsEnable() || EventBridge.IsActiveHand(__instance) || EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
                         {
                             Data.Laser.colorTint = XSettingsManager.Instance.Settings.AccentColor;
                             Data.Laser.opacity = 1f;
@@ -132,13 +132,13 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         else
                         {
                             Data.Laser.colorTint = Color.red;
-                            Data.Laser.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+                            Data.Laser.opacity = XConfig.InactivePointerOpacity.Value / 100f;
                         }
                     }
                     else
                     {
                         Data.Laser.colorTint = Color.gray;
-                        Data.Laser.opacity = XConfig.ActivePointerOpacity.Value / 100f;
+                        Data.Laser.opacity = XConfig.InactivePointerOpacity.Value / 100f;
                     }
 
                     Data.Laser.overlay.overlayColor = Data.Laser.colorTint;

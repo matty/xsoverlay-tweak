@@ -28,15 +28,17 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Cursor.AlwaysHideCursor));
         harmony.PatchAll(typeof(Patches.Cursor.MouseSmoothSpeed));
         harmony.PatchAll(typeof(Patches.Cursor.PhysicalMouseDetector));
+        harmony.PatchAll(typeof(Patches.Pointer.WindowsCursorPointer));
 
         harmony.PatchAll(typeof(Patches.MouseNavigation));
 
-        harmony.PatchAll(typeof(Patches.Pointer.ActivePointerColor));
         harmony.PatchAll(typeof(Patches.Pointer.ActivePointerWebView));
         harmony.PatchAll(typeof(Patches.Pointer.EmulateMouseClickAnimation));
+        harmony.PatchAll(typeof(Patches.Pointer.InactivePointerColor));
+        harmony.PatchAll(typeof(Patches.Pointer.InactivePointerOpacity));
+        harmony.PatchAll(typeof(Patches.Pointer.PointerActiveClick));
         harmony.PatchAll(typeof(Patches.Pointer.PointerDoubleClickDelay));
         harmony.PatchAll(typeof(Patches.Pointer.PointerScaleMultiply));
-        harmony.PatchAll(typeof(Patches.Pointer.WindowsCursorPointer));
 
         harmony.PatchAll(typeof(Patches.SteamDashboard));
 

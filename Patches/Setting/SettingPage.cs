@@ -42,11 +42,11 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.MouseSmoothSpeed"] = XConfig.MouseSmoothSpeed.Value,
 
                 // Pointer
-                ["XSOverlayTweak.ActivePointerColor"] = XConfig.ActivePointerColor.Value,
-                ["XSOverlayTweak.ActivePointerOpacity"] = XConfig.ActivePointerOpacity.Value,
                 ["XSOverlayTweak.ActivePointerWebView"] = XConfig.ActivePointerWebView.Value,
                 ["XSOverlayTweak.PointerScaleMultiply"] = XConfig.PointerScaleMultiply.Value,
                 ["XSOverlayTweak.PointerDoubleClickDelay"] = XConfig.PointerDoubleClickDelay.Value,
+                ["XSOverlayTweak.InactivePointerColor"] = XConfig.InactivePointerColor.Value,
+                ["XSOverlayTweak.InactivePointerOpacity"] = XConfig.InactivePointerOpacity.Value,
                 ["XSOverlayTweak.WindowsCursorPointer"] = XConfig.WindowsCursorPointer.Value,
                 ["XSOverlayTweak.PointerActiveClick"] = XConfig.PointerActiveClick.Value,
                 ["XSOverlayTweak.EmulateMouseClickAnimation"] = XConfig.EmulateMouseClickAnimation.Value,
@@ -122,31 +122,31 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.MouseSmoothSpeed":
                     XConfig.MouseSmoothSpeed.Value = MouseSmoothSpeed.GetSpeed(int.Parse(value));
                     break;
+                case "XSOverlayTweak.WindowsCursorPointer":
+                    XConfig.WindowsCursorPointer.Value = bool.Parse(value);
+                    break;
 
                 // Pointer
-                case "XSOverlayTweak.ActivePointerColor":
-                    XConfig.ActivePointerColor.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.ActivePointerOpacity":
-                    XConfig.ActivePointerOpacity.Value = int.Parse(value);
-                    break;
                 case "XSOverlayTweak.ActivePointerWebView":
                     XConfig.ActivePointerWebView.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.PointerScaleMultiply":
-                    XConfig.PointerScaleMultiply.Value = int.Parse(value);
+                case "XSOverlayTweak.EmulateMouseClickAnimation":
+                    XConfig.EmulateMouseClickAnimation.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.PointerDoubleClickDelay":
-                    XConfig.PointerDoubleClickDelay.Value = bool.Parse(value);
+                case "XSOverlayTweak.InactivePointerColor":
+                    XConfig.InactivePointerColor.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.WindowsCursorPointer":
-                    XConfig.WindowsCursorPointer.Value = bool.Parse(value);
+                case "XSOverlayTweak.InactivePointerOpacity":
+                    XConfig.InactivePointerOpacity.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.PointerActiveClick":
                     XConfig.PointerActiveClick.Value = bool.Parse(value);
                     break;
-                case "XSOverlayTweak.EmulateMouseClickAnimation":
-                    XConfig.EmulateMouseClickAnimation.Value = bool.Parse(value);
+                case "XSOverlayTweak.PointerDoubleClickDelay":
+                    XConfig.PointerDoubleClickDelay.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.PointerScaleMultiply":
+                    XConfig.PointerScaleMultiply.Value = int.Parse(value);
                     break;
 
                 // Mouse Navigation
