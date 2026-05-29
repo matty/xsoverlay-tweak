@@ -11,7 +11,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> AlwayUpdateCursor;
         public static ConfigEntry<bool> AlwaysHideCursor;
         public static ConfigEntry<bool> PhysicalMouseDetector;
-        public static ConfigEntry<string> MouseSmoothSpeed;
+        public static ConfigEntry<int> MouseSmoothSpeed;
         public static ConfigEntry<bool> WindowsCursorPointer;
 
         public static ConfigEntry<bool> ActivePointerWebView;
@@ -63,7 +63,7 @@ namespace xsoverlay_tweak
             AlwayUpdateCursor = cfg.Bind("Cursor", "AlwayUpdateCursor", false, "Reduces Windows Cursor latency by sending the position from the Pointer before the desktop frame is captured.\nWithout this, the Windows Cursor often appears to lag one frame behind the Pointer position.");
             AlwaysHideCursor = cfg.Bind("Cursor", "AlwaysHideCursor", false, "Forcefully hides the system Windows Cursor in Desktop and Window Capture Overlay.");
             PhysicalMouseDetector = cfg.Bind("Cursor", "PhysicalMouseDetector", true, "Relinquishes Pointer control when physical mouse movement is detected.\nPointer Click to regain control.");
-            MouseSmoothSpeed = cfg.Bind("Cursor", "MouseSmoothSpeed", "Medium", "Adjusts the level of smoothing applied to the Windows Cursor within Capture Overlay.");
+            MouseSmoothSpeed = cfg.Bind("Cursor", "MouseSmoothSpeed", 3, "Adjusts the level of smoothing applied to the Windows Cursor within Capture Overlay.");
             WindowsCursorPointer = cfg.Bind("Pointer", "WindowsCursorPointer", true, "Hides the Capture Overlay Cursor and uses the Windows Cursor image as the Pointer to mimic the SteamVR Dashboard.");
 
             // Pointer

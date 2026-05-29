@@ -8,7 +8,6 @@ using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
-using xsoverlay_tweak.Patches.Cursor;
 
 namespace xsoverlay_tweak.Patches.Setting
 {
@@ -120,7 +119,7 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.PhysicalMouseDetector.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.MouseSmoothSpeed":
-                    XConfig.MouseSmoothSpeed.Value = MouseSmoothSpeed.GetSpeed(int.Parse(value));
+                    XConfig.MouseSmoothSpeed.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.WindowsCursorPointer":
                     XConfig.WindowsCursorPointer.Value = bool.Parse(value);
@@ -255,7 +254,6 @@ namespace xsoverlay_tweak.Patches.Setting
             jsContent = jsContent.Replace("<<Version>>", MyPluginInfo.PLUGIN_VERSION);
             jsContent = jsContent.Replace("<<HMDRefreshRate>>", $"'{DeviceManager.Instance.HMDRefreshRate} FPS'");
             jsContent = jsContent.Replace("<<RefreshRateList>>", string.Join(", ", RefreshRate.RefreshRateList));
-            jsContent = jsContent.Replace("<<MouseSmoothList>>", string.Join(", ", MouseSmoothSpeed.MouseSmoothList));
 
             string jsCode = $"(function() {{ {jsContent} }})();";
 

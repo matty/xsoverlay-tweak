@@ -7,7 +7,6 @@ namespace xsoverlay_tweak.Patches.Cursor
     internal class MouseSmoothSpeed
     {
         private static readonly List<Raycaster> Instances = [];
-        public static List<string> MouseSmoothList = ["'Ultra Low'", "'Very Low'", "'Low'", "'Medium'", "'High'", "'Very High'"];
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
@@ -28,23 +27,18 @@ namespace xsoverlay_tweak.Patches.Cursor
             EventBridge.Ref_Raycaster.InterpolationSpeed(__instance) = GetSpeed(XConfig.MouseSmoothSpeed.Value);
         }
 
-        public static float GetSpeed(string speed)
+        public static float GetSpeed(int speed)
         {
             return speed switch
             {
-                "Ultra Low" => 40f,
-                "Very Low" => 20f,
-                "Low" => 15f,
-                "Medium" => 10f,
-                "High" => 5f,
-                "Very High" => 0.01f,
+                0 => 40f,
+                1 => 20f,
+                2 => 15f,
+                3 => 10f,
+                4 => 5f,
+                5 => 0.01f,
                 _ => throw new System.NotImplementedException(),
             };
-        }
-
-        public static string GetSpeed(int speed)
-        {
-            return MouseSmoothList[speed].Replace("'", "");
         }
     }
 }
