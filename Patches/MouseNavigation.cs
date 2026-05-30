@@ -10,6 +10,7 @@ using Valve.VR;
 using WindowsInput;
 using WindowsInput.Native;
 using XSOverlay;
+using static XSOverlay.MouseInputDevice;
 
 namespace xsoverlay_tweak.Patches
 {
@@ -47,7 +48,7 @@ namespace xsoverlay_tweak.Patches
             {
                 if (IsEnable())
                     if (ApplySteamVRActionBinding())
-                        Utils.Notification.Send($"{MyPluginInfo.PLUGIN_NAME} - Mouse Navigation", $"When enabling Mouse Navigation for the first time, you have to restart {MyPluginInfo.PLUGIN_NAME} to take effect.", 10);
+                        Utils.Notification.Send($"{MyPluginInfo.PLUGIN_NAME} - Mouse Navigation", $"When enabling Mouse Navigation for the first time, you have to restart XSOverlay to take effect.", 10);
             };
         }
 
@@ -62,19 +63,25 @@ namespace xsoverlay_tweak.Patches
         // SteamVR input listen
         [HarmonyPatch(typeof(MouseInputDevice), "Update")]
         [HarmonyPostfix]
-        public static void SteamVRKeyBindingListener()
+        public static void SteamVRKeyBindingListener(MouseInputDevice __instance)
         {
             if (!IsEnable()) return;
 
             // Back Navigation
             if (CheckActionTriggered("/actions/xsoverlay/in/MouseBack", ref ActionHandleBack, ref BackWasPressedLastFrame))
                 if (IsDesktopHover)
+                {
                     SimulateBackNavigation(XInputManager.sim);
+                    PlayDeviceHaptic(__instance);
+                }
 
             // Forward Navigation
             if (CheckActionTriggered("/actions/xsoverlay/in/MouseForward", ref ActionHandleForward, ref ForwardWasPressedLastFrame))
                 if (IsDesktopHover)
+                {
                     SimulateForwardNavigation(XInputManager.sim);
+                    PlayDeviceHaptic(__instance);
+                }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -122,6 +129,14 @@ namespace xsoverlay_tweak.Patches
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, VirtualKeyCode.RIGHT);
             else
                 sim.Mouse.XButtonClick(2);
+        }
+
+        private static void PlayDeviceHaptic(MouseInputDevice instance)
+        {
+            if (instance.GrabAxis == ActivationAxis.LeftTrigger)
+                HapticsManager.Haptics(OVR_Pose_Handler.instance.leftIndex, 0U, 3000);
+            else
+                HapticsManager.Haptics(OVR_Pose_Handler.instance.rightIndex, 0U, 3000);
         }
 
         private static bool ApplySteamVRActionBinding()
