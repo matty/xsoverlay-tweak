@@ -36,20 +36,21 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                             else
                                 DoubleClickState.lastClickTime = Time.time;
 
-                            switch (clickActions.ActionIndex)
+                            if (IsDouble)
                             {
-                                case 0:
-                                    if (IsDouble)
+                                switch (clickActions.ActionIndex)
+                                {
+                                    case 0:
                                         MouseOperations.LMouseClick(XInputManager.sim);
-                                    break;
-                                case 1:
-                                    if (IsDouble)
+                                        break;
+                                    case 1:
                                         MouseOperations.RMouseClick(XInputManager.sim);
-                                    break;
-                                case 2:
-                                    if (IsDouble)
+                                        break;
+                                    case 2:
                                         MouseOperations.MMouseClick(XInputManager.sim);
-                                    break;
+                                        break;
+                                }
+
                             }
                         }
         }
