@@ -33,6 +33,8 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> Dashboardkeyboard;
 
         public static ConfigEntry<int> GrabHaptic;
+        public static ConfigEntry<int> WebViewHaptic;
+
         public static ConfigEntry<bool> EfficiencyMode;
         public static ConfigEntry<int> InactiveRefreshRate;
 
@@ -89,6 +91,8 @@ namespace xsoverlay_tweak
 
             // Haptic
             GrabHaptic = cfg.Bind("Haptic", "GrabHaptic", 50, "Plays a haptic feedback when grab any Overlay.");
+            WebViewHaptic = cfg.Bind("Haptic", "WebViewHaptic", 30, "c.");
+
             // Optimization
             EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.");
             InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The target Refresh Rate for XSOverlay rendering when Efficiency Mode is active.\nVery low value: the Layout Mode Toggle binding listener will miss some frames.");

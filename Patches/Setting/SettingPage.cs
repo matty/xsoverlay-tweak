@@ -64,6 +64,8 @@ namespace xsoverlay_tweak.Patches.Setting
 
                 // Haptic
                 ["XSOverlayTweak.GrabHaptic"] = XConfig.GrabHaptic.Value,
+                ["XSOverlayTweak.WebViewHaptic"] = XConfig.WebViewHaptic.Value,
+
                 // Optimization
                 ["XSOverlayTweak.EfficiencyMode"] = XConfig.EfficiencyMode.Value,
                 ["XSOverlayTweak.InactiveRefreshRate"] = XConfig.InactiveRefreshRate.Value,
@@ -181,6 +183,10 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.GrabHaptic":
                     XConfig.GrabHaptic.Value = int.Parse(value);
                     break;
+                case "XSOverlayTweak.WebViewHaptic":
+                    XConfig.WebViewHaptic.Value = int.Parse(value);
+                    break;
+
                 // Optimization
                 case "XSOverlayTweak.EfficiencyMode":
                     XConfig.EfficiencyMode.Value = bool.Parse(value);
