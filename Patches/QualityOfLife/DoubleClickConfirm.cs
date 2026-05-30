@@ -28,7 +28,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         if (!clickActions.IsHoldingMouseClick)
                         {
                             bool IsDouble = false;
-                            if (Time.time - DoubleClickState.lastClickTime <= XSettingsManager.Instance.Settings.DoubleClickDelay * 1.5)
+                            if (Time.time - DoubleClickState.lastClickTime <= XSettingsManager.Instance.Settings.DoubleClickDelay * 2)
                             {
                                 IsDouble = true;
                                 DoubleClickState.lastClickTime = 0f;

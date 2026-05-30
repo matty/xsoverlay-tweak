@@ -15,6 +15,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             public bool IsBlock = false;
             public bool IsStopping = false;
+            public bool IsDown = false;
             public Vector2 DesktopCoordinates = new();
             public Coroutine Coroutine;
         }
@@ -42,17 +43,26 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 {
                     if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true)
                     {
-                        if (GetTriggerAxis(__instance) > 0f && !___HadMouseInputDown && !___HoldingTouch && !___DraggingTouch)
+                        Data.IsDown = ___HadMouseInputDown || ___HoldingTouch || ___DraggingTouch;
+
+                        if (GetTriggerAxis(__instance) > 0f && !Data.IsDown)
                         {
                             if (Data.IsStopping)
                                 Plugin.Instance.StopCoroutine(Data.Coroutine);
+
+                            if (!Data.IsBlock)
+                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, 0.3f);
 
                             Data.IsStopping = false;
                             Data.IsBlock = true;
                         }
                         else if (Data.IsBlock && !Data.IsStopping)
                         {
+                            if (!Data.IsDown)
+                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 40f, 0.3f);
+
                             Data.IsStopping = true;
+                            Data.IsDown = false;
                             Data.Coroutine = Plugin.Instance.StartCoroutine(UnblockDelay(__instance));
                         }
                     }

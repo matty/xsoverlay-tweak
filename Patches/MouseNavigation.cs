@@ -10,6 +10,7 @@ using Valve.VR;
 using WindowsInput;
 using WindowsInput.Native;
 using XSOverlay;
+using xsoverlay_tweak.Utils;
 using static XSOverlay.MouseInputDevice;
 
 namespace xsoverlay_tweak.Patches
@@ -72,7 +73,8 @@ namespace xsoverlay_tweak.Patches
                 if (IsDesktopHover)
                 {
                     SimulateBackNavigation(XInputManager.sim);
-                    PlayDeviceHaptic(__instance);
+
+                    AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
                 }
 
             // Forward Navigation
@@ -80,7 +82,8 @@ namespace xsoverlay_tweak.Patches
                 if (IsDesktopHover)
                 {
                     SimulateForwardNavigation(XInputManager.sim);
-                    PlayDeviceHaptic(__instance);
+
+                    AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
                 }
         }
 
@@ -129,14 +132,6 @@ namespace xsoverlay_tweak.Patches
                 sim.Keyboard.ModifiedKeyStroke(VirtualKeyCode.MENU, VirtualKeyCode.RIGHT);
             else
                 sim.Mouse.XButtonClick(2);
-        }
-
-        private static void PlayDeviceHaptic(MouseInputDevice instance)
-        {
-            if (instance.GrabAxis == ActivationAxis.LeftTrigger)
-                HapticsManager.Haptics(OVR_Pose_Handler.instance.leftIndex, 0U, 3000);
-            else
-                HapticsManager.Haptics(OVR_Pose_Handler.instance.rightIndex, 0U, 3000);
         }
 
         private static bool ApplySteamVRActionBinding()
