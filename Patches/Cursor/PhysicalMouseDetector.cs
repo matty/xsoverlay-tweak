@@ -16,7 +16,7 @@ namespace xsoverlay_tweak.Patches.Cursor
             mouseDetector.PhysicalMouseMoved += (x, y) =>
             {
                 if (IsEnable())
-                    if (EventBridge.IsHoverAnyOverlay)
+                    if (EventBridge.IsHoverAnyDesktopOrWindowCapture)
                         IsPhysicalMovement = true;
             };
         }

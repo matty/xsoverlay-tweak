@@ -11,6 +11,9 @@ namespace xsoverlay_tweak.Utils
     internal class EventBridge
     {
         public static bool IsHoverAnyOverlay = false;
+        public static bool IsHoverAnyDesktopOrWindowCapture = false;
+        public static bool IsHoverAnyDesktopCapture = false;
+        public static bool IsHoverAnyWindowCapture = false;
 
         private static Coroutine NotificationCoroutine;
         public static bool IsNotificationVisible = false;
@@ -57,6 +60,9 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnSwitchHoveringOverlay += (raycaster, overlay) =>
                 {
                     IsHoverAnyOverlay = true;
+                    IsHoverAnyDesktopOrWindowCapture = overlay?.IsDesktopOrWindowCapture == true;
+                    IsHoverAnyDesktopCapture = overlay?.IsDesktopCapture == true;
+                    IsHoverAnyWindowCapture = overlay?.IsWindowCapture == true;
                     CurrentHoveringOverlay = overlay;
                     Ref_DeviceManager.GetHMDRefreshRate(__instance);
 
@@ -66,6 +72,9 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnTakeControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = true;
+                    IsHoverAnyDesktopOrWindowCapture = raycaster?.HoveringOverlay?.IsDesktopOrWindowCapture == true;
+                    IsHoverAnyDesktopCapture = raycaster?.HoveringOverlay?.IsDesktopCapture == true;
+                    IsHoverAnyWindowCapture = raycaster?.HoveringOverlay?.IsWindowCapture == true;
                     Ref_DeviceManager.GetHMDRefreshRate(__instance);
 
                     if (CurrentHoveringOverlayCoroutine != null)
@@ -77,6 +86,9 @@ namespace xsoverlay_tweak.Utils
                 XSOEventSystem.OnReleaseControlOfDesktopCursor += (raycaster) =>
                 {
                     IsHoverAnyOverlay = false;
+                    IsHoverAnyDesktopOrWindowCapture = false;
+                    IsHoverAnyDesktopCapture = false;
+                    IsHoverAnyWindowCapture = false;
                     Ref_DeviceManager.GetHMDRefreshRate(__instance);
 
                     CurrentHoveringOverlayCoroutine = Plugin.Instance.StartCoroutine(ClearCurrentHoveringOverlayTimer());
