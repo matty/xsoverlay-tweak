@@ -46,6 +46,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Haptic.KeyboardKeyHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.KeyboardPressHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.OverlaySwapHaptic));
+        harmony.PatchAll(typeof(Patches.Haptic.ToggleEditModeHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.WebViewHaptic));
 
         harmony.PatchAll(typeof(Patches.EfficiencyMode));
