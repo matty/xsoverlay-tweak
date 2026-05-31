@@ -51,7 +51,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                                 Plugin.Instance.StopCoroutine(Data.Coroutine);
 
                             if (!Data.IsBlock)
-                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, 0.3f);
+                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, XConfig.PullTriggerPointerLockHaptic.Value / 100f);
 
                             Data.IsStopping = false;
                             Data.IsBlock = true;
@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         else if (Data.IsBlock && !Data.IsStopping)
                         {
                             if (!Data.IsDown)
-                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 40f, 0.3f);
+                                AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 40f, XConfig.PullTriggerPointerLockHaptic.Value / 100f);
 
                             Data.IsStopping = true;
                             Data.IsDown = false;

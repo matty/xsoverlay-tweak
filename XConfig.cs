@@ -36,6 +36,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<int> KeyboardKeyHaptic;
         public static ConfigEntry<int> KeyboardPressHaptic;
         public static ConfigEntry<int> OverlaySwapHaptic;
+        public static ConfigEntry<int> PullTriggerPointerLockHaptic;
         public static ConfigEntry<int> WebViewHaptic;
 
         public static ConfigEntry<bool> EfficiencyMode;
@@ -97,7 +98,8 @@ namespace xsoverlay_tweak
             KeyboardKeyHaptic = cfg.Bind("Haptic", "KeyboardKeyHaptic", 30, "Plays a haptic feedback when Pointer is hovering a Keyboard key.");
             KeyboardPressHaptic = cfg.Bind("Haptic", "KeyboardPressHaptic", 30, "Plays a haptic feedback when Pointer is pressing a Keyboard key.");
             OverlaySwapHaptic = cfg.Bind("Haptic", "OverlaySwapHaptic", 30, "Plays a haptic feedback when Pointer is switching Overlay.");
-            WebViewHaptic = cfg.Bind("Haptic", "WebViewHaptic", 30, "c.");
+            PullTriggerPointerLockHaptic = cfg.Bind("Haptic", "PullTriggerPointerLockHaptic", 30, "Plays a haptic feedback when Pull Trigger Pointer Lock.");
+            WebViewHaptic = cfg.Bind("Haptic", "WebViewHaptic", 30, "Plays a haptic feedback when Pointer is hovering a Keyboard key.");
 
             // Optimization
             EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.");

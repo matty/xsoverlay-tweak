@@ -63,6 +63,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.KeyboardKeyHaptic', name: 'Keyboard Key', description: 'Plays a haptic feedback when Pointer is hovering a Keyboard key.', default: 30, options: [0, 100, 5], unit: '%' },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.KeyboardPressHaptic', name: 'KeyboardPressHaptic', description: 'Plays a haptic feedback when Pointer is pressing a Keyboard key.', default: 30, options: [0, 100, 5], unit: '%' },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.OverlaySwapHaptic', name: 'Overlay Swapping', description: 'Plays a haptic feedback when Pointer is switching Overlay.', default: 30, options: [0, 100, 5], unit: '%' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.PullTriggerPointerLockHaptic', name: 'Pull Trigger Pointer Lock Haptic', description: 'Plays a haptic feedback when Pull Trigger Pointer Lock.', default: 30, options: [0, 100, 5], unit: '%' },
                     { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.WebViewHaptic', name: 'WebView', description: 'Plays a haptic feedback when Pointer is hovering a Keyboard key.', default: 30, options: [0, 100, 5], unit: '%' },
 
                 ]
