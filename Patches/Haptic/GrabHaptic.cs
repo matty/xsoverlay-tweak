@@ -34,7 +34,7 @@ namespace xsoverlay_tweak.Patches.Haptic
                 {
                     Data.IsHaptic = false;
 
-                    AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.1f, 320f, XConfig.GrabHaptic.Value / 100f);
+                    AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.05f, 320f, XConfig.GrabHaptic.Value / 100f);
                 }
             }
         }
