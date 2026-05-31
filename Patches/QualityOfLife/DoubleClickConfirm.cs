@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using UnityEngine;
 using XSOverlay;
 
@@ -14,11 +15,14 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         }
         public static readonly ConditionalWeakTable<Raycaster, DoubleClickConfirmState> InstanceState = new();
 
+        [DllImport("user32.dll")]
+        private static extern uint GetDoubleClickTime();
+
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows")]
-        [HarmonyPostfix]
-        public static void WaitToConfrimDoubleClick(Raycaster __instance, ref ClickActions clickActions, ref MouseInputDevice ___InputDevice, ref bool ___HadMouseInputDown)
+        [HarmonyPrefix]
+        public static bool WaitToConfrimDoubleClick(Raycaster __instance, ref ClickActions clickActions, ref MouseInputDevice ___InputDevice, ref bool ___HadMouseInputDown)
         {
-            if (!IsEnable()) return;
+            if (!IsEnable()) return true;
 
             DoubleClickConfirmState DoubleClickState = InstanceState.GetOrCreateValue(__instance);
 
@@ -28,9 +32,12 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         if (!clickActions.IsHoldingMouseClick)
                         {
                             bool IsDouble = false;
-                            if (Time.time - DoubleClickState.lastClickTime <= XSettingsManager.Instance.Settings.DoubleClickDelay * 2)
+                            float Delay = Time.time - DoubleClickState.lastClickTime;
+
+                            if (Delay <= XSettingsManager.Instance.Settings.DoubleClickDelay * 2)
                             {
-                                IsDouble = true;
+                                if (Delay > GetDoubleClickTime() / 1000f)
+                                    IsDouble = true;
                                 DoubleClickState.lastClickTime = 0f;
                             }
                             else
@@ -41,18 +48,22 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                                 switch (clickActions.ActionIndex)
                                 {
                                     case 0:
-                                        MouseOperations.LMouseClick(XInputManager.sim);
+                                        XInputManager.sim.Mouse.LeftButtonDoubleClick();
                                         break;
                                     case 1:
-                                        MouseOperations.RMouseClick(XInputManager.sim);
+                                        XInputManager.sim.Mouse.RightButtonDoubleClick();
                                         break;
                                     case 2:
+                                        MouseOperations.MMouseClick(XInputManager.sim);
                                         MouseOperations.MMouseClick(XInputManager.sim);
                                         break;
                                 }
 
+                                return false;
                             }
                         }
+
+            return true;
         }
 
         private static bool IsEnable()
