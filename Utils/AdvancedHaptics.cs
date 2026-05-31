@@ -1,4 +1,5 @@
-﻿﻿using System.Collections;
+﻿using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Valve.VR;
 
@@ -6,6 +7,10 @@ namespace xsoverlay_tweak.Utils
 {
     internal class AdvancedHaptics
     {
+        private static readonly ConditionalWeakTable<object, Coroutine> HapticCoroutine = new();
+        private static readonly object LeftHandKey = new();
+        private static readonly object RightHandKey = new();
+
         /// <summary>
         /// Sends a haptic rumble with explicit control over frequency and strength.
         /// </summary>
@@ -16,12 +21,22 @@ namespace xsoverlay_tweak.Utils
         public static void Rumble(bool leftHand, float duration, float frequency, float strength)
         {
             uint deviceIndex = leftHand ? OVR_Pose_Handler.instance.leftIndex : OVR_Pose_Handler.instance.rightIndex;
+            object handKey = leftHand ? LeftHandKey : RightHandKey;
 
             if (deviceIndex != OpenVR.k_unTrackedDeviceIndexInvalid)
-                Plugin.Instance.StartCoroutine(DoRumble(deviceIndex, duration, frequency, strength));
+            {
+                if (HapticCoroutine.TryGetValue(handKey, out Coroutine Data))
+                {
+                    Plugin.Instance.StopCoroutine(Data);
+                    HapticCoroutine.Remove(handKey);
+                }
+
+                Coroutine coroutine = Plugin.Instance.StartCoroutine(DoRumble(handKey, deviceIndex, duration, frequency, strength));
+                HapticCoroutine.Add(handKey, coroutine);
+            }
         }
 
-        private static IEnumerator DoRumble(uint deviceIndex, float duration, float frequency, float strength)
+        private static IEnumerator DoRumble(object handKey, uint deviceIndex, float duration, float frequency, float strength)
         {
             float elapsed = 0f;
 
@@ -44,6 +59,8 @@ namespace xsoverlay_tweak.Utils
 
                 elapsed += timeBetweenPulses;
             }
+
+            HapticCoroutine.Remove(handKey);
         }
     }
 }
