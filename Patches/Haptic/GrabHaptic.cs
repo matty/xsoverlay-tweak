@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.Haptic
 
             if (HoverDictionary.TryGetValue(__instance, out HoverData Data))
             {
-                if (__instance.HeldOverlay.IsHeld && Data.IsHaptic)
+                if (__instance?.HeldOverlay?.IsHeld == true && Data.IsHaptic)
                 {
                     Data.IsHaptic = false;
 
