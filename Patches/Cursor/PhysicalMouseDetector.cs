@@ -29,7 +29,8 @@ namespace xsoverlay_tweak.Patches.Cursor
                 IsPhysicalMovement = false;
                 XSOEventSystem.Current.EventTakeControlOfDesktopCursor(__instance);
 
-                return false;
+                if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true)
+                    return false;
             }
 
             return true;
