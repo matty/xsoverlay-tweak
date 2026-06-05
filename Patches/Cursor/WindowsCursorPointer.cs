@@ -30,6 +30,8 @@ namespace xsoverlay_tweak.Patches.Cursor
             public Vector2 HotSpotOffset = Vector2.zero;
             public UI_RelativeTransformManipulator RelativeTransform;
             public bool IsCursor = false;
+            public uint AnimationFrame = 0;
+            public float LastFrameUpdateTime = 0;
         }
 
         private class XSWindowResult { public bool IsMatch; }
@@ -93,8 +95,13 @@ namespace xsoverlay_tweak.Patches.Cursor
                         ___VisualCursorElementOverlay.colorTint = Color.white;
 
                         // Only update the texture if the cursor handle has actually changed
-                        if (ci.hCursor != Data.LastCursorHandle || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture)
+                        if (ci.hCursor != Data.LastCursorHandle || IsPossiblyAnimatedCursor(ci.hCursor) || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture)
                         {
+                            if (ci.hCursor != Data.LastCursorHandle)
+                            {
+                                Data.AnimationFrame = 0;
+                                Data.LastFrameUpdateTime = 0;
+                            }
                             Data.IsCursor = true;
                             Data.LastCursorHandle = ci.hCursor;
 
@@ -153,6 +160,21 @@ namespace xsoverlay_tweak.Patches.Cursor
             CursorLocked_Ref(instance) = true;
             visualOverlay.AutoUpdateOverlayTexture = true;
             visualOverlay.overlayTexture = defaultIcon;
+        }
+
+        private static bool IsPossiblyAnimatedCursor(IntPtr hCursor)
+        {
+            IntPtr defaultArrow = LoadCursor(IntPtr.Zero, (IntPtr)32512); // IDC_ARROW
+            IntPtr textIBeam = LoadCursor(IntPtr.Zero, (IntPtr)32513);    // IDC_IBEAM
+            IntPtr sizeNS = LoadCursor(IntPtr.Zero, (IntPtr)32645);       // IDC_SIZENS
+            IntPtr sizeWE = LoadCursor(IntPtr.Zero, (IntPtr)32644);       // IDC_SIZEWE
+
+            if (hCursor == defaultArrow || hCursor == textIBeam || hCursor == sizeNS || hCursor == sizeWE)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         [HarmonyPatch("SetVisualCursorTransform")]
@@ -264,6 +286,30 @@ namespace xsoverlay_tweak.Patches.Cursor
         [DllImport("gdi32.dll")]
         static extern bool DeleteObject(IntPtr hObject);
 
+        [DllImport("user32.dll")]
+        static extern IntPtr GetDC(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr CreateDIBSection(IntPtr hdc, [In] ref BITMAPINFOHEADER pbmi, uint iUsage, out IntPtr ppvBits, IntPtr hSection, uint dwOffset);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr CreateCompatibleDC(IntPtr hdc);
+
+        [DllImport("gdi32.dll")]
+        static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
+
+        [DllImport("gdi32.dll")]
+        static extern bool DeleteDC(IntPtr hdc);
+
+        [DllImport("user32.dll")]
+        static extern bool DrawIconEx(IntPtr hdc, int xLeft, int yTop, IntPtr hIcon, int cxWidth, int cyWidth, uint istepIfAniCur, IntPtr hbrFlickerFreeDraw, uint diFlags);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        static extern IntPtr LoadCursor(IntPtr hInstance, IntPtr lpCursorName);
+
         private unsafe static Texture2D ExtractCurrentWindowsCursor(IntPtr hCursor, CursorData data, out Vector2 hotSpot)
         {
             hotSpot = Vector2.zero;
@@ -273,6 +319,7 @@ namespace xsoverlay_tweak.Patches.Cursor
 
             int w = 0, h = 0;
             bool isMonochrome = iconInfo.hbmColor == IntPtr.Zero;
+            bool isAnimated = IsPossiblyAnimatedCursor(hCursor);
 
             if (!isMonochrome)
             {
@@ -283,7 +330,48 @@ namespace xsoverlay_tweak.Patches.Cursor
                 int totalBytes = bm.bmWidthBytes * bm.bmHeight;
                 if (_rawPixelBuffer.Length < totalBytes) _rawPixelBuffer = new byte[totalBytes];
 
-                GetBitmapBits(iconInfo.hbmColor, totalBytes, _rawPixelBuffer);
+                // Only use the DIB section drawing for cursors that are likely animated (e.g., Wait, AppStarting)
+                // This fixes the 'stuck at first frame' issue while preserving static cursors like resize handles.
+                if (isAnimated)
+                {
+                    if (Time.time - data.LastFrameUpdateTime > 0.05f) // ~20 FPS
+                    {
+                        data.AnimationFrame++;
+                        data.LastFrameUpdateTime = Time.time;
+                    }
+
+                    IntPtr hdcScreen = GetDC(IntPtr.Zero);
+                    IntPtr hdcMem = CreateCompatibleDC(hdcScreen);
+
+                    BITMAPINFOHEADER bmi = new BITMAPINFOHEADER();
+                    bmi.biSize = (uint)Marshal.SizeOf(typeof(BITMAPINFOHEADER));
+                    bmi.biWidth = w;
+                    bmi.biHeight = -h; // Top-down DIB
+                    bmi.biPlanes = 1;
+                    bmi.biBitCount = 32;
+                    bmi.biCompression = 0; // BI_RGB
+
+                    IntPtr bitsPtr;
+                    IntPtr hbmDib = CreateDIBSection(hdcMem, ref bmi, 0, out bitsPtr, IntPtr.Zero, 0);
+                    IntPtr hOld = SelectObject(hdcMem, hbmDib);
+
+                    if (!DrawIconEx(hdcMem, 0, 0, hCursor, w, h, data.AnimationFrame, IntPtr.Zero, 0x0003))
+                    {
+                        data.AnimationFrame = 0;
+                        DrawIconEx(hdcMem, 0, 0, hCursor, w, h, 0, IntPtr.Zero, 0x0003);
+                    }
+
+                    Marshal.Copy(bitsPtr, _rawPixelBuffer, 0, totalBytes);
+
+                    SelectObject(hdcMem, hOld);
+                    DeleteObject(hbmDib);
+                    DeleteDC(hdcMem);
+                    ReleaseDC(IntPtr.Zero, hdcScreen);
+                }
+                else
+                {
+                    GetBitmapBits(iconInfo.hbmColor, totalBytes, _rawPixelBuffer);
+                }
             }
             else
             {
@@ -389,6 +477,22 @@ namespace xsoverlay_tweak.Patches.Cursor
             DeleteObject(iconInfo.hbmMask);
 
             return texture;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct BITMAPINFOHEADER
+        {
+            public uint biSize;
+            public int biWidth;
+            public int biHeight;
+            public ushort biPlanes;
+            public ushort biBitCount;
+            public uint biCompression;
+            public uint biSizeImage;
+            public int biXPelsPerMeter;
+            public int biYPelsPerMeter;
+            public uint biClrUsed;
+            public uint biClrImportant;
         }
     }
 }
