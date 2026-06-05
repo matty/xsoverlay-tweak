@@ -54,7 +54,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardSettings', name: 'Dashboard Settings', description: 'Allows the Settings WebView Overlay to be displayed over the SteamVR Dashboard.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWindow', name: 'Dashboard Window', description: 'Allows Capture Overlay to be displayed over the SteamVR Dashboard.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.DashboardWrist', name: 'Dashboard Wrist', description: 'Allows the Wrist Overlay to be displayed over the SteamVR Dashboard.', default: true },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.Dashboardkeyboard', name: 'Dashboard Keyboard', description: 'Allows the Keyboard to be displayed over the SteamVR Dashboard.<br>- Incompatible with Keyboard OSC mod.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.Dashboardkeyboard', name: 'Dashboard Keyboard', description: 'Allows the Keyboard to be displayed over the SteamVR Dashboard.', default: false },
                 ]
             },
             {
@@ -73,7 +73,7 @@ function InjectKBOSCTab() {
             {
                 name: 'Optimization', priority: 7, settings: [
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.EfficiencyMode', name: 'Efficiency Mode', description: 'Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.InactiveRefreshRate', name: 'Inactive Refresh Rate', description: 'The target Refresh Rate for XSOverlay rendering when Efficiency Mode is active.<br>Very low value: the Layout Mode Toggle binding listener will miss some frames.', default: 15, options: [5, <<HMDRefreshRate>>, 1], unit: 'FPS' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.InactiveRefreshRate', name: 'Inactive Refresh Rate', description: 'The target Refresh Rate for XSOverlay rendering when not interacting with any Overlay.<br>Very low value: the Layout Mode Toggle binding listener will miss some frames.', default: 15, options: [5, <<HMDRefreshRate>>, 1], unit: 'FPS' },
                 ]
             },
             {

@@ -94,7 +94,7 @@ namespace xsoverlay_tweak
             DashboardSettings = cfg.Bind("Dashboard", "DashboardSettings", true, "Keeps Settings Overlay visible while the SteamVR Dashboard is open.");
             DashboardWindow = cfg.Bind("Dashboard", "DashboardWindow", false, "Keeps Capture Overlay visible while the SteamVR Dashboard is open.");
             DashboardWrist = cfg.Bind("Dashboard", "DashboardWrist", true, "Keeps Wrist Overlay visible while the SteamVR Dashboard is open.");
-            Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Keeps Keyboard visible while the SteamVR Dashboard is open.\n- Incompatible with Keyboard OSC mod.");
+            Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Keeps Keyboard visible while the SteamVR Dashboard is open.");
 
             // Haptic
             GrabHaptic = cfg.Bind("Haptic", "GrabHaptic", 50, "Plays a haptic feedback when grab any Overlay.");
@@ -108,7 +108,7 @@ namespace xsoverlay_tweak
 
             // Optimization
             EfficiencyMode = cfg.Bind("Optimization", "EfficiencyMode", true, "Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.");
-            InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The target Refresh Rate for XSOverlay rendering when Efficiency Mode is active.\nVery low value: the Layout Mode Toggle binding listener will miss some frames.");
+            InactiveRefreshRate = cfg.Bind("Optimization", "InactiveRefreshRate", 15, "The target Refresh Rate for XSOverlay rendering when not interacting with any Overlay.\nVery low value: the Layout Mode Toggle binding listener will miss some frames.");
 
             // Quality of Life
             DefaultCaptureOverlayTexture = cfg.Bind("QualityOfLife", "DefaultCaptureOverlayTexture", true, "Initializes a Capture Overlay with a white texture to prevent new spawns from appearing invisible.");

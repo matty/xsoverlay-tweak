@@ -21,8 +21,20 @@ namespace xsoverlay_tweak.Patches
         }
 
         [HarmonyPatch(typeof(Unity_Overlay), "Start")]
+        [HarmonyPrefix]
+        public static void OverlayPreStart(Unity_Overlay __instance)
+        {
+            if (__instance == null) return;
+            string overlayName = __instance.overlayName;
+            if (string.IsNullOrEmpty(overlayName)) return;
+
+            if (overlayName == "chatbar") // Fix xsoverlay-keyboard-osc canvas invisible
+                __instance.isDashboardOverlay = false;
+        }
+
+        [HarmonyPatch(typeof(Unity_Overlay), "Start")]
         [HarmonyPostfix]
-        public static void OverlayStart(Unity_Overlay __instance)
+        public static void OverlayPostStart(Unity_Overlay __instance)
         {
             if (__instance == null) return;
             string overlayName = __instance.overlayName;
@@ -59,7 +71,7 @@ namespace xsoverlay_tweak.Patches
                 state = XConfig.DashboardSettings.Value;
             else if (name == "wrist")
                 state = XConfig.DashboardWrist.Value;
-            else if (name == "keyboard")
+            else if (name == "keyboard" || name == "chatbar")
                 state = XConfig.Dashboardkeyboard.Value;
             else if (name == "tooltip" || name == "splash")
                 state = XConfig.DashboardSettings.Value || XConfig.DashboardWrist.Value;
