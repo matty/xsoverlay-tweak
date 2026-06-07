@@ -66,7 +66,10 @@ namespace xsoverlay_tweak.Utils
                         IsHoverAnyDesktopCapture = true;
                     if (overlay?.IsWindowCapture == true)
                         IsHoverAnyWindowCapture = true;
-                    CurrentHoveringOverlay = overlay;
+
+                    if (IsActiveHand(raycaster))
+                        CurrentHoveringOverlay = overlay;
+
                     Ref_DeviceManager.GetHMDRefreshRate(__instance);
 
                     OnSwitchHoveringOverlay?.Invoke(raycaster, overlay);
@@ -76,6 +79,9 @@ namespace xsoverlay_tweak.Utils
                 {
                     IsHoverAnyOverlay = true;
                     Ref_DeviceManager.GetHMDRefreshRate(__instance);
+
+                    if (IsActiveHand(raycaster))
+                        CurrentHoveringOverlay = raycaster.HoveringOverlay;
 
                     if (CurrentHoveringOverlayCoroutine != null)
                         Plugin.Instance.StopCoroutine(CurrentHoveringOverlayCoroutine);
