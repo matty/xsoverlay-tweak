@@ -3,7 +3,6 @@ using BepInEx.Logging;
 using HarmonyLib;
 using System.Threading.Tasks;
 using xsoverlay_tweak.Utils;
-using xsoverlay_tweak.Utils.API;
 
 namespace xsoverlay_tweak;
 

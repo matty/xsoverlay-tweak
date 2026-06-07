@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Valve.VR;
 using XSOverlay;
-using xsoverlay_tweak.Utils.API;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.QualityOfLife
 {
