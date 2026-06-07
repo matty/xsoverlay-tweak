@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Valve.VR;
 using XSOverlay;
+using xsoverlay_tweak.Utils.API;
 
 namespace xsoverlay_tweak.Patches.QualityOfLife
 {
@@ -14,6 +15,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
         private static bool IsClosing = false;
         private static bool IsPerformanceMonitor = false;
+        private static bool IsMediaPlayer = false;
         private static Coroutine ClosingCoroutine;
 
         [HarmonyPatch(typeof(DeviceManager), "Awake")]
@@ -27,15 +29,19 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 if (XConfig.fpsVRSocket.Value == 1) // Top
                 {
                     if (ClosingCoroutine != null)
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-
-                    if (!enable)
                     {
-                        IsClosing = true;
+                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
+                        ClosingCoroutine = null;
+                    }
+
+                    IsClosing = !enable;
+
+                    if (IsClosing)
+                        ChangefpsVRTranform();
+                    else
+                    {
                         ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
                     }
-                    else
-                        ChangefpsVRTranform();
                 }
             };
 
@@ -48,13 +54,38 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 if (XConfig.fpsVRSocket.Value == 1) // Top
                 {
                     if (ClosingCoroutine != null)
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-
-                    if (!enable)
                     {
-                        IsClosing = true;
-                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
+                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
+                        ClosingCoroutine = null;
                     }
+
+                    IsClosing = !enable;
+
+                    if (IsClosing)
+                        ChangefpsVRTranform();
+                    else
+                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
+                }
+            };
+
+            CustomAPI.OnToggleMediaPlayer += (enable) =>
+            {
+                if (!IsEnabled()) return;
+
+                IsMediaPlayer = enable;
+
+                if (XConfig.fpsVRSocket.Value == 2) // Bottom
+                {
+                    if (ClosingCoroutine != null)
+                    {
+                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
+                        ClosingCoroutine = null;
+                    }
+
+                    IsClosing = !enable;
+
+                    if (IsClosing)
+                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
                     else
                         ChangefpsVRTranform();
                 }
@@ -107,18 +138,9 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 ChangefpsVRTranform();
         }
 
-        [HarmonyPatch(typeof(Raycaster), "Drop")]
-        [HarmonyPostfix]
-        public static void UpdateOnPostMoved()
-        {
-            if (!IsEnabled()) return;
-
-            ChangefpsVRTranform();
-        }
-
         private static void ChangefpsVRTranform()
         {
-            if (fpsVRHandle == 0 || WristOverlay.Instance == null) return;
+            if (fpsVRHandle == 0 || WristOverlay.Instance == null || WristOverlay.Instance.overlay.overlay.overlayTexture == null) return;
 
             // Get the real runtime physical sizes directly from the active XSOverlay instance metrics
             float xsoWidth = WristOverlay.Instance.overlay.overlay.overlayTexture.width;
@@ -158,7 +180,10 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             {
                 float yOffset = -((xsoHeightInMeters / 2f) + (fpsHeightInMeters / 2f));
 
-                yOffset += (xsoHeightInMeters * +0.3f);
+                if (IsMediaPlayer)
+                    yOffset += (xsoHeightInMeters * +0.15f);
+                else
+                    yOffset += (xsoHeightInMeters * +0.3f);
 
                 overlayTransform = AddOffset(overlayTransform, new Vector3(0f, yOffset, 0f), Quaternion.identity);
             }
