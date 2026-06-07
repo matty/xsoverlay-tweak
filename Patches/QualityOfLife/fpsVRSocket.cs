@@ -18,9 +18,9 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         private static bool IsMediaPlayer = false;
         private static Coroutine ClosingCoroutine;
 
-        [HarmonyPatch(typeof(DeviceManager), "Awake")]
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
-        public static void Awake(DeviceManager __instance)
+        public static void Awake()
         {
             XSOEventSystem.OnToggleLayoutMode += (enable) =>
             {

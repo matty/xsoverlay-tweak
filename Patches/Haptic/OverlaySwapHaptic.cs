@@ -3,10 +3,9 @@ using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.Haptic
 {
-    [HarmonyPatch(typeof(DeviceManager))]
     internal class OverlaySwapHaptic
     {
-        [HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(UpdateDateTime)), HarmonyPatch("Awake")]
         [HarmonyPostfix]
         public static void InitializeEvents()
         {
@@ -16,7 +15,6 @@ namespace xsoverlay_tweak.Patches.Haptic
 
                 if (raycaster.HeldOverlay == null && overlay != null)
                     AdvancedHaptics.Rumble(raycaster.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, XConfig.OverlaySwapHaptic.Value / 100f);
-
             };
         }
 
