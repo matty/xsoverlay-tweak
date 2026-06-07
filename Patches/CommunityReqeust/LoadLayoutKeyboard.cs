@@ -29,7 +29,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                 root["keyboard"] = new JObject
                 {
                     ["position"] = new JArray(keyboard.transform.localPosition.x, keyboard.transform.localPosition.y, keyboard.transform.localPosition.z),
-                    ["rotation"] = new JArray(keyboard.transform.localRotation.x, keyboard.transform.localRotation.y, keyboard.transform.localRotation.z, keyboard.transform.localRotation.w)
+                    ["rotation"] = new JArray(keyboard.transform.localRotation.x, keyboard.transform.localRotation.y, keyboard.transform.localRotation.z, keyboard.transform.localRotation.w),
+                    ["widthInMeters"] = keyboard.widthInMeters,
                 };
 
                 File.WriteAllText(text, root.ToString(Formatting.Indented));
@@ -49,14 +50,16 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             JObject root = JObject.Parse(File.ReadAllText(text));
             JToken keyboardData = root["keyboard"];
 
+            KeyboardGlobalManager keyboardManager = (KeyboardGlobalManager)AccessTools.Field(typeof(Overlay_Manager), "keyboardManager").GetValue(Overlay_Manager.Instance);
+
             if (keyboardData == null)
             {
-                if (Overlay_Manager.Instance.Keyboard.activeSelf)
+                if (Overlay_Manager.Instance.Keyboard.activeSelf && keyboardManager?.HasKeyboardBeenOpened == true)
                     ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
             }
             else
             {
-                if (!Overlay_Manager.Instance.Keyboard.activeSelf)
+                if (!Overlay_Manager.Instance.Keyboard.activeSelf || keyboardManager?.HasKeyboardBeenOpened == false)
                     ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
 
                 Task.Run(async () =>
@@ -70,6 +73,9 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 
                     if (keyboardData["rotation"] is JArray rot && rot.Count == 4)
                         keyboard.transform.localRotation = new Quaternion((float)rot[0], (float)rot[1], (float)rot[2], (float)rot[3]);
+
+                    if (keyboardData["widthInMeters"] != null)
+                        keyboard.widthInMeters = float.Parse(keyboardData["widthInMeters"].ToString());
                 });
             }
         }

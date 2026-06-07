@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using System.IO;
+using XSOverlay;
+using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
 
 namespace xsoverlay_tweak.Patches.CommunityReqeust
@@ -32,6 +34,32 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                     string patched = content.Replace(original, edited);
                     File.WriteAllText(filePath, patched);
                 }
+            }
+        }
+
+        [HarmonyPatch(typeof(OverlayWebView), "Awake")]
+        [HarmonyPrefix]
+        public static bool ChangeWindowToolbarDimension(OverlayWebView __instance)
+        {
+            if (!IsEnable()) return true;
+
+            if (__instance.UserInterfaceSelection == OverlayWebView.UserInterfacePaths.WindowToolbar)
+                __instance.Width += 110;
+
+            return true;
+        }
+
+        [HarmonyPatch(typeof(Overlay_Manager), "EnableKeyboard")]
+        [HarmonyPostfix]
+        public static void SpawnKeyboardPostionFix(Overlay_Manager __instance, KeyboardGlobalManager ___keyboardManager)
+        {
+            if (!IsEnable()) return;
+
+            if (___keyboardManager?.HasKeyboardBeenOpened == true)
+            {
+                __instance.Keyboard_Overlay.transform.position = OverlaySwitcher.Instance.ToolBarWindowOverlay.transform.position;
+                __instance.Keyboard_Overlay.transform.rotation = OverlaySwitcher.Instance.ToolBarWindowOverlay.transform.rotation;
+                __instance.Keyboard_Overlay.transform.position += __instance.Keyboard_Overlay.transform.forward * -0.2f;
             }
         }
 
