@@ -60,6 +60,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> OverlayRollCurveFix;
         public static ConfigEntry<bool> WebViewFix;
 
+        public static ConfigEntry<bool> HideBattery;
         public static ConfigEntry<bool> LoadLayoutKeyboard;
         public static ConfigEntry<bool> WindowToolbarKeyboard;
         public static ConfigEntry<bool> WristStateRestore;
@@ -134,6 +135,7 @@ namespace xsoverlay_tweak
             WebViewFix = cfg.Bind("Fix", "WebViewFix", true, "Fixes an issue where certain WebView UI elements were not clickable.");
 
             // Community Reqeust
+            HideBattery = cfg.Bind("CommunityReqeust", "Hide Battery", false, "Hide Wrist Overlay battery information widget.");
             LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "Layout Keyboard State", true, "Layout will save the current keyboard state to the selected profile.");
             WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "Window Toolbar Keyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityReqeust", "Wrist State Restore", true, "Restore the last Wrist Overlay state at launch.");

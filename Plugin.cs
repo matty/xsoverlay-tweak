@@ -70,6 +70,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
         harmony.PatchAll(typeof(Patches.Fix.WebViewFix));
 
+        harmony.PatchAll(typeof(Patches.CommunityReqeust.HideBattery));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.LoadLayoutKeyboard));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.MouseButtonSwap));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.WindowToolbarKeyboard));

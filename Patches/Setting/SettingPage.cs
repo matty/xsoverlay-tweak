@@ -95,6 +95,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.WebViewFix"] = XConfig.WebViewFix.Value,
 
                 // Community Reqeust
+                ["XSOverlayTweak.HideBattery"] = XConfig.HideBattery.Value,
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
@@ -273,6 +274,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
 
                 // Community Reqeust
+                case "XSOverlayTweak.HideBattery":
+                    XConfig.HideBattery.Value = bool.Parse(value);
+                    break;
                 case "XSOverlayTweak.LoadLayoutKeyboard":
                     XConfig.LoadLayoutKeyboard.Value = bool.Parse(value);
                     break;
