@@ -2,21 +2,34 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
+using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
 
 namespace xsoverlay_tweak.Patches.CommunityReqeust
 {
     internal class HideInvalidBattery
     {
+        public static Dictionary<uint, DeviceManager.Device> Devices;
+
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
+        [HarmonyPostfix]
+        public static void ListenForConfigChange()
+        {
+            XConfig.HideInvalidBattery.SettingChanged += (sender, args) =>
+            {
+                ServerClientBridge.Instance.Api.Commands["RequestDeviceInformation"]("systemui_GlobalToolbar", "", "");
+            };
+        }
+
         [HarmonyPatch(typeof(ApiHandler), "OnRequestDeviceInformation")]
         [HarmonyPrefix]
         public static bool UpdateDevices(ApiHandler __instance, string sender, string data)
         {
+            Devices = new(DeviceManager.Instance.Devices);
+
             if (!IsEnable()) return true;
 
-            Dictionary<uint, DeviceManager.Device> Devices = DeviceManager.Instance.Devices;
-
-            foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices)
+            foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices.ToList())
                 if (item.Value.battery == 0 || !item.Value.isSupported)
                     Devices.Remove(item.Key);
 

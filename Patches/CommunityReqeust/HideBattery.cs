@@ -12,7 +12,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
-        public static void Init()
+        public static void ListenForConfigChange()
         {
             XConfig.HideBattery.SettingChanged += (sender, args) =>
             {
