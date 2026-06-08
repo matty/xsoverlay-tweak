@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Valve.VR;
 using XSOverlay;
+using xsoverlay_tweak.Patches.CommunityReqeust;
 using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.QualityOfLife
@@ -27,20 +28,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 if (!IsEnabled()) return;
 
                 if (XConfig.fpsVRSocket.Value == 1 || XConfig.fpsVRSocket.Value == 2) // Top, Bottom
-                {
-                    if (ClosingCoroutine != null)
-                    {
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-                        ClosingCoroutine = null;
-                    }
-
-                    IsClosing = !enable;
-
-                    if (IsClosing)
-                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
-                    else
-                        ChangefpsVRTranform();
-                }
+                    RefreshWristState(enable);
             };
 
             XSOEventSystem.OnStartStopPerformanceMonitor += (enable) =>
@@ -50,20 +38,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 IsPerformanceMonitor = enable;
 
                 if (XConfig.fpsVRSocket.Value == 1 || XConfig.fpsVRSocket.Value == 2) // Top, Bottom
-                {
-                    if (ClosingCoroutine != null)
-                    {
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-                        ClosingCoroutine = null;
-                    }
-
-                    IsClosing = !enable;
-
-                    if (IsClosing)
-                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
-                    else
-                        ChangefpsVRTranform();
-                }
+                    RefreshWristState(enable);
             };
 
             CustomAPI.OnToggleMediaPlayer += (enable) =>
@@ -73,20 +48,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                {
-                    if (ClosingCoroutine != null)
-                    {
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-                        ClosingCoroutine = null;
-                    }
-
-                    IsClosing = !enable;
-
-                    if (IsClosing)
-                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
-                    else
-                        ChangefpsVRTranform();
-                }
+                    RefreshWristState(enable);
             };
 
             CustomAPI.OnClickToggleMediaPlayer += (enable) =>
@@ -96,23 +58,17 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                {
-                    if (ClosingCoroutine != null)
-                    {
-                        Plugin.Instance.StopCoroutine(ClosingCoroutine);
-                        ClosingCoroutine = null;
-                    }
-
-                    IsClosing = !enable;
-
-                    if (IsClosing)
-                        ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
-                    else
-                        ChangefpsVRTranform();
-                }
+                    RefreshWristState(enable);
             };
 
             XConfig.fpsVRSocket.SettingChanged += (sender, args) =>
+            {
+                if (!IsEnabled()) return;
+
+                ChangefpsVRTranform();
+            };
+
+            XConfig.HideBattery.SettingChanged += (sender, args) =>
             {
                 if (!IsEnabled()) return;
 
@@ -201,7 +157,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             {
                 float yOffset = -((xsoHeightInMeters / 2f) + (fpsHeightInMeters / 2f));
 
-                if (IsMediaPlayer)
+                if (IsMediaPlayer && !HideBattery.IsEnable())
                     yOffset += (xsoHeightInMeters * +0.15f);
                 else if (IsPerformanceMonitor && Overlay_Manager.Instance.editMode)
                     yOffset += (xsoHeightInMeters * +0.23f);
@@ -226,7 +182,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 //ETrackingUniverseOrigin overlayTransformAbsoluteTrackingOrigin = WristOverlay.Instance.overlay.overlay.overlayTransformAbsoluteTrackingOrigin;
                 //error = Overlay.SetOverlayTransformAbsolute(fpsVRHandle, overlayTransformAbsoluteTrackingOrigin, ref overlayTransform);
             }
-            else // Apply tracking changes to the target handle destination
+            else // ExecuteJava tracking changes to the target handle destination
             {
                 uint overlayTransformTrackedDeviceRelativeIndex = WristOverlay.Instance.overlay.overlay.overlayTransformTrackedDeviceRelativeIndex;
                 error = Overlay.SetOverlayTransformTrackedDeviceRelative(fpsVRHandle, overlayTransformTrackedDeviceRelativeIndex, ref overlayTransform);
@@ -268,6 +224,22 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             };
 
             return result;
+        }
+
+        private static void RefreshWristState(bool enable)
+        {
+            if (ClosingCoroutine != null)
+            {
+                Plugin.Instance.StopCoroutine(ClosingCoroutine);
+                ClosingCoroutine = null;
+            }
+
+            IsClosing = !enable;
+
+            if (IsClosing)
+                ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
+            else
+                ChangefpsVRTranform();
         }
 
         private static bool IsEnabled()
