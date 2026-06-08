@@ -42,7 +42,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 {
                     if (__instance.HoveringOverlay != null && !__instance.HoveringOverlay.IsHeld && !__instance.HoveringOverlay.IsLocked && __instance.HeldOverlay == null)
-                        if ((XConfig.PullTriggerPointerLock.Value == 1 && __instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true) || XConfig.PullTriggerPointerLock.Value == 2)
+                        if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true || (XConfig.PullTriggerPointerLock.Value == 2 && __instance?.HoveringOverlay?.IsPluginApplication == true))
                         {
                             Data.IsDown = ___HadMouseInputDown || ___HoldingTouch || ___IsWebViewTouchEventDown;
 
