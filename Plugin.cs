@@ -21,7 +21,7 @@ public class Plugin : BaseUnityPlugin
         XConfig.AllConfig(Config);
 
         harmony.PatchAll(typeof(CustomAPI));
-        harmony.PatchAll(typeof(CutomSettings));
+        harmony.PatchAll(typeof(CustomSettings));
         harmony.PatchAll(typeof(EventBridge));
 
         harmony.PatchAll(typeof(Patches.RefreshRate));

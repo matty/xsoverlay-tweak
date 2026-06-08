@@ -5,7 +5,7 @@ using XSOverlay;
 
 namespace xsoverlay_tweak.Utils
 {
-    internal class CutomSettings
+    internal class CustomSettings
     {
         public static XSettings Settings = new();
 

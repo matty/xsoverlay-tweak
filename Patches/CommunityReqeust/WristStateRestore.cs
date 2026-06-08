@@ -16,14 +16,14 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         {
             XSOEventSystem.OnStartStopPerformanceMonitor += (enable) =>
             {
-                CutomSettings.Settings.IsPerformanceMonitorOpened = enable;
-                CutomSettings.SaveSettings();
+                CustomSettings.Settings.IsPerformanceMonitorOpened = enable;
+                CustomSettings.SaveSettings();
             };
 
             CustomAPI.OnClickToggleMediaPlayer += (enable) =>
             {
-                CutomSettings.Settings.IsMediaPlayerOpened = enable;
-                CutomSettings.SaveSettings();
+                CustomSettings.Settings.IsMediaPlayerOpened = enable;
+                CustomSettings.SaveSettings();
             };
         }
 
@@ -41,7 +41,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                         if ({1} && !GetShowMediaPlayer()) {{
                             MiniToolbar.MediaPlayer.click();
                         }};
-                    }})()", CutomSettings.Settings.IsPerformanceMonitorOpened.ToString().ToLower(), CutomSettings.Settings.IsMediaPlayerOpened.ToString().ToLower());
+                    }})()", CustomSettings.Settings.IsPerformanceMonitorOpened.ToString().ToLower(), CustomSettings.Settings.IsMediaPlayerOpened.ToString().ToLower());
 
                 wv._webView.WebView.LoadProgressChanged += (sender, args) =>
                 {
