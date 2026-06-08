@@ -53,24 +53,23 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         public static void AddCSS(OverlayWebView wv)
         {
             string styleId = GetStyleId();
-
             string jsCode = string.Format(@"
-    (function() {{
-        if (!document.head) return 'ERROR: No Head';
-        const id = '{0}';
-        let style = document.getElementById(id);
-        if (!style) {{
-            style = document.createElement('style');
-            style.id = id;
-            document.head.appendChild(style);
-        }}
-        style.innerHTML = `
-            ::-webkit-scrollbar {{
-				width: 15px;
-			}}
-        `;
-        return 'SUCCESS: Applied ' + id;
-    }})();", styleId);
+            (function() {{
+                if (!document.head) return 'ERROR: No Head';
+                const id = '{0}';
+                let style = document.getElementById(id);
+                if (!style) {{
+                    style = document.createElement('style');
+                    style.id = id;
+                    document.head.appendChild(style);
+                }}
+                style.innerHTML = `
+                    ::-webkit-scrollbar {{
+				        width: 17px;
+			        }}
+                `;
+                return 'SUCCESS: Applied ' + id;
+            }})();", styleId);
 
             wv._webView.WebView.ExecuteJavaScript(jsCode, (result) =>
             {
@@ -85,14 +84,14 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             string styleId = GetStyleId();
             string jsCode = $@"
-    (function() {{
-        const style = document.getElementById('{styleId}');
-        if (style) {{
-            style.remove();
-            return 'SUCCESS: Removed ' + '{styleId}';
-        }}
-        return 'SUCCESS: Not found';
-    }})();";
+            (function() {{
+                const style = document.getElementById('{styleId}');
+                if (style) {{
+                    style.remove();
+                    return 'SUCCESS: Removed ' + '{styleId}';
+                }}
+                return 'SUCCESS: Not found';
+            }})();";
 
             wv._webView.WebView.ExecuteJavaScript(jsCode, (result) =>
             {
