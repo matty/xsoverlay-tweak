@@ -250,7 +250,7 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.PullTriggerClickThreshold.Value = float.Parse(value);
                     break;
                 case "XSOverlayTweak.PullTriggerPointerLock":
-                    XConfig.PullTriggerPointerLock.Value = bool.Parse(value);
+                    XConfig.PullTriggerPointerLock.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.WebViewWiderScroll":
                     XConfig.WebViewWiderScroll.Value = bool.Parse(value);
