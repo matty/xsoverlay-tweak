@@ -96,6 +96,7 @@ namespace xsoverlay_tweak.Patches.Setting
 
                 // Community Reqeust
                 ["XSOverlayTweak.HideBattery"] = XConfig.HideBattery.Value,
+                ["XSOverlayTweak.HideInvalidBattery"] = XConfig.HideInvalidBattery.Value,
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
@@ -276,6 +277,9 @@ namespace xsoverlay_tweak.Patches.Setting
                 // Community Reqeust
                 case "XSOverlayTweak.HideBattery":
                     XConfig.HideBattery.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.HideInvalidBattery":
+                    XConfig.HideInvalidBattery.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.LoadLayoutKeyboard":
                     XConfig.LoadLayoutKeyboard.Value = bool.Parse(value);
