@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 using Valve.VR;
 using XSOverlay;
@@ -65,6 +66,14 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             {
                 if (!IsEnabled()) return;
 
+                ChangefpsVRTranform();
+            };
+
+            XConfig.HideInvalidBattery.SettingChanged += async (sender, args) =>
+            {
+                if (!IsEnabled()) return;
+
+                await Task.Delay(100);
                 ChangefpsVRTranform();
             };
 
@@ -156,11 +165,17 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             else if (XConfig.fpsVRSocket.Value == 2) // Bottom
             {
                 float yOffset = -((xsoHeightInMeters / 2f) + (fpsHeightInMeters / 2f));
+                bool isBattery = !HideBattery.IsEnable() && !HideInvalidBattery.Devices.Count.Equals(0);
 
-                if (IsMediaPlayer && !HideBattery.IsEnable())
-                    yOffset += (xsoHeightInMeters * +0.15f);
+                if (IsMediaPlayer)
+                    if (isBattery)
+                        yOffset += (xsoHeightInMeters * +0.15f);
+                    else
+                        yOffset += (xsoHeightInMeters * +0.3f);
                 else if (IsPerformanceMonitor && Overlay_Manager.Instance.editMode)
                     yOffset += (xsoHeightInMeters * +0.23f);
+                else if (!isBattery)
+                    yOffset += (xsoHeightInMeters * +0.45f);
                 else
                     yOffset += (xsoHeightInMeters * +0.3f);
 
