@@ -1,7 +1,7 @@
 <div align="center">
 
   # XSOverlay Tweak
-  ### A comprehensive enhancement mod for  [XSOverlay](https://store.steampowered.com/app/1173510/XSOverlay/) that provides advanced performance tuning, cursor improvements, custom interaction mechanics, and various quality-of-life fixes.
+  ### Quality-of-life [XSOverlay](https://store.steampowered.com/app/1173510/XSOverlay/) improvements, including frame rate override, pointer laser, and issue fixes. 
 </div>
 
 ## 🖥️ Screenshot
@@ -10,54 +10,61 @@
 ## Features
 
 ### 🚀 Refresh Rate
-- **Target Refresh Rate**: Set a custom frame rate for XSOverlay rendering to improve responsiveness or reduce CPU usage.
-- **Contextual Performance**: Optionally apply high refresh rates only when hovering over an overlay or while in Layout Mode.
+- **Target Refresh Rate**: The target frame rate for XSOverlay rendering.
+- **Contextual Performance**: Optionally apply Target Refresh Rate only when hovering over an overlay or while in Layout Mode.
 
 ### 🖱️ Cursor & Mouse
-- **Windows Cursor Pointer**: Replaces the standard pointer with the actual Windows cursor image for a native "SteamVR Dashboard" feel.
-- **Latency Reduction**: "Always Update" sends cursor positions before desktop frames are captured to eliminate one-frame lag.
-- **Mouse Smoothing**: Multiple levels of smoothing (Ultra Low to Very High) for high-precision desktop interaction.
-- **Physical Mouse Detector:** Relinquishes VR pointer control automatically when physical mouse movement is detected.
-- **Always Hide**: Forcefully hides the system cursor in capture overlays.
+- **Always Hide**: Forcefully hides the system Windows Cursor in Desktop and Window Capture Overlay.
+- **Always Update**: Reduces Windows Cursor latency by sending the position from the Pointer before the desktop frame is captured.
+- **Mouse Smoothing**: Adjusts the level of smoothing applied to the Windows Cursor within Capture Overlay.
+- **Physical Mouse Detector**: Relinquishes Pointer control when physical mouse movement is detected.
+- **Windows Cursor Pointer**: Hides the Capture Overlay Cursor and uses the Windows Cursor image as the Pointer to mimic the SteamVR Dashboard.
 
 ### 👈 Pointer & Interaction
-- **Active Click**: Clicking with the inactive hand makes it active and performs a click simultaneously for seamless two-hand interaction.
-- **Inactive Pointer Visuals**: Highlights the inactive hand's pointer in red with adjustable opacity for easier identification.
-- **WebView Integration**: Applies inactive pointer features to internal UIs like Settings, Wrist, and other WebViews.
-- **Scale Multiplier**: Adjust the pointer scale relative to global XSOverlay settings.
-- **Double Click Delay**: Applies XSOverlay's double-click delay to the physical pointer itself.
-- **Click Animation**: Enables visual feedback for clicks when using Emulate Mouse mode.
+- **Active WebViews**: Applies the inactive Pointer features to WebView Overlay such as Settings, Wrist, and others.
+- **Emulate Mouse Click Animation**: Enables the Pointer click visual animation for Input Method > Emulate Mouse.
+- **Inactive Highlight**: Highlights the inactive hand's Pointer in red for easier identification.
+- **Inactive Opacity**: Sets the opacity level for the inactive hand's Pointer.
+- **Active Click**: Clicking the inactive hand's Pointer makes it the Active Hand and performs a Mouse Click simultaneously for two-hand interaction.
+- **Double Click Delay**: Applies the Double Click Delay from XSOverlay settings to the physical Pointer itself, not just the cursor.
+- **Scale Multiplier**: Multiplier for the Pointer scale relative to the global XSOverlay setting.
+
 
 ### 🎮 Mouse Navigation
-- **Browser Navigation**: Custom SteamVR bindings for Mouse Forward and Mouse Back actions.
-- **Keyboard Emulation**: Option to use `Alt + Left/Right` shortcuts for navigation, targeting the focused window.
+- **Enable**: Custom keybindings for Mouse Forward/Back navigation.
+- **Use Alt+Left/Right**: Use Alt+Left/Right keyboard shortcuts for navigation instead of Mouse Clicks. Targets the focused window instead of the hovered window.
+
 
 ### 🖥️ Dashboard Overlay
-- **Persistent Visibility**: Choose which overlays remain visible and interactive while the SteamVR Dashboard is open:
+- **Persistent Visibility**: Allows Overlys to be displayed over the SteamVR Dashboard
   - Notifications, Pointer, Settings, Capture Windows, Wrist, and Keyboard.
 
 ### 📳 Haptic Feedback
-- **Granular Feedback**: Individual strength sliders (0-100%) for various interactions:
+- **Granular Feedback**: Individual various interactions:
   - Grabbing, Keyboard Hover/Press, Overlay Swapping, WebView interaction, and Pointer Locking.
-- **Contextual Vibrations**: Haptic feedback for Sticky Keys and toggling Layout Mode.
+- **Contextual Vibrations**: Haptic feedback for Sticky Keys and toggle Layout Mode.
 
 ### ⚡ Optimization
-- **Efficiency Mode**: Enables Windows Efficiency Mode for the XSOverlay process to minimize resource usage.
-- **Inactive Refresh Rate**: Set a very low target frame rate (down to 5 FPS) when not interacting with any overlays.
+- **Efficiency Mode**: Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.
+- **Inactive Refresh Rate**: The target Refresh Rate for XSOverlay rendering when not interacting with any Overlay.
 
 ### ✨ Quality of Life
-- **Laser Pointer**: Renders a laser from controllers (mimicking SteamVR) for more accurate targeting.
-- **Trigger Lock**: "Pull Trigger Pointer Lock" keeps the pointer steady while clicking to prevent accidental movement.
-- **Interaction Logic**: Enhances "Pinned" or "Block Input" overlays to only allow interaction when Layout Mode is active.
-- **WebView Enhancements**: Wider scrollbars for easier VR interaction.
-- **Wrist Improvements**: Increased allowed positioning radius for the Wrist Overlay.
-- **Visual Fixes**: Initializes capture overlays with a white texture to prevent them from appearing invisible on spawn.
+- **Default Capture Overlay Texture**: Initializes a Capture Overlay with a white texture to prevent new spawns from appearing invisible.
+- **Double Click Confirm**: Ensures that a Double Click is always sent reliably when using Emulate Mouse mode.
+- **fpsVR Socket**: Attaches the fpsVR overlay to a specific socket position of XSOverlay.
+- **Laser**: Draws a Laser Pointer from the VR controllers to mimic the SteamVR Dashboard for accurate targeting.
+- **Overlay Curve Auto Refresh**: Automatically applies Overlay Curve changes to all active behaviors. For example, when the Overlay Curve setting changes, Overlay Scaling and Overlay Spawning are affected
+- **Pin + Block Input Non Layout Mode**: Blocks interaction with 'Pinned' or 'Block Input' Overlay unless Layout Mode is active.
+- **Pull Trigger Click Threshold**: The Trigger pull threshold required to trigger a Left Click.
+- **Pull Trigger Pointer Lock**: Locks the Pointer in place while the Trigger is held for easier double clicking.
+- **WebView Wider Scroll**: Makes the WebView scrollbar wider for easier interaction.
+- **Wrist Over Position**: Increases the allowed positioning radius of the Wrist Overlay.
 
 ### 🔧 Fixes
-- **Sticky Ctrl Fix**: Resolves the issue where the Ctrl key fails to remain "sticky" correctly.
-- **Layout Scale Fix**: Ensures saved scale values are applied accurately when loading overlay layouts.
-- **Rendering Fixes**: Prevents overlays from turning invisible during simultaneous rotation and curvature changes.
-- **WebView Click Fix**: Fixes unclickable UI elements in certain internal WebView displays.
+- **Ctrl Key Sticky Fix**: Fixes the issue where the Ctrl key is not sticky.
+- **Load Layout Scale Fix**: Ensures saved scale values are applied correctly when loading an Overlay Layout.
+- **Overlay Roll Curve Fix**: Prevents an Overlay from turning invisible when curvature and rotation change simultaneously.
+- **WebView Fix**: Fixes an issue where certain WebView UI elements were not clickable.
 
 ## ⛏️ Installation
 1. Download the plugin ZIP from [Releases](https://github.com/chaixshot/xxsoverlay-tweak/releases/latest)
