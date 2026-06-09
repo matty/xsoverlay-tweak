@@ -137,7 +137,7 @@ namespace xsoverlay_tweak
 
             // Community Reqeust
             HideBattery = cfg.Bind("CommunityReqeust", "Hide Battery", false, "Hide Wrist Overlay battery information widget.");
-            HideInvalidBattery = cfg.Bind("CommunityReqeust", "Hide Invalid Battery", false, ".");
+            HideInvalidBattery = cfg.Bind("CommunityReqeust", "Hide Invalid Battery", false, "Hide invalid battery device from Wrist Overlay.");
             LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "Layout Keyboard State", true, "Layout will save the current keyboard state to the selected profile.");
             WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "Window Toolbar Keyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityReqeust", "Wrist State Restore", true, "Restore the last Wrist Overlay state at launch.");
