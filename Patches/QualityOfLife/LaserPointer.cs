@@ -23,6 +23,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         }
 
         private static readonly ConditionalWeakTable<Raycaster, LaserData> LaserDictionary = new();
+        private static bool ShouldBeActive = false;
 
         // Create Laser_A overlay
         [HarmonyPatch("Start")]
@@ -66,16 +67,17 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
 
+            ShouldBeActive = Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null;
+
             if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
             {
-                bool shouldBeActive = Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null;
-                if (shouldBeActive)
+                if (ShouldBeActive)
                     __instance.IsActiveRaycaster = true;
 
-                if (Data.LaserA.gameObject.activeSelf != shouldBeActive)
+                if (Data.LaserA.gameObject.activeSelf != ShouldBeActive)
                 {
-                    Data.LaserA.gameObject.SetActive(shouldBeActive);
-                    Data.LaserB.gameObject.SetActive(shouldBeActive);
+                    Data.LaserA.gameObject.SetActive(ShouldBeActive);
+                    Data.LaserB.gameObject.SetActive(ShouldBeActive);
                 }
             }
         }
@@ -87,6 +89,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             if (!IsEnable()) return;
             if (!IsHand(__instance)) return;
+            if (!ShouldBeActive) return;
 
             if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
             {
@@ -117,15 +120,15 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                     else
                         Data.RayHitPoint_last = RayHitPoint;
 
-                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 0.5f;
+                    Data.Distance = ___VisualCursorElement.activeSelf ? Vector3.Distance(CurrentRayPosition, RayHitPoint) : 2f;
 
                     Data.LaserA.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
                     Data.LaserA.transform.up = CurrentRayDirection;
                     Data.LaserA.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
 
-                    Data.LaserB.transform.position = CurrentRayPosition + (CurrentRayDirection * (Data.Distance / 2));
-                    Data.LaserB.transform.up = CurrentRayDirection;
-                    Data.LaserB.transform.Rotate(0, 180 * (__instance.transform.rotation.y - (__instance.transform.rotation.y - Overlay_Manager.Instance.head.rotation.y)), 0, Space.Self);
+                    Data.LaserB.transform.position = Data.LaserA.transform.position;
+                    Data.LaserB.transform.up = Data.LaserA.transform.up;
+                    Data.LaserB.transform.rotation = Data.LaserA.transform.rotation;
                     Data.LaserB.transform.Rotate(0, 180, 0, Space.Self);
 
                     if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.01f)
