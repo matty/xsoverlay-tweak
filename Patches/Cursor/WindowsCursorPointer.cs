@@ -155,7 +155,9 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         private static void ResetToDefaultCursor(Raycaster instance, Unity_Overlay visualOverlay, Texture2D defaultIcon, CursorData data)
         {
+            data.LastCursorHandle = IntPtr.Zero;
             data.IsCursor = false;
+
             if (data.RelativeTransform != null)
                 ScaleByDistance_Ref(data.RelativeTransform) = true;
 
