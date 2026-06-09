@@ -53,6 +53,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Haptic.WebViewHaptic));
 
         harmony.PatchAll(typeof(Patches.Optimization.EfficiencyMode));
+        harmony.PatchAll(typeof(Patches.Optimization.uOSCThreadLoop));
 
         harmony.PatchAll(typeof(Patches.QualityOfLife.DefaultCaptureOverlayTexture));
         harmony.PatchAll(typeof(Patches.QualityOfLife.DoubleClickConfirm));
