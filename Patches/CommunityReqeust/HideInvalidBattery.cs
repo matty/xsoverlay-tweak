@@ -27,10 +27,10 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         {
             Devices = new(DeviceManager.Instance.Devices);
 
-            if (!IsEnable()) return true;
+            if (!IsHideInvalidBatteryEnable()) return true;
 
             foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices.ToList())
-                if (item.Value.battery == 0 || !item.Value.isSupported)
+                if (item.Value.battery == 0 || !item.Value.isSupported || IsHideEnable())
                     Devices.Remove(item.Key);
 
             IOrderedEnumerable<DeviceManager.Device> orderedEnumerable = from x in Devices.Values.ToList<DeviceManager.Device>()
@@ -42,9 +42,14 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             return false;
         }
 
-        public static bool IsEnable()
+        public static bool IsHideInvalidBatteryEnable()
         {
-            return XConfig.HideInvalidBattery.Value;
+            return XConfig.HideInvalidBattery.Value || IsHideEnable();
+        }
+
+        public static bool IsHideEnable()
+        {
+            return XConfig.HideBattery.Value;
         }
     }
 }
