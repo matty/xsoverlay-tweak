@@ -66,6 +66,19 @@
 - **Overlay Roll Curve Fix**: Prevents an Overlay from turning invisible when curvature and rotation change simultaneously.
 - **WebView Fix**: Fixes an issue where certain WebView UI elements were not clickable.
 
+## 🆕 Incoming Update
+- **Supports Horizontal Scrolling**
+- **Window Toolbar Gesture**
+- **fpsVR Socket**
+- **Wrist State Restore**
+- **Load Layout Keyboard**
+- **Window Toolbar Keyboard**
+- **Mouse Button Swap**
+- **Hide Battery**
+- **Hide Invalid Battery**
+- **Optimization OSC**
+- **Overlay Confirm Close**
+
 ## ⛏️ Installation
 1. Download the plugin ZIP from [Releases](https://github.com/chaixshot/xxsoverlay-tweak/releases/latest)
 2. Extract the ZIP and drop the files and folders inside ``xsoverlay-tweak`` to ``[Steam]/steamapps/common/[XSOverlay]``
