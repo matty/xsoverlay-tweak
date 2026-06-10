@@ -77,6 +77,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.CommunityReqeust.LoadLayoutKeyboard));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.OverlayConfirmClose));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.MouseButtonSwap));
+        harmony.PatchAll(typeof(Patches.CommunityReqeust.WindowToolbarGesture));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.WindowToolbarKeyboard));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.WristStateSave));
 
