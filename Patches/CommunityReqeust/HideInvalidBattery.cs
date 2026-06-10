@@ -27,7 +27,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         {
             Devices = new(DeviceManager.Instance.Devices);
 
-            if (!IsHideInvalidBatteryEnable()) return true;
+            if (!IsEnable()) return true;
 
             foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices.ToList())
                 if (item.Value.battery == 0 || !item.Value.isSupported || IsHideEnable())
@@ -42,7 +42,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             return false;
         }
 
-        public static bool IsHideInvalidBatteryEnable()
+        public static bool IsEnable()
         {
             return XConfig.HideInvalidBattery.Value || IsHideEnable();
         }

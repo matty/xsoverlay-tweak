@@ -33,7 +33,7 @@ namespace xsoverlay_tweak.Patches.Fix
         [HarmonyPrefix]
         public static bool ClickWebView(Raycaster __instance)
         {
-            if (!IsHideInvalidBatteryEnable()) return true;
+            if (!IsEnable()) return true;
 
             Plugin.Logger.LogError(__instance.HoveringOverlay.overlayName);
             if (IsWebView(__instance.HoveringOverlay))

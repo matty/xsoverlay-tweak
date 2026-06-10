@@ -165,7 +165,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             else if (XConfig.fpsVRSocket.Value == 2) // Bottom
             {
                 float yOffset = -((xsoHeightInMeters / 2f) + (fpsHeightInMeters / 2f));
-                bool isBattery = !HideBattery.IsEnable() && !HideInvalidBattery.Devices.Count.Equals(0);
+                bool isBattery = !HideInvalidBattery.IsEnable() && !HideInvalidBattery.Devices.Count.Equals(0);
 
                 if (IsMediaPlayer)
                     if (isBattery)
