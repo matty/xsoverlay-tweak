@@ -9,7 +9,7 @@ namespace xsoverlay_tweak.Patches
 {
     internal class RefreshRate
     {
-        private static int HMDRefreshRate = 90;
+        public static int HMDRefreshRate = 90;
         private static float LastGrabTime;
         private static float GrabbedDistance = 0f;
         private static float MinGrabInterval = 0.011f;
@@ -126,42 +126,6 @@ namespace xsoverlay_tweak.Patches
                 GrabbedDistance = ___GrabbedDistance;
                 LastGrabTime = currentTime;
             }
-        }
-
-        [HarmonyPatch(typeof(Raycaster), "HandleScrolling")]
-        [HarmonyPrefix]
-        public static bool FixScrollingSpeed(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref int ___ScrollClicksPerSecond, ref float ____tickAccumulator, ref Vector2 ___CursorUVNormalized)
-        {
-            if (!IsRefreshRateEnable()) return true;
-
-            // Pre-calculate combined constant to avoid redundant division and framerate sampling
-            float scrollFactor = XSettingsManager.Instance.Settings.ScrollSpeed / HMDRefreshRate;
-
-            float num = 0.2f;
-            float y = ___InputDevice.NormalizedScrollAxis.y;
-            float num2 = Mathf.Abs(y);
-            if (num2 <= num || (float)___ScrollClicksPerSecond <= 0f)
-            {
-                return false;
-            }
-
-            if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
-            {
-                ____tickAccumulator += num2 * (float)___ScrollClicksPerSecond * scrollFactor;
-                int num3 = (int)____tickAccumulator;
-                if (num3 > 0)
-                {
-                    ____tickAccumulator -= num3;
-                    MouseOperations.Scroll(((y > 0f) ? 1 : (-1)) * num3, XInputManager.sim);
-                }
-            }
-            else if (__instance.HoveringOverlay.IsPluginApplication)
-            {
-                float num4 = y * scrollFactor;
-                __instance.HoveringOverlay.WebViewHandler.WebView.Scroll(new Vector2(0f, 0f - num4), ___CursorUVNormalized);
-            }
-
-            return false;
         }
 
         private static void UpdateCache()

@@ -25,6 +25,7 @@ namespace xsoverlay_tweak.Utils
         public static event Action<Raycaster, Unity_Overlay> OnSwitchHoveringOverlay;
         public static event Action<Raycaster> OnTakeControlOfDesktopCursor;
         public static event Action<Raycaster> OnReleaseControlOfDesktopCursor;
+        public static event Action<Vector2, Vector2> OnHandleScrolling;
 
         internal class Ref_DeviceManager
         {
@@ -146,6 +147,11 @@ namespace xsoverlay_tweak.Utils
         public static bool IsOverlayKeyboard(Unity_Overlay overlay)
         {
             return overlay?.overlayName == "keyboard";
+        }
+
+        public static void HandleScrolling(Vector2 ScrollAxis, Vector2 normalizedPoint)
+        {
+            OnHandleScrolling?.Invoke(ScrollAxis, normalizedPoint);
         }
 
         private static IEnumerator ClearCurrentHoveringOverlayTimer()
