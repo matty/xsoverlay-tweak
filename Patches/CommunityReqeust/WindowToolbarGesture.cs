@@ -1,6 +1,9 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using UnityEngine;
 using uWindowCapture;
 using XSOverlay;
 using xsoverlay_tweak.Utils;
@@ -12,8 +15,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         private class WindowData
         {
             public UwcWindow LastWindow;
-            public bool IsChanged = false;
             public int ScrollIndex = 0;
+            public float NextScrollTime;
         }
         private static readonly ConditionalWeakTable<Unity_Overlay, WindowData> LastWindow = new();
 
@@ -23,42 +26,49 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         {
             EventBridge.OnHandleScrolling += (ScrollAxis, normalizedPoint) =>
             {
-                Unity_Overlay targetOverlay = Overlay_Manager.Instance.WindowToolbarMover.ParentOverlay;
-
-                if (LastWindow.TryGetValue(targetOverlay, out WindowData Data))
+                if (EventBridge.CurrentHoveringOverlay?.overlayName == "window.settings" || EventBridge.CurrentHoveringOverlay?.overlayName == "window.toolbar")
                 {
-                    if (Math.Abs(ScrollAxis.y) > 0.3f)
+                    Unity_Overlay targetOverlay = Overlay_Manager.Instance.WindowToolbarMover.ParentOverlay;
+
+                    if (LastWindow.TryGetValue(targetOverlay, out WindowData Data))
                     {
-                        if (!Data.IsChanged)
+                        if (Math.Abs(ScrollAxis.y) > 0.3f)
                         {
-                            Data.IsChanged = true;
+                            if (Time.time >= Data.NextScrollTime)
+                            {
+                                Data.NextScrollTime = Time.time + 0.5f;
 
-                            var currentWindowList = UwcWindowList.Instance.CurrentWindowList;
-                            int maxWindow = currentWindowList.Count;
+                                WindowComponentManager windowComponent = targetOverlay.overlayRootObject.GetComponentInChildren<WindowComponentManager>(true);
+                                Dictionary<int, UwcWindowList.WindowListItem?> currentWindowList = UwcWindowList.Instance.CurrentWindowList;
+                                int maxWindow = currentWindowList.Count;
+                                int scrollIndex = Data.ScrollIndex;
 
-                            if (maxWindow == 0) return;
+                                if (maxWindow == 0) return;
 
-                            if (ScrollAxis.y < 0)
-                                Data.ScrollIndex--;
-                            else
-                                Data.ScrollIndex++;
+                            startover:
+                                if (ScrollAxis.y < 0)
+                                    scrollIndex--;
+                                else
+                                    scrollIndex++;
 
-                            if (Data.ScrollIndex >= maxWindow)
-                                Data.ScrollIndex = 0;
-                            else if (Data.ScrollIndex < 0)
-                                Data.ScrollIndex = maxWindow - 1;
+                                if (scrollIndex >= maxWindow)
+                                    scrollIndex = 0;
+                                else if (scrollIndex < 0)
+                                    scrollIndex = maxWindow - 1;
 
-                            var targetItem = System.Linq.Enumerable.ElementAtOrDefault(currentWindowList.Values, Data.ScrollIndex);
-                            if (targetItem == null) return;
+                                UwcWindowList.WindowListItem? targetItem = Enumerable.ElementAtOrDefault(currentWindowList.Values, scrollIndex);
+                                if (targetItem == null) return;
+                                int windowTargetId = targetItem.Value.id;
 
-                            int windowTargetId = targetItem.Value.id;
+                                if (windowTargetId == windowComponent.WindowAPI.window.id) // Same window
+                                    goto startover;
 
-                            WindowComponentManager windowComponent = targetOverlay.overlayRootObject.GetComponentInChildren<WindowComponentManager>(true);
-                            windowComponent?.SetOverlayCaptureTarget(targetOverlay, windowTargetId);
+                                windowComponent?.SetOverlayCaptureTarget(targetOverlay, windowTargetId);
+                            }
                         }
+                        else
+                            Data.NextScrollTime = 0f;
                     }
-                    else if (Data.IsChanged)
-                        Data.IsChanged = false;
                 }
             };
         }
@@ -84,28 +94,47 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             return true;
         }
 
-        [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(int)])]
+        [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(int)]), HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(UwcWindow)])]
         [HarmonyPrefix]
-        public static bool RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, int windowTargetId)
+        public static bool RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
         {
-            if (LastWindow.TryGetValue(overlay, out WindowData Data))
-                Data.LastWindow = __instance.WindowAPI.window;
-            else
-                LastWindow.Add(overlay, new WindowData { LastWindow = __instance.WindowAPI.window });
+            if (!(___ThisOverlay != overlay))
+            {
+                if (LastWindow.TryGetValue(overlay, out WindowData Data))
+                    Data.LastWindow = __instance.WindowAPI.window;
+                else
+                {
+                    LastWindow.Add(overlay, new WindowData
+                    {
+                        LastWindow = __instance.WindowAPI.window,
+                    });
+                }
+            }
 
             return true;
         }
 
-        [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(UwcWindow)])]
-        [HarmonyPrefix]
-        public static bool RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, UwcWindow window)
+        [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(int)]), HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(UwcWindow)])]
+        [HarmonyPostfix]
+        public static void SetScrollIndexFromSelectedWindow(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
         {
-            if (LastWindow.TryGetValue(overlay, out WindowData Data))
-                Data.LastWindow = __instance.WindowAPI.window;
-            else
-                LastWindow.Add(overlay, new WindowData { LastWindow = __instance.WindowAPI.window });
+            if (!(___ThisOverlay != overlay))
+            {
+                Dictionary<int, UwcWindowList.WindowListItem?> currentWindowList = UwcWindowList.Instance.CurrentWindowList;
+                int windowTargetId = __instance.WindowAPI.window?.id ?? 0;
+                int scrollIndex = Enumerable.TakeWhile(currentWindowList.Values, item => item == null || item.Value.id != windowTargetId).Count();
 
-            return true;
+                if (LastWindow.TryGetValue(overlay, out WindowData Data))
+                    Data.ScrollIndex = scrollIndex;
+                else
+                {
+                    LastWindow.Add(overlay, new WindowData
+                    {
+                        LastWindow = __instance.WindowAPI.window,
+                        ScrollIndex = scrollIndex
+                    });
+                }
+            }
         }
     }
 }
