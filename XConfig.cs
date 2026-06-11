@@ -83,6 +83,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> LoadLayoutKeyboard;
         public static ConfigEntry<bool> MouseButtonSwap;
         public static ConfigEntry<bool> OverlayConfirmClose;
+        public static ConfigEntry<bool> WindowToolbarGesture;
         public static ConfigEntry<bool> WindowToolbarKeyboard;
         public static ConfigEntry<bool> WristStateRestore;
 
@@ -169,6 +170,7 @@ namespace xsoverlay_tweak
             LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityReqeust", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
             OverlayConfirmClose = cfg.Bind("CommunityReqeust", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
+            WindowToolbarGesture = cfg.Bind("WindowToolbarGesture", "WindowToolbarGesture", true, "When hovering over the Window Toolbar, right-click to switch to previous Window or thumbstick scrolling the Window list.");
             WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityReqeust", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
 

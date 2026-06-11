@@ -115,6 +115,7 @@ function InjectKBOSCTab() {
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LoadLayoutKeyboard', name: 'Layout Keyboard State', description: 'Layout will save the current keyboard state to the selected profile.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.MouseButtonSwap', name: 'Mouse Button Swap', description: 'Detecting the Windows setting \'Switch primary and secondary buttons\' to auto-swap controller binding.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OverlayConfirmClose', name: 'Overlay Confirm Close', description: 'Requires pressing the close overlay button three times to close.', default: false },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WindowToolbarGesture', name: 'Window Toolbar Gesture', description: 'When hovering over the Window Toolbar, right-click to switch to previous Window or thumbstick scrolling the Window list.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WindowToolbarKeyboard', name: 'Window Toolbar Keyboard', description: 'Add keyboard summon button to the Capture Overlay Toolbar.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WristStateRestore', name: 'Wrist State Restore', description: 'Restore the last Wrist Overlay state at launch.', default: true },
                 ]

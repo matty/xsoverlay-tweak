@@ -108,6 +108,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
                 ["XSOverlayTweak.MouseButtonSwap"] = XConfig.MouseButtonSwap.Value,
                 ["XSOverlayTweak.OverlayConfirmClose"] = XConfig.OverlayConfirmClose.Value,
+                ["XSOverlayTweak.WindowToolbarGesture"] = XConfig.WindowToolbarGesture.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
 
@@ -319,6 +320,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.OverlayConfirmClose":
                     XConfig.OverlayConfirmClose.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.WindowToolbarGesture":
+                    XConfig.WindowToolbarGesture.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.WindowToolbarKeyboard":
                     XConfig.WindowToolbarKeyboard.Value = bool.Parse(value);

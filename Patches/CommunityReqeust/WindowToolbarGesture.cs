@@ -26,6 +26,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         {
             EventBridge.OnHandleScrolling += (ScrollAxis, normalizedPoint) =>
             {
+                if (!IsEnable()) return;
+
                 if (EventBridge.CurrentHoveringOverlay?.overlayName == "window.settings" || EventBridge.CurrentHoveringOverlay?.overlayName == "window.toolbar")
                 {
                     Unity_Overlay targetOverlay = Overlay_Manager.Instance.WindowToolbarMover.ParentOverlay;
@@ -77,6 +79,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool RightClickWindowToolbar(Raycaster __instance, ClickActions clickActions)
         {
+            if (!IsEnable()) return true;
+
             if (EventBridge.CurrentHoveringOverlay?.overlayName == "window.toolbar")
                 if (EventBridge.IsActiveHand(__instance) && clickActions.ActionIndex == 1)
                 {
@@ -98,6 +102,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
         {
+            if (!IsEnable()) return true;
+
             if (!(___ThisOverlay != overlay))
             {
                 if (LastWindow.TryGetValue(overlay, out WindowData Data))
@@ -118,6 +124,8 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPostfix]
         public static void SetScrollIndexFromSelectedWindow(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
         {
+            if (!IsEnable()) return;
+
             if (!(___ThisOverlay != overlay))
             {
                 Dictionary<int, UwcWindowList.WindowListItem?> currentWindowList = UwcWindowList.Instance.CurrentWindowList;
@@ -135,6 +143,11 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                     });
                 }
             }
+        }
+
+        private static bool IsEnable()
+        {
+            return XConfig.WindowToolbarGesture.Value;
         }
     }
 }
