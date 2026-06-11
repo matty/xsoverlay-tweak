@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using System.IO;
+using System.Threading.Tasks;
 using XSOverlay;
 using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
@@ -9,16 +10,28 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 {
     internal class WindowToolbarKeyboard
     {
-        [HarmonyPatch(typeof(ApiHandler), "InitializeAPI")]
+        private static bool WasEnable = false;
+
+        [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
         public static void AddWindowToolbarKeybordButton(ApiHandler __instance)
         {
-            EditFile();
-
             XConfig.WindowToolbarKeyboard.SettingChanged += (sender, args) =>
             {
-                EditFile();
-                Notification.Send($"{MyPluginInfo.PLUGIN_NAME} - Window Toolbar Keyboard", $"Restart XSOverlay to take effect.", 10);
+                EditToolbarJsFile();
+
+                XSTools.ExecuteOnMainThread(async () =>
+                {
+                    await Task.Delay(200);
+
+                    OverlayWebView toolbarWebView = Overlay_Manager.Instance.WindowToolbar.GetComponentInChildren<Unity_Overlay>(true).OverlayWebView;
+
+                    toolbarWebView.DisableOnStart = false;
+                    toolbarWebView._webView.WebView.Reload();
+                    toolbarWebView._webView.WebView.SetRenderingEnabled(true);
+
+                    ChangeToolbarWidth(toolbarWebView, false);
+                });
             };
         }
 
@@ -26,10 +39,11 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool ChangeWindowToolbarDimension(OverlayWebView __instance)
         {
-            if (!IsEnable()) return true;
-
             if (__instance.UserInterfaceSelection == OverlayWebView.UserInterfacePaths.WindowToolbar)
-                __instance.Width += 110;
+            {
+                EditToolbarJsFile();
+                ChangeToolbarWidth(__instance, true);
+            }
 
             return true;
         }
@@ -48,7 +62,34 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             }
         }
 
-        private static void EditFile()
+        private static void ChangeToolbarWidth(OverlayWebView webView, bool isAwake)
+        {
+            float targetWidth = webView.Width;
+            bool isChanged = false;
+
+            if (IsEnable())
+            {
+                isChanged = true;
+                WasEnable = true;
+                targetWidth += 110;
+            }
+            else if (WasEnable)
+            {
+                isChanged = true;
+                WasEnable = false;
+                targetWidth -= 110;
+            }
+
+            if (isChanged)
+            {
+                webView.Width = targetWidth;
+
+                if (!isAwake)
+                    webView.UpdateResolution(new UnityEngine.Resolution { width = (int)webView.Width, height = (int)webView.Height });
+            }
+        }
+
+        private static void EditToolbarJsFile()
         {
             string filePath = @".\XSOverlay_Data\StreamingAssets\Plugins\Applications\_UI\Default\_Shared\js\toolbar.js";
             if (!File.Exists(filePath)) return;
