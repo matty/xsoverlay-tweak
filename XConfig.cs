@@ -67,6 +67,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> LoadLayoutKeyboard;
         public static ConfigEntry<bool> MouseButtonSwap;
         public static ConfigEntry<bool> OverlayConfirmClose;
+        public static ConfigEntry<bool> TrackSpaceHMDSmooth;
         public static ConfigEntry<bool> WindowToolbarKeyboard;
         public static ConfigEntry<bool> WristStateRestore;
 
@@ -147,6 +148,7 @@ namespace xsoverlay_tweak
             LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "Layout Keyboard State", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityReqeust", "Mouse Button Swap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
             OverlayConfirmClose = cfg.Bind("CommunityReqeust", "Overlay Confirm Close", false, "Requires pressing the close overlay button three times to close.");
+            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "Tracking Space HMD Smooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
             WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "Window Toolbar Keyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityReqeust", "Wrist State Restore", true, "Restore the last Wrist Overlay state at launch.");
 
