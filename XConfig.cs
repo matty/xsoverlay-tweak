@@ -143,14 +143,14 @@ namespace xsoverlay_tweak
             WebViewFix = cfg.Bind("Fix", "WebViewFix", true, "Fixes an issue where certain WebView UI elements were not clickable.");
 
             // Community Reqeust
-            HideBattery = cfg.Bind("CommunityReqeust", "Hide Battery", false, "Hide Wrist Overlay battery information widget.");
-            HideInvalidBattery = cfg.Bind("CommunityReqeust", "Hide Invalid Battery", false, "Hide invalid battery device from Wrist Overlay.");
-            LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "Layout Keyboard State", true, "Layout will save the current keyboard state to the selected profile.");
-            MouseButtonSwap = cfg.Bind("CommunityReqeust", "Mouse Button Swap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
-            OverlayConfirmClose = cfg.Bind("CommunityReqeust", "Overlay Confirm Close", false, "Requires pressing the close overlay button three times to close.");
-            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "Tracking Space HMD Smooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
-            WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "Window Toolbar Keyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
-            WristStateRestore = cfg.Bind("CommunityReqeust", "Wrist State Restore", true, "Restore the last Wrist Overlay state at launch.");
+            HideBattery = cfg.Bind("CommunityReqeust", "HideBattery", false, "Hide Wrist Overlay battery information widget.");
+            HideInvalidBattery = cfg.Bind("CommunityReqeust", "HideInvalidBattery", false, "Hide invalid battery device from Wrist Overlay.");
+            LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
+            MouseButtonSwap = cfg.Bind("CommunityReqeust", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
+            OverlayConfirmClose = cfg.Bind("CommunityReqeust", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
+            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
+            WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
+            WristStateRestore = cfg.Bind("CommunityReqeust", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Displays a notification when a new version is available.");

@@ -66,11 +66,11 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.QualityOfLife.WebViewWiderScroll));
         harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
 
+        harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
         harmony.PatchAll(typeof(Patches.Fix.HandleScrollingFix));
         harmony.PatchAll(typeof(Patches.Fix.LoadLayoutScaleFix));
         harmony.PatchAll(typeof(Patches.Fix.KeyboardControlButtonStateFix));
         harmony.PatchAll(typeof(Patches.Fix.OverlayRollCurveFix));
-        harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
         harmony.PatchAll(typeof(Patches.Fix.WebViewFix));
 
         harmony.PatchAll(typeof(Patches.CommunityReqeust.HideInvalidBattery));
