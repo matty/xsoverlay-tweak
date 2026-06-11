@@ -90,6 +90,7 @@ namespace xsoverlay_tweak.Patches.Setting
 
                 // Fix
                 ["XSOverlayTweak.CtrlKeyStickyFix"] = XConfig.CtrlKeyStickyFix.Value,
+                ["XSOverlayTweak.CursorMovingInteractionFix"] = XConfig.CursorMovingInteractionFix.Value,
                 ["XSOverlayTweak.HandleScrollingFix"] = XConfig.HandleScrollingFix.Value,
                 ["XSOverlayTweak.KeyboardControlButtonStateFix"] = XConfig.KeyboardControlButtonStateFix.Value,
                 ["XSOverlayTweak.LoadLayoutScaleFix"] = XConfig.LoadLayoutScaleFix.Value,
@@ -268,6 +269,9 @@ namespace xsoverlay_tweak.Patches.Setting
                 // Fix
                 case "XSOverlayTweak.CtrlKeyStickyFix":
                     XConfig.CtrlKeyStickyFix.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.CursorMovingInteractionFix":
+                    XConfig.CursorMovingInteractionFix.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.HandleScrollingFix":
                     XConfig.HandleScrollingFix.Value = bool.Parse(value);

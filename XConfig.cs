@@ -56,6 +56,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WristOverPosition;
 
         public static ConfigEntry<bool> CtrlKeyStickyFix;
+        public static ConfigEntry<bool> CursorMovingInteractionFix;
         public static ConfigEntry<bool> HandleScrollingFix;
         public static ConfigEntry<bool> KeyboardControlButtonStateFix;
         public static ConfigEntry<bool> LoadLayoutScaleFix;
@@ -136,6 +137,7 @@ namespace xsoverlay_tweak
 
             // Fix
             CtrlKeyStickyFix = cfg.Bind("Fix", "CtrlKeyStickyFix", true, "Fix where double-tapping the Ctrl key does not sticky.");
+            CursorMovingInteractionFix = cfg.Bind("Fix", "CursorMovingInteractionFix", true, "Fix where Windows cursor movement events fail to interact with elements. For example, hovering the cursor over the Windows taskbar displays a thumbnail preview, or dragging to move system tray icon.");
             HandleScrollingFix = cfg.Bind("Fix", "HandleScrollingFix", true, "Normalize stick scrolling speed by the HMD refresh rate and support horizontal scrolling.");
             KeyboardControlButtonStateFix = cfg.Bind("Fix", "KeyboardControlButtonStateFix", true, "Fix keyboard control button color not following the state when summoning.");
             LoadLayoutScaleFix = cfg.Bind("Fix", "LoadLayoutScaleFix", true, "Ensures saved scale values are applied correctly when loading an Overlay Layout.");
