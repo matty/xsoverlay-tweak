@@ -4,16 +4,19 @@ namespace xsoverlay_tweak
 {
     internal class XConfig
     {
+        // RefreshRate
         public static ConfigEntry<string> RefreshRate;
         public static ConfigEntry<bool> OnlyHoverOverlay;
         public static ConfigEntry<bool> OnlyInLayoutMod;
 
+        // Cursor
         public static ConfigEntry<bool> AlwaysUpdateCursor;
         public static ConfigEntry<bool> AlwaysHideCursor;
         public static ConfigEntry<bool> PhysicalMouseDetector;
         public static ConfigEntry<int> MouseSmoothSpeed;
         public static ConfigEntry<bool> WindowsCursorPointer;
 
+        // Pointer
         public static ConfigEntry<bool> ActivePointerWebView;
         public static ConfigEntry<bool> EmulateMouseClickAnimation;
         public static ConfigEntry<bool> InactivePointerColor;
@@ -22,9 +25,11 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> PointerDoubleClickDelay;
         public static ConfigEntry<int> PointerScaleMultiply;
 
+        // Mouse Navigation
         public static ConfigEntry<bool> MouseNavigation;
         public static ConfigEntry<bool> MouseNavigationUseModifiedKey;
 
+        // Dashboard
         public static ConfigEntry<bool> DashboardNotification;
         public static ConfigEntry<bool> DashboardPointer;
         public static ConfigEntry<bool> DashboardSettings;
@@ -32,6 +37,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> DashboardWrist;
         public static ConfigEntry<bool> Dashboardkeyboard;
 
+        // Haptic
         public static ConfigEntry<int> GrabHaptic;
         public static ConfigEntry<int> KeyboardKeyHaptic;
         public static ConfigEntry<int> KeyboardPressHaptic;
@@ -41,9 +47,11 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> ToggleEditModeHaptic;
         public static ConfigEntry<int> WebViewHaptic;
 
+        // Optimization
         public static ConfigEntry<bool> EfficiencyMode;
         public static ConfigEntry<int> InactiveRefreshRate;
 
+        // Quality of Life
         public static ConfigEntry<bool> DefaultCaptureOverlayTexture;
         public static ConfigEntry<bool> DoubleClickConfirm;
         public static ConfigEntry<int> fpsVRSocket;
@@ -55,6 +63,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WebViewWiderScroll;
         public static ConfigEntry<bool> WristOverPosition;
 
+        // Fix
         public static ConfigEntry<bool> CtrlKeyStickyFix;
         public static ConfigEntry<bool> CursorMovingInteractionFix;
         public static ConfigEntry<bool> HandleScrollingFix;
@@ -63,6 +72,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> OverlayRollCurveFix;
         public static ConfigEntry<bool> WebViewFix;
 
+        // Community Reqeust
         public static ConfigEntry<bool> HideBattery;
         public static ConfigEntry<bool> HideInvalidBattery;
         public static ConfigEntry<bool> LoadLayoutKeyboard;

@@ -24,16 +24,18 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(CustomSettings));
         harmony.PatchAll(typeof(EventBridge));
 
+        // RefreshRate
         harmony.PatchAll(typeof(Patches.RefreshRate));
 
+        // Cursor
         harmony.PatchAll(typeof(Patches.Cursor.AlwaysHideCursor));
         harmony.PatchAll(typeof(Patches.Cursor.AlwaysUpdateCursor));
         harmony.PatchAll(typeof(Patches.Cursor.PhysicalMouseDetector));
         harmony.PatchAll(typeof(Patches.Cursor.MouseSmoothSpeed));
         harmony.PatchAll(typeof(Patches.Cursor.WindowsCursorPointer));
 
-        harmony.PatchAll(typeof(Patches.MouseNavigation));
 
+        // Pointer
         harmony.PatchAll(typeof(Patches.Pointer.ActivePointerWebView));
         harmony.PatchAll(typeof(Patches.Pointer.EmulateMouseClickAnimation));
         harmony.PatchAll(typeof(Patches.Pointer.InactivePointerColor));
@@ -42,8 +44,13 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Pointer.PointerDoubleClickDelay));
         harmony.PatchAll(typeof(Patches.Pointer.PointerScaleMultiply));
 
+        // Mouse Navigation
+        harmony.PatchAll(typeof(Patches.MouseNavigation));
+
+        // Dashboard
         harmony.PatchAll(typeof(Patches.SteamDashboard));
 
+        // Haptic
         harmony.PatchAll(typeof(Patches.Haptic.GrabHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.KeyboardKeyHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.KeyboardPressHaptic));
@@ -52,9 +59,11 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Haptic.ToggleEditModeHaptic));
         harmony.PatchAll(typeof(Patches.Haptic.WebViewHaptic));
 
+        // Optimization
         harmony.PatchAll(typeof(Patches.Optimization.EfficiencyMode));
         harmony.PatchAll(typeof(Patches.Optimization.uOSCThreadLoop));
 
+        // Quality of Life
         harmony.PatchAll(typeof(Patches.QualityOfLife.DefaultCaptureOverlayTexture));
         harmony.PatchAll(typeof(Patches.QualityOfLife.DoubleClickConfirm));
         harmony.PatchAll(typeof(Patches.QualityOfLife.fpsVRSocket));
@@ -66,6 +75,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.QualityOfLife.WebViewWiderScroll));
         harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
 
+        // Fix
         harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
         harmony.PatchAll(typeof(Patches.Fix.CursorMovingInteractionFix));
         harmony.PatchAll(typeof(Patches.Fix.HandleScrollingFix));
@@ -74,6 +84,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Fix.OverlayRollCurveFix));
         harmony.PatchAll(typeof(Patches.Fix.WebViewFix));
 
+        // Community Reqeust
         harmony.PatchAll(typeof(Patches.CommunityReqeust.HideInvalidBattery));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.LoadLayoutKeyboard));
         harmony.PatchAll(typeof(Patches.CommunityReqeust.OverlayConfirmClose));
