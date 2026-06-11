@@ -78,7 +78,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 
                 Task.Run(async () =>
                 {
-                    await Task.Delay(50); // Wait for re-center
+                    await Task.Delay(150); // Wait for re-center and keyboard summoning
 
 
                     if (keyboardData["position"] is JArray pos && pos.Count == 3)
