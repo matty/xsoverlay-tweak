@@ -85,7 +85,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 
         private static bool IsEnable()
         {
-            return XConfig.OverlayConfirmClose.Value;
+            return XConfig.TrackSpaceHMDSmooth.Value;
         }
     }
 }
