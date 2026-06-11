@@ -13,6 +13,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             public Vector3 Position;
             public Quaternion Rotation;
             public bool Initialized;
+            public bool IsMoving;
         }
 
         private static readonly ConditionalWeakTable<Unity_Overlay, SmoothPose> _smoothedPoses = new();
@@ -44,6 +45,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                 smooth.Position = target.position;
                 smooth.Rotation = target.rotation;
                 smooth.Initialized = true;
+                smooth.IsMoving = false;
             }
 
             float posDamp = XSettingsManager.Instance.Settings.PositionDampening;
@@ -54,8 +56,23 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             float currentPosDamp = __instance.IsHeld ? posDamp : posDamp / 5f;
             float currentRotDamp = __instance.IsHeld ? rotDamp : rotDamp / 5f;
 
-            smooth.Position = Vector3.Lerp(smooth.Position, target.position, Time.deltaTime * currentPosDamp);
-            smooth.Rotation = Quaternion.Slerp(smooth.Rotation, target.rotation, Time.deltaTime * currentRotDamp);
+            float dist = Vector3.Distance(smooth.Position, target.position);
+            float angle = Quaternion.Angle(smooth.Rotation, target.rotation);
+
+            float oneCm = 0.01f;
+            float oneDegree = 1.0f;
+
+            // Moving Threshold
+            if (__instance.IsHeld || dist > (oneCm * XConfig.TrackSpaceHMDDistThreshold.Value) || angle > (oneDegree * XConfig.TrackSpaceHMDAngleThreshold.Value))
+                smooth.IsMoving = true;
+            else if (dist < (oneCm * 5) && angle < (oneDegree * 5))
+                smooth.IsMoving = false;
+
+            if (smooth.IsMoving)
+            {
+                smooth.Position = Vector3.Lerp(smooth.Position, target.position, Time.deltaTime * currentPosDamp);
+                smooth.Rotation = Quaternion.Slerp(smooth.Rotation, target.rotation, Time.deltaTime * currentRotDamp);
+            }
 
             // Use Absolute tracking to allow software-side smoothing; TrackedDeviceRelative is rigid at driver level.
             __instance.overlay.overlayTransformType = VROverlayTransformType.VROverlayTransform_Absolute;

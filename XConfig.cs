@@ -63,6 +63,11 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> WebViewWiderScroll;
         public static ConfigEntry<bool> WristOverPosition;
 
+        // Track Space HMD Smooth
+        public static ConfigEntry<bool> TrackSpaceHMDSmooth;
+        public static ConfigEntry<int> TrackSpaceHMDAngleThreshold;
+        public static ConfigEntry<int> TrackSpaceHMDDistThreshold;
+
         // Fix
         public static ConfigEntry<bool> CtrlKeyStickyFix;
         public static ConfigEntry<bool> CursorMovingInteractionFix;
@@ -78,7 +83,6 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> LoadLayoutKeyboard;
         public static ConfigEntry<bool> MouseButtonSwap;
         public static ConfigEntry<bool> OverlayConfirmClose;
-        public static ConfigEntry<bool> TrackSpaceHMDSmooth;
         public static ConfigEntry<bool> WindowToolbarKeyboard;
         public static ConfigEntry<bool> WristStateRestore;
 
@@ -145,6 +149,11 @@ namespace xsoverlay_tweak
             WebViewWiderScroll = cfg.Bind("QualityOfLife", "WebViewWiderScroll", true, "Makes the WebView scrollbar wider for easier interaction.");
             WristOverPosition = cfg.Bind("QualityOfLife", "WristOverPosition", true, "Increases the allowed positioning radius of the Wrist Overlay.");
 
+            // Track Space HMD Smooth
+            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
+            TrackSpaceHMDAngleThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDAngleThreshold", 50, "HMD angle threshold to start moving the HMD-attached Capture Overlay.");
+            TrackSpaceHMDDistThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDDistThreshold", 20, "HMD distance threshold to start moving the HMD-attached Capture Overlay.");
+
             // Fix
             CtrlKeyStickyFix = cfg.Bind("Fix", "CtrlKeyStickyFix", true, "Fix where double-tapping the Ctrl key does not sticky.");
             CursorMovingInteractionFix = cfg.Bind("Fix", "CursorMovingInteractionFix", true, "Fix where Windows cursor movement events fail to interact with elements. For example, hovering the cursor over the Windows taskbar displays a thumbnail preview, or dragging to move system tray icon.");
@@ -160,7 +169,6 @@ namespace xsoverlay_tweak
             LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityReqeust", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
             OverlayConfirmClose = cfg.Bind("CommunityReqeust", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
-            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
             WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityReqeust", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
 

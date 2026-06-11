@@ -91,7 +91,14 @@ function InjectKBOSCTab() {
                 ]
             },
             {
-                name: 'Fix', priority: 9, settings: [
+                name: 'Track Space  Smooth', priority: 9, settings: [
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.TrackSpaceHMDSmooth', name: 'Enable', description: 'When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.', default: true },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDAngleThreshold', name: 'Tracking Space Angle Threshold', description: 'HMD angle threshold to start moving the HMD-attached Capture Overlay.', default: 50, options: [0, 90, 5], unit: 'Degree' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDDistThreshold', name: 'Tracking Space Distance Threshold', description: 'HMD distance threshold to start moving the HMD-attached Capture Overlay.', default: 20, options: [0, 150, 5], unit: 'cm' },
+                ]
+            },
+            {
+                name: 'Fix', priority: 10, settings: [
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.CtrlKeyStickyFix', name: 'Ctrl Key Sticky', description: 'Fixes the issue where the Ctrl key is not sticky.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.CursorMovingInteractionFix', name: 'Cursor Moving Interaction', description: 'Fix where Windows cursor movement events fail to interact with elements. For example, hovering the cursor over the Windows taskbar displays a thumbnail preview, or dragging to move system tray icon.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HandleScrollingFix', name: 'Handle Scrolling', description: 'Normalize stick scrolling speed by the HMD refresh rate and support horizontal scrolling.', default: true },
@@ -102,19 +109,18 @@ function InjectKBOSCTab() {
                 ]
             },
             {
-                name: 'Community Reqeust', priority: 10, settings: [
+                name: 'Community Reqeust', priority: 11, settings: [
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideBattery', name: 'Hide Battery', description: 'Hide Wrist Overlay battery information widget.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideInvalidBattery', name: 'Hide Invalid Battery', description: 'Hide invalid battery device from Wrist Overlay.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LoadLayoutKeyboard', name: 'Layout Keyboard State', description: 'Layout will save the current keyboard state to the selected profile.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.MouseButtonSwap', name: 'Mouse Button Swap', description: 'Detecting the Windows setting \'Switch primary and secondary buttons\' to auto-swap controller binding.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OverlayConfirmClose', name: 'Overlay Confirm Close', description: 'Requires pressing the close overlay button three times to close.', default: false },
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.CommunityReqeust', name: 'Tracking Space HMD Smooth', description: 'When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.', default: true },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WindowToolbarKeyboard', name: 'Window Toolbar Keyboard', description: 'Add keyboard summon button to the Capture Overlay Toolbar.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.WristStateRestore', name: 'Wrist State Restore', description: 'Restore the last Wrist Overlay state at launch.', default: true },
                 ]
             },
             {
-                name: 'About', priority: 11, settings: [
+                name: 'About', priority: 12, settings: [
                     { type: Ui.ComponentType.Text, description: '<br>Version: <<Version>>'},
                     { type: Ui.ComponentType.Button, id: 'XSOverlayTweak.CheckForUpdate', name: 'Check for Updates', description: 'Check for the latest version of XSOverlay Tweak.', default: true },
                     { type: Ui.ComponentType.Button, id: 'XSOverlayTweak.OpenGitHub', name: 'Open GitHub', description: 'Visit the XSOverlay Tweak GitHub page.', default: true },

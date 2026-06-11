@@ -88,6 +88,11 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.WebViewWiderScroll"] = XConfig.WebViewWiderScroll.Value,
                 ["XSOverlayTweak.WristOverPosition"] = XConfig.WristOverPosition.Value,
 
+                // Track Space HMD Smooth
+                ["XSOverlayTweak.TrackSpaceHMDSmooth"] = XConfig.TrackSpaceHMDSmooth.Value,
+                ["XSOverlayTweak.TrackSpaceHMDAngleThreshold"] = XConfig.TrackSpaceHMDAngleThreshold.Value,
+                ["XSOverlayTweak.TrackSpaceHMDDistThreshold"] = XConfig.TrackSpaceHMDDistThreshold.Value,
+
                 // Fix
                 ["XSOverlayTweak.CtrlKeyStickyFix"] = XConfig.CtrlKeyStickyFix.Value,
                 ["XSOverlayTweak.CursorMovingInteractionFix"] = XConfig.CursorMovingInteractionFix.Value,
@@ -103,7 +108,6 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
                 ["XSOverlayTweak.MouseButtonSwap"] = XConfig.MouseButtonSwap.Value,
                 ["XSOverlayTweak.OverlayConfirmClose"] = XConfig.OverlayConfirmClose.Value,
-                ["XSOverlayTweak.TrackSpaceHMDSmooth"] = XConfig.TrackSpaceHMDSmooth.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
 
@@ -267,6 +271,17 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
 
                 // Fix
+                case "XSOverlayTweak.TrackSpaceHMDSmooth":
+                    XConfig.TrackSpaceHMDSmooth.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.TrackSpaceHMDAngleThreshold":
+                    XConfig.TrackSpaceHMDAngleThreshold.Value = int.Parse(value);
+                    break;
+                case "XSOverlayTweak.TrackSpaceHMDDistThreshold":
+                    XConfig.TrackSpaceHMDDistThreshold.Value = int.Parse(value);
+                    break;
+
+                // Fix
                 case "XSOverlayTweak.CtrlKeyStickyFix":
                     XConfig.CtrlKeyStickyFix.Value = bool.Parse(value);
                     break;
@@ -304,9 +319,6 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.OverlayConfirmClose":
                     XConfig.OverlayConfirmClose.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.TrackSpaceHMDSmooth":
-                    XConfig.TrackSpaceHMDSmooth.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.WindowToolbarKeyboard":
                     XConfig.WindowToolbarKeyboard.Value = bool.Parse(value);
