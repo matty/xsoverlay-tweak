@@ -29,9 +29,14 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
 
             if (!IsEnable()) return true;
 
-            foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices.ToList())
-                if (item.Value.battery == 0 || !item.Value.isSupported || IsHideEnable())
-                    Devices.Remove(item.Key);
+            if (IsHideEnable())
+                Devices = [];
+            else
+            {
+                foreach (KeyValuePair<uint, DeviceManager.Device> item in Devices.ToList())
+                    if (item.Value.battery == 0 || !item.Value.isSupported)
+                        Devices.Remove(item.Key);
+            }
 
             IOrderedEnumerable<DeviceManager.Device> orderedEnumerable = from x in Devices.Values.ToList<DeviceManager.Device>()
                                                                          orderby x.classification, x.id == OVR_Pose_Handler.instance.leftIndex descending, x.id
