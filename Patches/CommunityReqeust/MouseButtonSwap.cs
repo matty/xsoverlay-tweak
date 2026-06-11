@@ -20,7 +20,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapClickLeftToRight(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.RightButtonClick();
             return false;
@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapDownLeftToRight(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.RightButtonDown();
             return false;
@@ -40,7 +40,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapUpLeftToRight(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.RightButtonUp();
             return false;
@@ -50,7 +50,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapClickRightToLeft(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.LeftButtonClick();
             return false;
@@ -60,7 +60,7 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapDownRightToLeft(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.LeftButtonDown();
             return false;
@@ -70,10 +70,15 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
         [HarmonyPrefix]
         public static bool SwapUpRightToLeft(InputSimulator sim)
         {
-            if (!IsMouseSwap) return true;
+            if (!IsEnable()) return true;
 
             sim.Mouse.LeftButtonUp();
             return false;
+        }
+
+        private static bool IsEnable()
+        {
+            return XConfig.MouseButtonSwap.Value && IsMouseSwap;
         }
 
         // Import GetSystemMetrics from user32.dll

@@ -98,6 +98,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.HideBattery"] = XConfig.HideBattery.Value,
                 ["XSOverlayTweak.HideInvalidBattery"] = XConfig.HideInvalidBattery.Value,
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
+                ["XSOverlayTweak.MouseButtonSwap"] = XConfig.MouseButtonSwap.Value,
                 ["XSOverlayTweak.OverlayConfirmClose"] = XConfig.OverlayConfirmClose.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
@@ -284,6 +285,9 @@ namespace xsoverlay_tweak.Patches.Setting
                     break;
                 case "XSOverlayTweak.LoadLayoutKeyboard":
                     XConfig.LoadLayoutKeyboard.Value = bool.Parse(value);
+                    break;
+                case "XSOverlayTweak.MouseButtonSwap":
+                    XConfig.MouseButtonSwap.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.OverlayConfirmClose":
                     XConfig.OverlayConfirmClose.Value = bool.Parse(value);
