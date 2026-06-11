@@ -97,7 +97,7 @@ This mod injects a custom settings page directly into the XSOverlay UI.
 To use the Mouse Back/Forward features:
 1. Open XSOverlay Settings and go to the **Bindings** tab.
 2. This opens the SteamVR bindings menu.
-3. Edit your current binding and add a button for the `MouseBack` or `MouseForward` actions.
+3. Edit your current binding and add a button for the `Mouse Back` and `Mouse Forward` actions.
 
 ## ⛔ Disable
 Go to ``[Steam]/steamapps/common/[XSOverlay]/BepInEx/plugins/`` and remove ``xsoverlay_tweak.dll``
