@@ -13,6 +13,8 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         [HarmonyPrefix]
         public static bool TripleToDeleteWindowOverlay()
         {
+            if (!IsEnable()) return true;
+
             float currentTime = Time.time;
             float timeSinceLastClick = currentTime - lastClickTime;
 
@@ -32,6 +34,11 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             }
 
             return false;
+        }
+
+        private static bool IsEnable()
+        {
+            return XConfig.OverlayConfirmClose.Value;
         }
     }
 }

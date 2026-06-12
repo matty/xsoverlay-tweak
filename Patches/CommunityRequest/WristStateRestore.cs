@@ -69,7 +69,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
         private static bool IsEnable()
         {
-            return XConfig.WindowToolbarKeyboard.Value;
+            return XConfig.WristStateRestore.Value;
         }
     }
 }
