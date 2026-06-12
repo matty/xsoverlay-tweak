@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Valve.VR;
 using XSOverlay;
-using xsoverlay_tweak.Patches.CommunityReqeust;
+using xsoverlay_tweak.Patches.CommunityRequest;
 using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.QualityOfLife

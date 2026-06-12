@@ -80,7 +80,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> OverlayRollCurveFix;
         public static ConfigEntry<bool> WebViewFix;
 
-        // Community Reqeust
+        // Community Request
         public static ConfigEntry<bool> HideBattery;
         public static ConfigEntry<bool> HideInvalidBattery;
         public static ConfigEntry<bool> LoadLayoutKeyboard;
@@ -155,11 +155,11 @@ namespace xsoverlay_tweak
             WristOverPosition = cfg.Bind("QualityOfLife", "WristOverPosition", true, "Increases the allowed positioning radius of the Wrist Overlay.");
 
             // Track Space HMD Smooth
-            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space,\nIt will use Position Dampening and Rotation Dampening settings to smooth its movement.");
-            TrackSpaceHMDLockRoll = cfg.Bind("CommunityReqeust", "TrackSpaceHMDLockRoll", true, "Prevents the HMD-attached Capture Overlay from rolling with HMD.");
-            TrackSpaceHMDAngleThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDAngleThreshold", 50, "HMD angle threshold to start moving the HMD-attached Capture Overlay.");
-            TrackSpaceHMDDistThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDDistThreshold", 20, "HMD distance threshold to start moving the HMD-attached Capture Overlay.");
-            TrackSpaceHMDStopThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDStopThreshold", 5, "Threshold below which the HMD-attached Capture Overlay stops moving to prevent jitter.");
+            TrackSpaceHMDSmooth = cfg.Bind("TrackSpaceHMDSmooth", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space,\nIt will use Position Dampening and Rotation Dampening settings to smooth its movement.");
+            TrackSpaceHMDLockRoll = cfg.Bind("TrackSpaceHMDSmooth", "TrackSpaceHMDLockRoll", true, "Prevents the HMD-attached Capture Overlay from rolling with HMD.");
+            TrackSpaceHMDAngleThreshold = cfg.Bind("TrackSpaceHMDSmooth", "TrackSpaceHMDAngleThreshold", 50, "HMD angle threshold to start moving the HMD-attached Capture Overlay.");
+            TrackSpaceHMDDistThreshold = cfg.Bind("TrackSpaceHMDSmooth", "TrackSpaceHMDDistThreshold", 20, "HMD distance threshold to start moving the HMD-attached Capture Overlay.");
+            TrackSpaceHMDStopThreshold = cfg.Bind("TrackSpaceHMDSmooth", "TrackSpaceHMDStopThreshold", 5, "Threshold below which the HMD-attached Capture Overlay stops moving to prevent jitter.");
 
             // Fix
             CtrlKeyStickyFix = cfg.Bind("Fix", "CtrlKeyStickyFix", true, "Fix where double-tapping the Ctrl key does not sticky.");
@@ -170,15 +170,15 @@ namespace xsoverlay_tweak
             OverlayRollCurveFix = cfg.Bind("Fix", "OverlayRollFlickerFix", true, "Prevents an Overlay from turning invisible when curvature and rotation change simultaneously.");
             WebViewFix = cfg.Bind("Fix", "WebViewFix", true, "Fixes an issue where certain WebView UI elements were not clickable.");
 
-            // Community Reqeust
-            HideBattery = cfg.Bind("CommunityReqeust", "HideBattery", false, "Hide Wrist Overlay battery information widget.");
-            HideInvalidBattery = cfg.Bind("CommunityReqeust", "HideInvalidBattery", false, "Hide invalid battery device from Wrist Overlay.");
-            LoadLayoutKeyboard = cfg.Bind("CommunityReqeust", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
-            MouseButtonSwap = cfg.Bind("CommunityReqeust", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
-            OverlayConfirmClose = cfg.Bind("CommunityReqeust", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
-            WindowToolbarGesture = cfg.Bind("WindowToolbarGesture", "WindowToolbarGesture", true, "When hovering over the Window Toolbar, right-click to switch to previous Window or thumbstick scrolling the Window list.");
-            WindowToolbarKeyboard = cfg.Bind("CommunityReqeust", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
-            WristStateRestore = cfg.Bind("CommunityReqeust", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
+            // Community Request
+            HideBattery = cfg.Bind("CommunityRequest", "HideBattery", false, "Hide Wrist Overlay battery information widget.");
+            HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", false, "Hide invalid battery device from Wrist Overlay.");
+            LoadLayoutKeyboard = cfg.Bind("CommunityRequest", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
+            MouseButtonSwap = cfg.Bind("CommunityRequest", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
+            OverlayConfirmClose = cfg.Bind("CommunityRequest", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
+            WindowToolbarGesture = cfg.Bind("CommunityRequest", "WindowToolbarGesture", true, "When hovering over the Window Toolbar, right-click to switch to previous Window or thumbstick scrolling the Window list.");
+            WindowToolbarKeyboard = cfg.Bind("CommunityRequest", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
+            WristStateRestore = cfg.Bind("CommunityRequest", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
 
             // About
             UpdateNotification = cfg.Bind("About", "UpdateNotifications", true, "Displays a notification when a new version is available.");

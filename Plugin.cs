@@ -76,7 +76,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
 
         // Track Space HMD Smooth
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.TrackSpaceHMDSmooth));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.TrackSpaceHMDSmooth));
 
         // Fix
         harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
@@ -88,13 +88,13 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Fix.WebViewFix));
 
         // Community Reqeust
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.HideInvalidBattery));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.LoadLayoutKeyboard));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.OverlayConfirmClose));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.MouseButtonSwap));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.WindowToolbarGesture));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.WindowToolbarKeyboard));
-        harmony.PatchAll(typeof(Patches.CommunityReqeust.WristStateSave));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.HideInvalidBattery));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.LoadLayoutKeyboard));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.OverlayConfirmClose));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.MouseButtonSwap));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.WindowToolbarGesture));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.WindowToolbarKeyboard));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.WristStateSave));
 
         harmony.PatchAll(typeof(Patches.Setting.SettingPage));
 

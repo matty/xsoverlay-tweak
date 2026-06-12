@@ -112,7 +112,7 @@ function InjectKBOSCTab() {
                 ]
             },
             {
-                name: 'Community Reqeust', priority: 11, settings: [
+                name: 'Community Request', priority: 11, settings: [
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideBattery', name: 'Hide Battery', description: 'Hide Wrist Overlay battery information widget.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideInvalidBattery', name: 'Hide Invalid Battery', description: 'Hide invalid battery device from Wrist Overlay.', default: false },
                     { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LoadLayoutKeyboard', name: 'Layout Keyboard State', description: 'Layout will save the current keyboard state to the selected profile.', default: true },

@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using WindowsInput;
 using XSOverlay;
 
-namespace xsoverlay_tweak.Patches.CommunityReqeust
+namespace xsoverlay_tweak.Patches.CommunityRequest
 {
     internal class MouseButtonSwap
     {

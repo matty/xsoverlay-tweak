@@ -1,4 +1,4 @@
-﻿﻿using HarmonyLib;
+﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -105,7 +105,7 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.OverlayRollCurveFix"] = XConfig.OverlayRollCurveFix.Value,
                 ["XSOverlayTweak.WebViewFix"] = XConfig.WebViewFix.Value,
 
-                // Community Reqeust
+                // Community Request
                 ["XSOverlayTweak.HideBattery"] = XConfig.HideBattery.Value,
                 ["XSOverlayTweak.HideInvalidBattery"] = XConfig.HideInvalidBattery.Value,
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
@@ -317,7 +317,7 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.WebViewFix.Value = bool.Parse(value);
                     break;
 
-                // Community Reqeust
+                // Community Request
                 case "XSOverlayTweak.HideBattery":
                     XConfig.HideBattery.Value = bool.Parse(value);
                     break;
