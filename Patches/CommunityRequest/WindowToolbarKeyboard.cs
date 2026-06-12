@@ -16,22 +16,22 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         [HarmonyPostfix]
         public static void AddWindowToolbarKeybordButton(ApiHandler __instance)
         {
-            XConfig.WindowToolbarKeyboard.SettingChanged += (sender, args) =>
+            XConfig.WindowToolbarKeyboard.SettingChanged += async (sender, args) =>
             {
-                EditToolbarJsFile();
+                await Task.Run(() => EditToolbarJsFile()); // Ensure the file is edited before we trigger the reload
+                await Task.Delay(250); // Small delay to ensure the OS file system has flushed and browser handles are released
 
-                XSTools.ExecuteOnMainThread(async () =>
-                {
-                    await Task.Delay(200);
+                OverlayWebView toolbarWebView = Overlay_Manager.Instance.WindowToolbar.GetComponentInChildren<Unity_Overlay>(true).OverlayWebView;
+                var webView = toolbarWebView?._webView?.WebView;
+                if (webView == null) return;
 
-                    OverlayWebView toolbarWebView = Overlay_Manager.Instance.WindowToolbar.GetComponentInChildren<Unity_Overlay>(true).OverlayWebView;
+                toolbarWebView.DisableOnStart = false;
 
-                    toolbarWebView.DisableOnStart = false;
-                    toolbarWebView._webView.WebView.Reload();
-                    toolbarWebView._webView.WebView.SetRenderingEnabled(true);
+                string baseUrl = webView.Url.Split('?')[0].Split('#')[0];  // Stripping existing query/fragment to prevent stacking parameters (?t=...&t=...)
+                webView.LoadUrl($"{baseUrl}?t={System.DateTime.Now.Ticks}"); // Appending a unique timestamp forces Chromium to re-evaluate the page and sub-resources
+                webView.SetRenderingEnabled(true);
 
-                    ChangeToolbarWidth(toolbarWebView, false);
-                });
+                ChangeToolbarWidth(toolbarWebView, false);
             };
         }
 
