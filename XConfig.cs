@@ -66,8 +66,10 @@ namespace xsoverlay_tweak
 
         // Track Space HMD Smooth
         public static ConfigEntry<bool> TrackSpaceHMDSmooth;
+        public static ConfigEntry<bool> TrackSpaceHMDLockRoll;
         public static ConfigEntry<int> TrackSpaceHMDAngleThreshold;
         public static ConfigEntry<int> TrackSpaceHMDDistThreshold;
+        public static ConfigEntry<int> TrackSpaceHMDStopThreshold;
 
         // Fix
         public static ConfigEntry<bool> CtrlKeyStickyFix;
@@ -153,9 +155,11 @@ namespace xsoverlay_tweak
             WristOverPosition = cfg.Bind("QualityOfLife", "WristOverPosition", true, "Increases the allowed positioning radius of the Wrist Overlay.");
 
             // Track Space HMD Smooth
-            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.");
+            TrackSpaceHMDSmooth = cfg.Bind("CommunityReqeust", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space,\nIt will use Position Dampening and Rotation Dampening settings to smooth its movement.");
+            TrackSpaceHMDLockRoll = cfg.Bind("CommunityReqeust", "TrackSpaceHMDLockRoll", true, "Prevents the HMD-attached Capture Overlay from rolling with HMD.");
             TrackSpaceHMDAngleThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDAngleThreshold", 50, "HMD angle threshold to start moving the HMD-attached Capture Overlay.");
             TrackSpaceHMDDistThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDDistThreshold", 20, "HMD distance threshold to start moving the HMD-attached Capture Overlay.");
+            TrackSpaceHMDStopThreshold = cfg.Bind("CommunityReqeust", "TrackSpaceHMDStopThreshold", 5, "Threshold below which the HMD-attached Capture Overlay stops moving to prevent jitter.");
 
             // Fix
             CtrlKeyStickyFix = cfg.Bind("Fix", "CtrlKeyStickyFix", true, "Fix where double-tapping the Ctrl key does not sticky.");

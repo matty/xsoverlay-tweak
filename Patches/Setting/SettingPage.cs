@@ -1,4 +1,4 @@
-﻿using HarmonyLib;
+﻿﻿using HarmonyLib;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -91,8 +91,10 @@ namespace xsoverlay_tweak.Patches.Setting
 
                 // Track Space HMD Smooth
                 ["XSOverlayTweak.TrackSpaceHMDSmooth"] = XConfig.TrackSpaceHMDSmooth.Value,
+                ["XSOverlayTweak.TrackSpaceHMDLockRoll"] = XConfig.TrackSpaceHMDLockRoll.Value,
                 ["XSOverlayTweak.TrackSpaceHMDAngleThreshold"] = XConfig.TrackSpaceHMDAngleThreshold.Value,
                 ["XSOverlayTweak.TrackSpaceHMDDistThreshold"] = XConfig.TrackSpaceHMDDistThreshold.Value,
+                ["XSOverlayTweak.TrackSpaceHMDStopThreshold"] = XConfig.TrackSpaceHMDStopThreshold.Value,
 
                 // Fix
                 ["XSOverlayTweak.CtrlKeyStickyFix"] = XConfig.CtrlKeyStickyFix.Value,
@@ -279,11 +281,17 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.TrackSpaceHMDSmooth":
                     XConfig.TrackSpaceHMDSmooth.Value = bool.Parse(value);
                     break;
+                case "XSOverlayTweak.TrackSpaceHMDLockRoll":
+                    XConfig.TrackSpaceHMDLockRoll.Value = bool.Parse(value);
+                    break;
                 case "XSOverlayTweak.TrackSpaceHMDAngleThreshold":
                     XConfig.TrackSpaceHMDAngleThreshold.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.TrackSpaceHMDDistThreshold":
                     XConfig.TrackSpaceHMDDistThreshold.Value = int.Parse(value);
+                    break;
+                case "XSOverlayTweak.TrackSpaceHMDStopThreshold":
+                    XConfig.TrackSpaceHMDStopThreshold.Value = int.Parse(value);
                     break;
 
                 // Fix

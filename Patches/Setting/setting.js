@@ -92,10 +92,12 @@ function InjectKBOSCTab() {
                 ]
             },
             {
-                name: 'Track Space  Smooth', priority: 9, settings: [
-                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.TrackSpaceHMDSmooth', name: 'Enable', description: 'When Capture Overlay uses HMD Tracking Space, it will use Position Dampening and Rotation Dampening settings to smooth its movement.', default: true },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDAngleThreshold', name: 'Tracking Space Angle Threshold', description: 'HMD angle threshold to start moving the HMD-attached Capture Overlay.', default: 50, options: [0, 90, 5], unit: 'Degree' },
-                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDDistThreshold', name: 'Tracking Space Distance Threshold', description: 'HMD distance threshold to start moving the HMD-attached Capture Overlay.', default: 20, options: [0, 150, 5], unit: 'cm' },
+                name: 'Track Space HMD Smooth', priority: 9, settings: [
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.TrackSpaceHMDSmooth', name: 'Enable', description: 'When Capture Overlay uses HMD Tracking Space<br>It will use Position Dampening and Rotation Dampening settings to smooth its movement.', default: true },
+                    { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.TrackSpaceHMDLockRoll', name: 'Freeze Roll', description: 'Prevents the HMD-attached Capture Overlay from rolling with HMD.', default: true },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDAngleThreshold', name: 'Tracking Space Angle Threshold', description: 'HMD angle threshold to start moving the HMD-attached Capture Overlay.', default: 50, options: [0, 120, 5], unit: 'Degree' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDDistThreshold', name: 'Tracking Space Distance Threshold', description: 'HMD distance threshold to start moving the HMD-attached Capture Overlay.', default: 20, options: [0, 150, 5], unit: 'Centimetre' },
+                    { type: Ui.ComponentType.Slider, id: 'XSOverlayTweak.TrackSpaceHMDStopThreshold', name: 'Track Space Stop Threshold', description: 'Threshold below which the HMD-attached Capture Overlay stops moving to prevent jitter.', default: 5, options: [0, 100, 1], unit: 'Degree/Centimetre' },
                 ]
             },
             {

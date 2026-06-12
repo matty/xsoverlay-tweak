@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System.Collections;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 using Valve.VR;
@@ -15,8 +16,13 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             public bool Initialized;
             public bool IsMoving;
         }
+        private static readonly ConditionalWeakTable<Unity_Overlay, SmoothPose> smoothedPoses = new();
 
-        private static readonly ConditionalWeakTable<Unity_Overlay, SmoothPose> _smoothedPoses = new();
+        private static bool IsRecenter = false;
+        private static Coroutine RecenterCoroutine;
+
+        private static readonly float oneCentimetre = 0.01f;
+        private static readonly float oneDegree = 1.0f;
 
         [HarmonyPatch(typeof(Unity_Overlay), "UpdateOverlay")]
         [HarmonyPostfix]
@@ -32,46 +38,61 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
                 if (__instance.WorldSpaceSceneImpostor == null) return;
             }
 
-            if (!_smoothedPoses.TryGetValue(__instance, out var smooth))
+            if (!smoothedPoses.TryGetValue(__instance, out var Data))
             {
-                smooth = new SmoothPose();
-                _smoothedPoses.Add(__instance, smooth);
+                Data = new SmoothPose();
+                smoothedPoses.Add(__instance, Data);
             }
 
             Transform target = __instance.WorldSpaceSceneImpostor.transform;
 
-            if (!smooth.Initialized || __instance.QueuedToForcePositionUpdate)
+            if (!Data.Initialized || __instance.QueuedToForcePositionUpdate)
             {
-                smooth.Position = target.position;
-                smooth.Rotation = target.rotation;
-                smooth.Initialized = true;
-                smooth.IsMoving = false;
+                Data.Position = target.position;
+                Data.Rotation = target.rotation;
+                Data.Initialized = true;
+                Data.IsMoving = false;
             }
+
+            Quaternion targetRotation = target.rotation;
+            if (XConfig.TrackSpaceHMDLockRoll.Value)
+                targetRotation = Quaternion.LookRotation(targetRotation * Vector3.forward, Vector3.up);
 
             float posDamp = XSettingsManager.Instance.Settings.PositionDampening;
             float rotDamp = XSettingsManager.Instance.Settings.RotationDampening;
 
-            // If grabbed, Raycaster.Grab() is already smoothing the WorldSpaceSceneImpostor towards the ray.
-            // Follow the impostor rigidly (high dampening) to avoid double-interpolation during grabs.
-            float currentPosDamp = __instance.IsHeld ? posDamp : posDamp / 5f;
-            float currentRotDamp = __instance.IsHeld ? rotDamp : rotDamp / 5f;
+            float dist = Vector3.Distance(Data.Position, target.position);
+            float angle = Quaternion.Angle(Data.Rotation, targetRotation);
 
-            float dist = Vector3.Distance(smooth.Position, target.position);
-            float angle = Quaternion.Angle(smooth.Rotation, target.rotation);
+            float distThreshold = oneCentimetre * XConfig.TrackSpaceHMDDistThreshold.Value;
+            float angleThreshold = oneDegree * XConfig.TrackSpaceHMDAngleThreshold.Value;
+            float stopThreshold = XConfig.TrackSpaceHMDStopThreshold.Value;
 
-            float oneCm = 0.01f;
-            float oneDegree = 1.0f;
+            bool isChildOverlay = __instance.overlayName == "window.toolbar" || __instance.overlayName == "window.settings";
+            Unity_Overlay parentOverlay = isChildOverlay ? Overlay_Manager.Instance.WindowToolbarMover.ParentOverlay : null;
 
-            // Moving Threshold
-            if (__instance.IsHeld || dist > (oneCm * XConfig.TrackSpaceHMDDistThreshold.Value) || angle > (oneDegree * XConfig.TrackSpaceHMDAngleThreshold.Value))
-                smooth.IsMoving = true;
-            else if (dist < (oneCm * 5) && angle < (oneDegree * 5))
-                smooth.IsMoving = false;
+            // Logic derived from Raycaster.Grab: Determine if we follow the target or wait for threshold.
+            if (isChildOverlay && parentOverlay != null && smoothedPoses.TryGetValue(parentOverlay, out var parentData))
+                Data.IsMoving = parentData.IsMoving;  // Inherit movement state from parent to keep UI elements synced.
+            else if (__instance.IsHeld || parentOverlay?.IsHeld == true)
+                Data.IsMoving = true;
+            else if (dist > distThreshold || angle > angleThreshold)
+                Data.IsMoving = true;
+            else if (dist < (oneCentimetre * stopThreshold) && angle < (oneDegree * stopThreshold))
+                Data.IsMoving = false;
 
-            if (smooth.IsMoving)
+            if (Data.IsMoving || IsRecenter)
             {
-                smooth.Position = Vector3.Lerp(smooth.Position, target.position, Time.deltaTime * currentPosDamp);
-                smooth.Rotation = Quaternion.Slerp(smooth.Rotation, target.rotation, Time.deltaTime * currentRotDamp);
+                // If the window is being held, Grab() is already applying smoothing. 
+                // Rigidly (high dampening) to avoid "lagging" behind the hand.
+                // Otherwise, we use a reduced dampening factor to provide a stable, "lazy" follow effect for HMD movement.
+                bool isHeld = __instance.IsHeld || parentOverlay?.IsHeld == true;
+                float dampMultiplier = isHeld ? 1f : 0.2f;
+
+                // Use Slerp for position to maintain spherical consistency around the head.
+                // This prevents the "vibrating" or linear shortcutting feel during fast HMD rotations.
+                Data.Position = Vector3.Slerp(Data.Position, target.position, Time.deltaTime * posDamp * dampMultiplier);
+                Data.Rotation = Quaternion.Slerp(Data.Rotation, targetRotation, Time.deltaTime * rotDamp * dampMultiplier);
             }
 
             // Use Absolute tracking to allow software-side smoothing; TrackedDeviceRelative is rigid at driver level.
@@ -81,23 +102,39 @@ namespace xsoverlay_tweak.Patches.CommunityReqeust
             Vector3 originalPos = __instance.transform.position;
             Quaternion originalRot = __instance.transform.rotation;
 
-            __instance.transform.position = smooth.Position;
-            __instance.transform.rotation = smooth.Rotation;
+            __instance.transform.position = Data.Position;
+            __instance.transform.rotation = Data.Rotation;
 
             __instance.SetTransformAbsolute(OVR_Pose_Handler.instance.trackingSpace, __instance.transform);
 
             // Restore local offset so Raycaster and internal state logic aren't broken by world coordinates
-            __instance.transform.position = originalPos;
-            __instance.transform.rotation = originalRot;
-
-            /*var optsField = AccessTools.Field(typeof(Unity_Overlay), "opts");
-            object optsValue = optsField.GetValue(__instance);
-            if (optsValue != null)
+            if (!__instance.IsHeld)
             {
-                AccessTools.Field(optsValue.GetType(), "pos").SetValue(optsValue, __instance.transform.position);
-                AccessTools.Field(optsValue.GetType(), "rot").SetValue(optsValue, __instance.transform.rotation);
-                if (optsValue.GetType().IsValueType) optsField.SetValue(__instance, optsValue);
-            }*/
+                __instance.transform.position = originalPos;
+                __instance.transform.rotation = originalRot;
+            }
+        }
+
+        [HarmonyPatch(typeof(Overlay_Manager), nameof(Overlay_Manager.RecieveRecenterWindows), []), HarmonyPatch(typeof(Overlay_Manager), nameof(Overlay_Manager.RecieveRecenterWindows), [typeof(HandSource)])]
+        [HarmonyPostfix]
+        public static void ListenForRecenter()
+        {
+            if (!IsEnable()) return;
+
+            IsRecenter = true;
+
+            if (RecenterCoroutine != null)
+                Plugin.Instance.StopCoroutine(RecenterCoroutine);
+
+            RecenterCoroutine = Plugin.Instance.StartCoroutine(StopRecenter());
+        }
+
+        private static IEnumerator StopRecenter()
+        {
+            yield return new WaitForSecondsRealtime(1f);
+
+            IsRecenter = false;
+            RecenterCoroutine = null;
         }
 
         private static bool IsEnable()
