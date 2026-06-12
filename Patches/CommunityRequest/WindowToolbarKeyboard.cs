@@ -37,15 +37,13 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
         [HarmonyPatch(typeof(OverlayWebView), "Awake")]
         [HarmonyPrefix]
-        public static bool ChangeWindowToolbarDimension(OverlayWebView __instance)
+        public static void ChangeWindowToolbarDimension(OverlayWebView __instance)
         {
             if (__instance.UserInterfaceSelection == OverlayWebView.UserInterfacePaths.WindowToolbar)
             {
                 EditToolbarJsFile();
                 ChangeToolbarWidth(__instance, true);
             }
-
-            return true;
         }
 
         [HarmonyPatch(typeof(Overlay_Manager), "EnableKeyboard")]

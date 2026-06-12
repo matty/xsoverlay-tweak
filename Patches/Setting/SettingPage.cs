@@ -125,7 +125,7 @@ namespace xsoverlay_tweak.Patches.Setting
 
         [HarmonyPatch(typeof(XSettingsManager), nameof(XSettingsManager.SetSetting))]
         [HarmonyPrefix]
-        public static bool SetSetting(string name, string value, string value1, bool sendAnalytics = true)
+        public static void SetSetting(string name, string value, string value1, bool sendAnalytics = true)
         {
             switch (name)
             {
@@ -354,8 +354,6 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.UpdateNotification.Value = bool.Parse(value);
                     break;
             }
-
-            return true;
         }
 
         public static void InjectSettingsModule(OverlayWebView wv)

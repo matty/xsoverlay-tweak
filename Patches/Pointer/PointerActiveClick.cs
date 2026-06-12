@@ -11,9 +11,9 @@ namespace xsoverlay_tweak.Patches.Pointer
 
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows"), HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool HandleClickOnCaptureOverlayToBecomeActiveHandAndClick(Raycaster __instance)
+        public static void HandleClickOnCaptureOverlayToBecomeActiveHandAndClick(Raycaster __instance)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             if (!EventBridge.IsActiveHand(__instance))
             {
@@ -24,8 +24,6 @@ namespace xsoverlay_tweak.Patches.Pointer
 
                 __instance.CanClickDesktopCursor = true;
             }
-
-            return true;
         }
 
         public static bool IsEnable()

@@ -13,9 +13,9 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         //** Pre OnMove
         [HarmonyPatch(typeof(Raycaster), "Drop")]
         [HarmonyPrefix]
-        public static bool PreDrop(Raycaster __instance)
+        public static void PreDrop(Raycaster __instance)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             if (__instance.HeldOverlay != null)
                 if (__instance.HeldOverlay.IsWristOverlay)
@@ -32,8 +32,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                     else
                         position = __instance.HeldOverlay.transform.position;
                 }
-
-            return true;
         }
 
         //** Post OnMove
@@ -54,9 +52,9 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         //?? Pre OnLoad
         [HarmonyPatch(typeof(XSettingsManager), "LoadWristOffsets")]
         [HarmonyPrefix]
-        public static bool PreLoadWristOffsets(XSettingsManager __instance)
+        public static void PreLoadWristOffsets(XSettingsManager __instance)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             Transform transform = XSettingsManager.Instance.WristDefaultPointLeft;
 
@@ -69,8 +67,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 position = __instance.Settings.WristOffsets;
 
             rotation = Quaternion.Euler(__instance.Settings.WristRotation); ;
-
-            return true;
         }
 
         //?? Post OnLoad

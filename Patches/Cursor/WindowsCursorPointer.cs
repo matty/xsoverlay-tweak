@@ -210,10 +210,10 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         [HarmonyPatch("HandleClicksForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool SetCursorPositionBeforeClick(Raycaster __instance, ref ClickActions clickActions, ref MouseInputDevice ___InputDevice)
+        public static void SetCursorPositionBeforeClick(Raycaster __instance, ref ClickActions clickActions, ref MouseInputDevice ___InputDevice)
         {
-            if (!IsEnable()) return true;
-            if (!IsHand(__instance)) return true;
+            if (!IsEnable()) return;
+            if (!IsHand(__instance)) return;
 
             if (___InputDevice.InputSource == clickActions.InputSource && __instance.CanClickDesktopCursor)
                 if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
@@ -222,8 +222,6 @@ namespace xsoverlay_tweak.Patches.Cursor
                         RayCastResult? desktopCoordinate = EventBridge.Ref_Raycaster.GetDesktopCoordinate(__instance);
                         MouseOperations.SetCursorPosition((int)desktopCoordinate.Value.desktopCoord.x, (int)desktopCoordinate.Value.desktopCoord.y);
                     }
-
-            return true;
         }
 
         public static bool IsEnable()

@@ -31,9 +31,9 @@ namespace xsoverlay_tweak.Patches.Fix
         //!! Not work by clicking
         /*[HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]
         [HarmonyPrefix]
-        public static bool ClickWebView(Raycaster __instance)
+        public static void ClickWebView(Raycaster __instance)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             Plugin.Logger.LogError(__instance.HoveringOverlay.overlayName);
             if (IsWebView(__instance.HoveringOverlay))
@@ -44,8 +44,6 @@ namespace xsoverlay_tweak.Patches.Fix
 
                 __instance.HoveringOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
             }
-
-            return true;
         }*/
 
         [HarmonyPatch(typeof(Raycaster), "HandleTouchInputForWebApplications")]

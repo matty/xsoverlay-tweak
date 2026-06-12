@@ -75,17 +75,15 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
         [HarmonyPatch(typeof(Raycaster), "PointerHoverAndStateManagement")]
         [HarmonyPrefix]
-        public static bool BlockCursorMovement(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
+        public static void BlockCursorMovement(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
         {
-            if (!IsEnable() || !IsHand(__instance)) return true;
+            if (!IsEnable() || !IsHand(__instance)) return;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 if (Data.IsBlock)
                     ___DesktopCoordinates = Data.DesktopCoordinates;
                 else
                     Data.DesktopCoordinates = ___DesktopCoordinates;
-
-            return true;
         }
 
         [HarmonyPatch(typeof(Raycaster), "SetVisualCursorTransform")]
@@ -114,15 +112,13 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
         [HarmonyPatch(typeof(Raycaster), "HandleClicksForDesktopWindows"), HarmonyPatch(typeof(Raycaster), "HandleTouchInputForDesktopWindows")]
         [HarmonyPrefix]
-        public static bool InputClickLockPosition(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
+        public static void InputClickLockPosition(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
         {
-            if (!IsEnable() || !IsHand(__instance)) return true;
+            if (!IsEnable() || !IsHand(__instance)) return;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 if (Data.IsBlock)
                     ___DesktopCoordinates = Data.DesktopCoordinates;
-
-            return true;
         }
 
         [HarmonyPatch(typeof(MouseInputDevice), nameof(MouseInputDevice.StartClickFreezePeriod))]

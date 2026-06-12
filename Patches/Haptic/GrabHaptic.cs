@@ -41,22 +41,18 @@ namespace xsoverlay_tweak.Patches.Haptic
 
         [HarmonyPatch("Drop")]
         [HarmonyPrefix]
-        public static bool Drop(Raycaster __instance)
+        public static void Drop(Raycaster __instance)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             if (HoverDictionary.TryGetValue(__instance, out HoverData Data))
             {
                 if (__instance.HeldOverlay == null || Data.IsHaptic)
-                {
-                    return true;
-                }
+                    return;
 
                 Data.IsHaptic = true;
                 AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 40f, XConfig.GrabHaptic.Value / 100f);
             }
-
-            return true;
         }
 
         private static bool IsHand(Raycaster instance)

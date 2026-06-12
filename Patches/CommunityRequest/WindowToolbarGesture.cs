@@ -100,9 +100,9 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
         [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(int)]), HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(UwcWindow)])]
         [HarmonyPrefix]
-        public static bool RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
+        public static void RememberCaptureTarget(WindowComponentManager __instance, Unity_Overlay overlay, Unity_Overlay ___ThisOverlay)
         {
-            if (!IsEnable()) return true;
+            if (!IsEnable()) return;
 
             if (!(___ThisOverlay != overlay))
             {
@@ -116,8 +116,6 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     });
                 }
             }
-
-            return true;
         }
 
         [HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(int)]), HarmonyPatch(typeof(WindowComponentManager), nameof(WindowComponentManager.SetOverlayCaptureTarget), [typeof(Unity_Overlay), typeof(UwcWindow)])]

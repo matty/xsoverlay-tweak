@@ -46,12 +46,10 @@ namespace xsoverlay_tweak.Patches
 
         [HarmonyPatch(typeof(Unity_Overlay), "OnDestroy")]
         [HarmonyPrefix]
-        public static bool OnDestroy(Unity_Overlay __instance)
+        public static void OnDestroy(Unity_Overlay __instance)
         {
             if (__instance != null && !string.IsNullOrEmpty(__instance.overlayName))
                 OverlayDictionary.Remove(__instance.overlayName);
-
-            return true;
         }
 
         private static void RefreshAll(object sender, EventArgs e)
