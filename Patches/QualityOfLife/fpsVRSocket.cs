@@ -12,7 +12,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
     internal class fpsVRSocket
     {
         private static CVROverlay Overlay;
-        private static EVROverlayError error;
+        private static EVROverlayError evroverlayError;
         private static ulong fpsVRHandle = 0;
 
         private static bool IsClosing = false;
@@ -91,15 +91,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             if (!IsEnabled()) return;
 
-            if (fpsVRHandle == 0)
-            {
-                Overlay = OpenVR.Overlay;
-                EVROverlayError evroverlayError = Overlay.FindOverlay("sb.fpsVR.ingameoverlay", ref fpsVRHandle);
-
-                if (evroverlayError != EVROverlayError.None)
-                    Plugin.Logger.LogError(evroverlayError.ToString());
-            }
-
             if (!IsClosing)
                 ChangefpsVRTranform();
         }
@@ -126,6 +117,15 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
         private static void ChangefpsVRTranform()
         {
+            if (fpsVRHandle == 0)
+            {
+                Overlay = OpenVR.Overlay;
+                evroverlayError = Overlay.FindOverlay("sb.fpsVR.ingameoverlay", ref fpsVRHandle);
+
+                if (evroverlayError != EVROverlayError.None)
+                    Plugin.Logger.LogError(evroverlayError.ToString());
+            }
+
             if (fpsVRHandle == 0 || WristOverlay.Instance == null || WristOverlay.Instance.overlay.overlay.overlayTexture == null) return;
 
             // Get the real runtime physical sizes directly from the active XSOverlay instance metrics
@@ -195,13 +195,16 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             if (transformType == VROverlayTransformType.VROverlayTransform_Absolute || transformType != VROverlayTransformType.VROverlayTransform_TrackedDeviceRelative) // Floating
             {
                 //ETrackingUniverseOrigin overlayTransformAbsoluteTrackingOrigin = WristOverlay.Instance.overlay.overlay.overlayTransformAbsoluteTrackingOrigin;
-                //error = Overlay.SetOverlayTransformAbsolute(fpsVRHandle, overlayTransformAbsoluteTrackingOrigin, ref overlayTransform);
+                //evroverlayError = Overlay.SetOverlayTransformAbsolute(fpsVRHandle, overlayTransformAbsoluteTrackingOrigin, ref overlayTransform);
             }
             else // ExecuteJava tracking changes to the target handle destination
             {
                 uint overlayTransformTrackedDeviceRelativeIndex = WristOverlay.Instance.overlay.overlay.overlayTransformTrackedDeviceRelativeIndex;
-                error = Overlay.SetOverlayTransformTrackedDeviceRelative(fpsVRHandle, overlayTransformTrackedDeviceRelativeIndex, ref overlayTransform);
+                evroverlayError = Overlay.SetOverlayTransformTrackedDeviceRelative(fpsVRHandle, overlayTransformTrackedDeviceRelativeIndex, ref overlayTransform);
             }
+
+            if (evroverlayError != EVROverlayError.None)
+                Plugin.Logger.LogError(evroverlayError.ToString());
         }
 
         private static IEnumerator ClosingDelay()
