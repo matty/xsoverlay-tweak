@@ -159,7 +159,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         yOffset += (xsoHeightInMeters * -0.3f);
                 }
 
-
                 overlayTransform = AddOffset(overlayTransform, new Vector3(0f, yOffset, 0f), Quaternion.identity);
             }
             else if (XConfig.fpsVRSocket.Value == 2) // Bottom
@@ -167,17 +166,17 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 float yOffset = -((xsoHeightInMeters / 2f) + (fpsHeightInMeters / 2f));
                 bool isBattery = !HideInvalidBattery.IsEnable() && !HideInvalidBattery.Devices.Count.Equals(0);
 
-                if (IsMediaPlayer)
-                    if (isBattery)
-                        yOffset += (xsoHeightInMeters * +0.15f);
-                    else
-                        yOffset += (xsoHeightInMeters * +0.3f);
-                else if (IsPerformanceMonitor && Overlay_Manager.Instance.editMode)
-                    yOffset += (xsoHeightInMeters * +0.23f);
-                else if (!isBattery)
-                    yOffset += (xsoHeightInMeters * +0.45f);
-                else
-                    yOffset += (xsoHeightInMeters * +0.3f);
+                yOffset += (xsoHeightInMeters * +0.3f);
+
+                if (IsPerformanceMonitor && Overlay_Manager.Instance.editMode && !isBattery)
+                    yOffset += (xsoHeightInMeters * -0.23f);
+                else if (IsMediaPlayer)
+                    yOffset += (xsoHeightInMeters * -0.16f);
+                else if (IsPerformanceMonitor && !isBattery)
+                    yOffset += (xsoHeightInMeters * -0.08f);
+
+                if (!isBattery)
+                    yOffset += (xsoHeightInMeters * +0.15f);
 
                 overlayTransform = AddOffset(overlayTransform, new Vector3(0f, yOffset, 0f), Quaternion.identity);
             }
