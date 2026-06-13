@@ -159,7 +159,7 @@ namespace xsoverlay_tweak
 
             // Community Request
             HideBattery = cfg.Bind("CommunityRequest", "HideBattery", false, "Hide Wrist Overlay battery information widget.");
-            HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", false, "Hide invalid battery device from Wrist Overlay.");
+            HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", true, "Hide invalid battery device from Wrist Overlay.");
             LoadLayoutKeyboard = cfg.Bind("CommunityRequest", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityRequest", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
             OverlayConfirmClose = cfg.Bind("CommunityRequest", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");

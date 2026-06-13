@@ -26,10 +26,10 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             public bool IsChildOverlay = false;
 
             public bool IsMoving = false;
-            public bool IsSmooth = false;
+            public bool IsSmooth = true;
             public bool LockRoll = true;
-            public int DistThreshold = 20;
-            public int AngleThreshold = 50;
+            public int DistThreshold = 0;
+            public int AngleThreshold = 0;
             public int StopThreshold = 5;
         }
         private static readonly ConditionalWeakTable<Unity_Overlay, SmoothData> OverlayStatus = new();

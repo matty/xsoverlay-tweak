@@ -114,7 +114,7 @@ function InjectKBOSCTab() {
                 {
                     name: 'Community Request', priority: 10, settings: [
                         { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideBattery', name: 'Hide Battery', description: 'Hide Wrist Overlay battery information widget.', default: false },
-                        { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideInvalidBattery', name: 'Hide Invalid Battery', description: 'Hide invalid battery device from Wrist Overlay.', default: false },
+                        { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.HideInvalidBattery', name: 'Hide Invalid Battery', description: 'Hide invalid battery device from Wrist Overlay.', default: true },
                         { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.LoadLayoutKeyboard', name: 'Layout Keyboard State', description: 'Layout will save the current keyboard state to the selected profile.', default: true },
                         { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.MouseButtonSwap', name: 'Mouse Button Swap', description: 'Detecting the Windows setting \'Switch primary and secondary buttons\' to auto-swap controller binding.', default: true },
                         { type: Ui.ComponentType.Toggle, id: 'XSOverlayTweak.OverlayConfirmClose', name: 'Overlay Confirm Close', description: 'Requires pressing the close overlay button three times to close.', default: false },
