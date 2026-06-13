@@ -44,7 +44,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                             MiniToolbar.PerformanceStats.click();
                         }};
 
-                        if ({1} && !GetShowMediaPlayer()) {{
+                        if ({1} && !ShowMediaPlayer) {{
                             MiniToolbar.MediaPlayer.click();
                         }};
                     }})()", CustomSettings.Settings.IsPerformanceMonitorOpened.ToString().ToLower(), CustomSettings.Settings.IsMediaPlayerOpened.ToString().ToLower());

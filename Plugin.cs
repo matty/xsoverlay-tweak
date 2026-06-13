@@ -20,6 +20,8 @@ public class Plugin : BaseUnityPlugin
         Logger = base.Logger;
         XConfig.AllConfig(Config);
 
+        harmony.PatchAll(typeof(GlobalizeJsModule));
+
         harmony.PatchAll(typeof(CustomAPI));
         harmony.PatchAll(typeof(CustomSettings));
         harmony.PatchAll(typeof(EventBridge));
