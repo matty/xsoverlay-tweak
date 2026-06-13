@@ -28,7 +28,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             {
                 if (!IsEnable()) return;
 
-                if (EventBridge.CurrentHoveringOverlay?.overlayName == "window.settings" || EventBridge.CurrentHoveringOverlay?.overlayName == "window.toolbar")
+                if (EventBridge.CurrentHoveringOverlay?.overlayName == "window.toolbar")
                 {
                     Unity_Overlay targetOverlay = Overlay_Manager.Instance.WindowToolbarMover.ParentOverlay;
 
