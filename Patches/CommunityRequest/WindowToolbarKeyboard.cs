@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
-using System.IO;
 using System.Threading.Tasks;
+using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
@@ -16,37 +16,44 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         [HarmonyPostfix]
         public static void AddWindowToolbarKeybordButton(ApiHandler __instance)
         {
-            XConfig.WindowToolbarKeyboard.SettingChanged += async (sender, args) =>
+            XConfig.WindowToolbarKeyboard.SettingChanged += (sender, args) =>
             {
-                await Task.Run(() => EditToolbarJsFile()); // Ensure the file is edited before we trigger the reload
-                await Task.Delay(250); // Small delay to ensure the OS file system has flushed and browser handles are released
+                OverlayWebView webView = Overlay_Manager.Instance.WindowToolbar.GetComponentInChildren<Unity_Overlay>(true)?.OverlayWebView;
 
-                OverlayWebView toolbarWebView = Overlay_Manager.Instance.WindowToolbar.GetComponentInChildren<Unity_Overlay>(true).OverlayWebView;
-                var webView = toolbarWebView?._webView?.WebView;
-                if (webView == null) return;
+                if (webView != null)
+                {
+                    ChangeUI(webView);
+                    ChangeWidth(webView);
 
-                toolbarWebView.DisableOnStart = false;
-
-                string baseUrl = webView.Url.Split('?')[0].Split('#')[0];  // Stripping existing query/fragment to prevent stacking parameters (?t=...&t=...)
-                webView.LoadUrl($"{baseUrl}?t={System.DateTime.Now.Ticks}"); // Appending a unique timestamp forces Chromium to re-evaluate the page and sub-resources
-                webView.SetRenderingEnabled(true);
-
-                ChangeToolbarWidth(toolbarWebView, false);
+                    webView._webView.WebView.SetRenderingEnabled(true);
+                }
             };
         }
 
-        [HarmonyPatch(typeof(OverlayWebView), "Awake")]
-        [HarmonyPrefix]
-        public static void ChangeWindowToolbarDimension(OverlayWebView __instance)
+        [HarmonyPatch(typeof(Overlay_Manager), "OnRegisterWebviewOverlay")]
+        [HarmonyPostfix]
+        public static void WindowToolbarLoaded(OverlayWebView wv)
         {
-            if (__instance.UserInterfaceSelection == OverlayWebView.UserInterfacePaths.WindowToolbar)
+            if (wv.UserInterfaceSelection == OverlayWebView.UserInterfacePaths.WindowToolbar)
             {
-                EditToolbarJsFile();
-                ChangeToolbarWidth(__instance, true);
+                ChangeWidth(wv);
+
+                wv._webView.WebView.LoadProgressChanged += (sender, args) =>
+                {
+                    if (args.Type == ProgressChangeType.Finished)
+                    {
+                        Task.Run(async () =>
+                        {
+                            await Task.Delay(1000);
+
+                            ChangeUI(wv);
+                        });
+                    }
+                };
             }
         }
 
-        [HarmonyPatch(typeof(Overlay_Manager), "EnableKeyboard")]
+        [HarmonyPatch(typeof(Overlay_Manager), nameof(Overlay_Manager.EnableKeyboard))]
         [HarmonyPostfix]
         public static void SpawnKeyboardPostionFix(Overlay_Manager __instance, KeyboardGlobalManager ___keyboardManager)
         {
@@ -59,9 +66,9 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             }
         }
 
-        private static void ChangeToolbarWidth(OverlayWebView webView, bool isAwake)
+        private static void ChangeWidth(OverlayWebView toolbarWebView)
         {
-            float targetWidth = webView.Width;
+            float targetWidth = toolbarWebView.Width;
             bool isChanged = false;
 
             if (IsEnable())
@@ -79,32 +86,46 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
             if (isChanged)
             {
-                webView.Width = targetWidth;
+                toolbarWebView.Width = targetWidth;
 
-                if (!isAwake)
-                    webView.UpdateResolution(new UnityEngine.Resolution { width = (int)webView.Width, height = (int)webView.Height });
+                toolbarWebView.UpdateResolution(new UnityEngine.Resolution { width = (int)toolbarWebView.Width, height = (int)toolbarWebView.Height });
             }
         }
 
-        private static void EditToolbarJsFile()
+        private static void ChangeUI(OverlayWebView toolbarWebView)
         {
-            string filePath = @".\XSOverlay_Data\StreamingAssets\Plugins\Applications\_UI\Default\_Shared\js\toolbar.js";
-            if (!File.Exists(filePath)) return;
+            var webView = toolbarWebView._webView.WebView;
+            if (webView == null) return;
 
-            string content = File.ReadAllText(filePath);
-            string original = "var windowToolbarLookup = {\r\n    \"WindowSettings\": \"gear-fill\",";
-            string edited = "var windowToolbarLookup = {\r\n    \"Keyboard\": \"keyboard-fill\",\r\n\t\"WindowSettings\": \"gear-fill\",";
+            string jsCode;
 
-            if (content.Contains(original) && IsEnable())
+            if (IsEnable())
+                jsCode = @"(function() {
+                    if (window.windowToolbarLookup && !window.windowToolbarLookup.Keyboard) {
+                        window.windowToolbarLookup = { ""Keyboard"": ""keyboard-fill"", ...window.windowToolbarLookup };
+                        var container = document.getElementById('ToolbarButtons') || document.querySelector('.toolbar');
+                        if (container && typeof window.InitializeUI === 'function') {
+                            container.innerHTML = '';
+                            window.InitializeUI();
+                        }
+                    }
+                })();";
+            else
+                jsCode = @"(function() {
+                    if (window.windowToolbarLookup && window.windowToolbarLookup.Keyboard) {
+                        delete window.windowToolbarLookup.Keyboard;
+                        var container = document.getElementById('ToolbarButtons') || document.querySelector('.toolbar');
+                        if (container && typeof window.InitializeUI === 'function') {
+                            container.innerHTML = '';
+                            window.InitializeUI();
+                        }
+                    }
+                })();";
+
+            toolbarWebView._webView.WebView.ExecuteJavaScript(jsCode, (result) =>
             {
-                string patched = content.Replace(original, edited);
-                File.WriteAllText(filePath, patched);
-            }
-            else if (content.Contains(edited) && !IsEnable())
-            {
-                string patched = content.Replace(edited, original);
-                File.WriteAllText(filePath, patched);
-            }
+                //Plugin.Logger.LogError($"[{toolbarWebView.UserInterfaceSelection}] {result}");
+            });
         }
 
         private static bool IsEnable()
