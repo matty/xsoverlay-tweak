@@ -182,6 +182,11 @@ namespace xsoverlay_tweak.Utils
             }
         }
 
+        public static bool IsRaycasterHand(Raycaster raycaster)
+        {
+            return raycaster.HapticDeviceName != Raycaster.HapticDevice.None;
+        }
+
         private static IEnumerator ClearCurrentHoveringOverlayTimer()
         {
             yield return new WaitForSecondsRealtime(1);

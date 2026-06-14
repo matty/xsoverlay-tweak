@@ -21,7 +21,7 @@ namespace xsoverlay_tweak.Patches.Haptic
         [HarmonyPostfix]
         public static void Initialize(Raycaster __instance)
         {
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             HoverDictionary.Add(__instance, new());
         }
@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.Haptic
         [HarmonyPostfix]
         public static void PlayHapticOnHoverButton(Raycaster __instance, List<RaycastResult> ___PointerResult)
         {
-            if (!IsEnable() || !IsHand(__instance) || __instance.HoveringOverlay.IsPluginApplication || __instance.HeldOverlay != null) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance) || __instance.HoveringOverlay.IsPluginApplication || __instance.HeldOverlay != null) return;
 
             if (HoverDictionary.TryGetValue(__instance, out HoverData Data))
             {
@@ -55,11 +55,6 @@ namespace xsoverlay_tweak.Patches.Haptic
                 if (!IsFound)
                     Data.OldHoverObject = null;
             }
-        }
-
-        private static bool IsHand(Raycaster instance)
-        {
-            return instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
 
         private static bool IsEnable()

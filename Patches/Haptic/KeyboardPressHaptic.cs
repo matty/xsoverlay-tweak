@@ -15,7 +15,7 @@ namespace xsoverlay_tweak.Patches.Haptic
         [HarmonyPostfix]
         public static void PlayHapticOnPressButton(Raycaster __instance, SteamVR_Input_Sources inputSource, ref List<RaycastResult> ___PointerResult, MouseInputDevice ___InputDevice)
         {
-            if (!IsEnable() || !IsHand(__instance)) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance)) return;
             if (___PointerResult == null || inputSource != ___InputDevice.InputSource || __instance.HoveringOverlay == null || __instance.HoveringOverlay.IsPluginApplication || ___InputDevice.ScaleGracePeriodActive)
                 return;
 
@@ -42,11 +42,6 @@ namespace xsoverlay_tweak.Patches.Haptic
             }
 
             return;
-        }
-
-        private static bool IsHand(Raycaster instance)
-        {
-            return instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
 
         private static bool IsEnable()

@@ -17,7 +17,7 @@ namespace xsoverlay_tweak.Patches.Haptic
         [HarmonyPostfix]
         public static void Initialize(Raycaster __instance)
         {
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             HoverDictionary.Add(__instance, new());
         }
@@ -53,11 +53,6 @@ namespace xsoverlay_tweak.Patches.Haptic
                 Data.IsHaptic = true;
                 AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 40f, XConfig.GrabHaptic.Value / 100f);
             }
-        }
-
-        private static bool IsHand(Raycaster instance)
-        {
-            return instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
 
         private static bool IsEnable()

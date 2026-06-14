@@ -46,7 +46,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         [HarmonyPostfix]
         public static void StartRaycasterInstance(Raycaster __instance)
         {
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             if (IsEnable())
                 CursorDictionary.Add(__instance, new());
@@ -81,7 +81,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         public static void ChangePointerTextureToWindowsCursor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay, ref Texture2D ___CursorIcon)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
             {
@@ -232,7 +232,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         public static void SetCursorPositionBeforeClick(Raycaster __instance, ref ClickActions clickActions, ref MouseInputDevice ___InputDevice)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             if (___InputDevice.InputSource == clickActions.InputSource && __instance.CanClickDesktopCursor)
                 if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
@@ -246,11 +246,6 @@ namespace xsoverlay_tweak.Patches.Cursor
         public static bool IsEnable()
         {
             return XConfig.WindowsCursorPointer.Value && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
-        }
-
-        private static bool IsHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
 
         //?? --- Win32 API Interop ---

@@ -12,7 +12,7 @@ namespace xsoverlay_tweak.Patches.Pointer
         public static void ApplyInactiveFeatureHandToWebView(Raycaster __instance, ref bool canCursorInteract, ref bool ___IsWebViewTouchEventDown)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             canCursorInteract = canCursorInteract && EventBridge.IsActiveHand(__instance);
         }
@@ -23,7 +23,7 @@ namespace xsoverlay_tweak.Patches.Pointer
         public static bool HandlePressOnWebViewTriggerToBecomeActive(Raycaster __instance)
         {
             if (!IsEnable()) return true;
-            if (!IsHand(__instance)) return true;
+            if (!EventBridge.IsRaycasterHand(__instance)) return true;
 
             // Become active hand and skip sending touch event to webview
             if (!EventBridge.IsActiveHand(__instance) && EventBridge.IsOverlayWebView(__instance.HoveringOverlay))
@@ -40,11 +40,6 @@ namespace xsoverlay_tweak.Patches.Pointer
         private static bool IsEnable()
         {
             return XConfig.ActivePointerWebView.Value;
-        }
-
-        private static bool IsHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace xsoverlay_tweak.Patches.Pointer
         public static void SetActiveColor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             if (EventBridge.IsActiveHand(__instance) || EventBridge.IsOverlayKeyboard(__instance.HoveringOverlay))
                 ___VisualCursorElementOverlay.colorTint = XSettingsManager.Instance.Settings.AccentColor;
@@ -27,11 +27,6 @@ namespace xsoverlay_tweak.Patches.Pointer
         public static bool IsEnable()
         {
             return XConfig.InactivePointerColor.Value;
-        }
-
-        private static bool IsHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
     }
 }

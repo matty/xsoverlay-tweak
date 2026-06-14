@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPostfix]
         public static void Start(Raycaster __instance)
         {
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
             if (IsEnable())
                 CreateLaser(__instance);
 
@@ -65,7 +65,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         public static void DetermineIfActiveLaser(Raycaster __instance)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             ShouldBeActive = Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null;
 
@@ -88,7 +88,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         public static void HandleLaserMovement(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref GameObject ___VisualCursorElement, ref Unity_Overlay ___VisualCursorElementOverlay, ref Vector3 ___CurrentRayPosition, ref Vector3 ___RayHitPoint, ref Vector3 ___CurrentRayDirection)
         {
             if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!EventBridge.IsRaycasterHand(__instance)) return;
             if (!ShouldBeActive) return;
 
             if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
@@ -246,11 +246,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         private static bool IsEnable()
         {
             return XConfig.LaserPointer.Value != 0;
-        }
-
-        private static bool IsHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
 
         private static bool IsRightHand(Raycaster __instance)

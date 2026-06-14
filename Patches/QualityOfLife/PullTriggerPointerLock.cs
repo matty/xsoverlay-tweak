@@ -27,7 +27,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPostfix]
         public static void Init(Raycaster __instance)
         {
-            if (!IsEnable() || !IsHand(__instance)) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance)) return;
 
             InstanceState.Add(__instance, new());
         }
@@ -36,7 +36,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPostfix]
         public static void ListenTriggerAxis(Raycaster __instance, bool ___HadMouseInputDown, bool ___HoldingTouch, bool ___IsWebViewTouchEventDown)
         {
-            if (!IsEnable() || !IsHand(__instance)) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance)) return;
 
             if (EventBridge.IsActiveHand(__instance))
                 if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
@@ -77,7 +77,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPrefix]
         public static void BlockCursorMovement(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
         {
-            if (!IsEnable() || !IsHand(__instance)) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance)) return;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 if (Data.IsBlock)
@@ -90,7 +90,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPrefix]
         public static bool BlockPointerMovement(Raycaster __instance)
         {
-            if (!IsEnable() || !IsHand(__instance) || !PointerDoubleClickDelay.IsEnable()) return true;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance) || !PointerDoubleClickDelay.IsEnable()) return true;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 return !Data.IsBlock;
@@ -102,7 +102,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPrefix]
         public static bool BlockSearchForOverlays(Raycaster __instance)
         {
-            if (!IsEnable() || !IsHand(__instance) || !PointerDoubleClickDelay.IsEnable()) return true;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance) || !PointerDoubleClickDelay.IsEnable()) return true;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 return !Data.IsBlock;
@@ -114,7 +114,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         [HarmonyPrefix]
         public static void InputClickLockPosition(Raycaster __instance, ref Vector2 ___DesktopCoordinates)
         {
-            if (!IsEnable() || !IsHand(__instance)) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance)) return;
 
             if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 if (Data.IsBlock)
@@ -142,11 +142,6 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         private static bool IsEnable()
         {
             return XConfig.PullTriggerPointerLock.Value != 0;
-        }
-
-        private static bool IsHand(Raycaster __instance)
-        {
-            return __instance.HapticDeviceName != Raycaster.HapticDevice.None;
         }
     }
 }
