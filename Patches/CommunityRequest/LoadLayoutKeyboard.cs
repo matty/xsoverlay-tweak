@@ -5,7 +5,7 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using XSOverlay;
-using XSOverlay.WebApp;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.CommunityRequest
 {
@@ -60,26 +60,14 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             KeyboardGlobalManager keyboardManager = (KeyboardGlobalManager)AccessTools.Field(typeof(Overlay_Manager), "keyboardManager").GetValue(overlay_Manager);
 
             if (keyboardData == null) // No keyboard save in Layout
-            {
-                if (overlay_Manager.Keyboard.activeSelf && keyboardManager?.HasKeyboardBeenOpened == true) // Hide keyboard if summoned
-                {
-                    if (keyboard.isPinned) // Pinned keyboard can't unsummon
-                    {
-                        overlay_Manager.PinKeyboard();
-                        overlay_Manager.PinWindowSpecificWindow(keyboard);
-                    }
-                    ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
-                }
-            }
+                EventBridge.ExecuteApiToggleKeyboard(false);
             else
             {
-                if (!overlay_Manager.Keyboard.activeSelf || keyboardManager?.HasKeyboardBeenOpened == false) // Show keyboard if unsummoned
-                    ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
+                EventBridge.ExecuteApiToggleKeyboard(true);
 
                 Task.Run(async () =>
                 {
                     await Task.Delay(150); // Wait for re-center and keyboard summoning
-
 
                     if (keyboardData["position"] is JArray pos && pos.Count == 3)
                         keyboard.transform.localPosition = new Vector3((float)pos[0], (float)pos[1], (float)pos[2]);

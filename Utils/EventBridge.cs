@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using uWindowCapture;
 using XSOverlay;
+using XSOverlay.WebApp;
 using xsoverlay_tweak.Patches.Cursor;
 
 namespace xsoverlay_tweak.Utils
@@ -152,6 +153,33 @@ namespace xsoverlay_tweak.Utils
         public static void HandleScrolling(Vector2 ScrollAxis, Vector2 normalizedPoint)
         {
             OnHandleScrolling?.Invoke(ScrollAxis, normalizedPoint);
+        }
+
+        /// <summary>
+        /// Toogle keyboard by using API command to support OSC Keyboard mod
+        /// </summary>
+        /// <param name="isShow"></param>
+        public static void ExecuteApiToggleKeyboard(bool isShow)
+        {
+            Overlay_Manager overlay_Manager = Overlay_Manager.Instance;
+            Unity_Overlay keyboard = overlay_Manager.Keyboard_Overlay;
+            KeyboardGlobalManager keyboardManager = (KeyboardGlobalManager)AccessTools.Field(typeof(Overlay_Manager), "keyboardManager").GetValue(overlay_Manager);
+
+            if (isShow)
+            {
+                if (!overlay_Manager.Keyboard.activeSelf || keyboardManager?.HasKeyboardBeenOpened == false) // Show keyboard if unsummoned
+                    ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
+            }
+            else if (overlay_Manager.Keyboard.activeSelf && keyboardManager?.HasKeyboardBeenOpened == true) // Hide keyboard if summoned
+            {
+                if (keyboard.isPinned) // Pinned keyboard can't unsummon
+                {
+                    overlay_Manager.PinKeyboard();
+                    overlay_Manager.PinWindowSpecificWindow(keyboard);
+                }
+
+                ServerClientBridge.Instance.Api.Commands["Keyboard"]("", "", "");
+            }
         }
 
         private static IEnumerator ClearCurrentHoveringOverlayTimer()
