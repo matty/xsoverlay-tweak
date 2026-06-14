@@ -6,6 +6,7 @@ using UnityEngine;
 using uWindowCapture;
 using Valve.VR;
 using XSOverlay;
+using xsoverlay_tweak.Patches.CommunityRequest;
 using xsoverlay_tweak.Patches.Pointer;
 using xsoverlay_tweak.Patches.QualityOfLife;
 using xsoverlay_tweak.Utils;
@@ -185,27 +186,45 @@ namespace xsoverlay_tweak.Patches.Cursor
         [HarmonyPostfix]
         public static void CursorParallelToCurveoverlay(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
         {
-            if (!IsEnable()) return;
-            if (!IsHand(__instance)) return;
+            if (!IsEnable() || !IsHand(__instance)) return;
 
-            if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
-                if (Data.IsCursor)
+            if (CursorDictionary.TryGetValue(__instance, out CursorData Data) && Data.IsCursor)
+            {
+                PullTriggerPointerLock.InstanceState.TryGetValue(__instance, out PullTriggerPointerLock.RaycasterState ClickState);
+
+                if (!___InputDevice.ClickFreezeActive && (ClickState == null || !ClickState.IsBlock))
                 {
-                    PullTriggerPointerLock.InstanceState.TryGetValue(__instance, out PullTriggerPointerLock.RaycasterState DoubleClickDelayState);
+                    Unity_Overlay overlay = __instance.HoveringOverlay;
+                    Transform transform = overlay.transform;
+                    Quaternion rotation = overlay.transform.rotation;
 
-                    // vNormal is the local surface normal from SteamVR.
-                    Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
-                    Vector3 worldNormal = __instance.HoveringOverlay.transform.TransformDirection(localNormal);
+                    if (overlay?.WorldSpaceSceneImpostor != null) // Overlay attached to device
+                    {
+                        transform = overlay.WorldSpaceSceneImpostor.transform;
+                        rotation = overlay.WorldSpaceSceneImpostor.transform.rotation;
 
-                    worldNormal.x = -worldNormal.x; // Mirror X in world space to align with Unity's coordinate system for the cursor plate.
+                        if (OverlayAttachSmooth.OverlayStatus.TryGetValue(overlay, out var SmoothData)) // Attached device rolling lock
+                            if (SmoothData.LockRoll)
+                                rotation = SmoothData.Rotation;
+                    }
 
-                    // Calculate the tilt required to stay parallel to the curved surface at this specific point.
-                    Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
+                    if (overlay.overlayCurveRadius.Equals(0)) // Overlay not curve
+                        ___VisualCursorElement.transform.rotation = rotation;
+                    else // Cursor faces up to the overlay curved surface
+                    {
+                        Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
+                        Vector3 worldNormal = transform.TransformDirection(localNormal);
 
-                    // Apply the surface tilt to the overlay's base world rotation.
-                    if (!___InputDevice.ClickFreezeActive && (DoubleClickDelayState == null || !DoubleClickDelayState.IsBlock))
-                        ___VisualCursorElement.transform.rotation = __instance.HoveringOverlay.transform.rotation * surfaceTilt;
+                        worldNormal.x = -worldNormal.x; // Mirror X in world space to align with Unity's coordinate system for the cursor plate.
+
+                        // Calculate the tilt required to stay parallel to the curved surface at this specific point.
+                        Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
+
+                        // Apply the surface tilt to the overlay's base world rotation.
+                        ___VisualCursorElement.transform.rotation = rotation * surfaceTilt;
+                    }
                 }
+            }
         }
 
         [HarmonyPatch("HandleClicksForDesktopWindows")]
