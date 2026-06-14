@@ -131,6 +131,10 @@ namespace xsoverlay_tweak.Patches.Cursor
                             ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
                             ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
                         }
+
+                        // Fix click animation scale
+                        if (___VisualCursorElementClickAnimationOverlay.gameObject.activeSelf)
+                            ___VisualCursorElementClickAnimationOverlay.widthInMeters /= 5f;
                     }
                     else if (Data.IsCursor)
                         ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
