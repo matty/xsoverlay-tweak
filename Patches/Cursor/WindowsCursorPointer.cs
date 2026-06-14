@@ -125,7 +125,7 @@ namespace xsoverlay_tweak.Patches.Cursor
                             if (Height > Width)
                                 num3 *= Height / Width;
 
-                            float widthInMeters = (0.012f * (Data.CursorTexture.width / 32f)) * num3 * PointerScaleMultiply.GetScale();
+                            float widthInMeters = 0.024f * num3 * PointerScaleMultiply.GetScale();
                             ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
                             ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
                             ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
@@ -298,8 +298,6 @@ namespace xsoverlay_tweak.Patches.Cursor
                 int totalBytes = bm.bmWidthBytes * bm.bmHeight;
                 if (_rawPixelBuffer.Length < totalBytes) _rawPixelBuffer = new byte[totalBytes];
 
-                // Only use the DIB section drawing for cursors that are likely animated (e.g., Wait, AppStarting)
-                // This fixes the 'stuck at first frame' issue while preserving static cursors like resize handles.
                 if (isAnimated)
                 {
                     if (Time.time - data.LastFrameUpdateTime > 0.066f) // ~15 FPS
@@ -311,16 +309,17 @@ namespace xsoverlay_tweak.Patches.Cursor
                     IntPtr hdcScreen = GetDC(IntPtr.Zero);
                     IntPtr hdcMem = CreateCompatibleDC(hdcScreen);
 
-                    BITMAPINFOHEADER bmi = new BITMAPINFOHEADER();
-                    bmi.biSize = (uint)Marshal.SizeOf(typeof(BITMAPINFOHEADER));
-                    bmi.biWidth = w;
-                    bmi.biHeight = -h; // Top-down DIB
-                    bmi.biPlanes = 1;
-                    bmi.biBitCount = 32;
-                    bmi.biCompression = 0; // BI_RGB
+                    BITMAPINFOHEADER bmi = new()
+                    {
+                        biSize = (uint)Marshal.SizeOf(typeof(BITMAPINFOHEADER)),
+                        biWidth = w,
+                        biHeight = -h, // Top-down DIB
+                        biPlanes = 1,
+                        biBitCount = 32,
+                        biCompression = 0 // BI_RGB
+                    };
 
-                    IntPtr bitsPtr;
-                    IntPtr hbmDib = CreateDIBSection(hdcMem, ref bmi, 0, out bitsPtr, IntPtr.Zero, 0);
+                    IntPtr hbmDib = CreateDIBSection(hdcMem, ref bmi, 0, out IntPtr bitsPtr, IntPtr.Zero, 0);
                     IntPtr hOld = SelectObject(hdcMem, hbmDib);
 
                     if (!DrawIconEx(hdcMem, 0, 0, hCursor, w, h, data.AnimationFrame, IntPtr.Zero, 0x0003))
@@ -356,12 +355,10 @@ namespace xsoverlay_tweak.Patches.Cursor
             int hx = iconInfo.xHotspot;
             int hy = iconInfo.yHotspot;
 
-            int size = Math.Max(Math.Max(hx, w - hx), Math.Max(hy, h - hy)) * 2;
-            int W = Math.Max(32, size);
-            int H = Math.Max(32, size);
+            // CHANGED: Force the canvas resolution to ALWAYS be 64x64
+            int W = 64;
+            int H = 64;
 
-            // FIX: If data.CursorTexture was destroyed externally, this logic handles re-creation safely.
-            // When it persists, it skips instantiation completely and simply rewrites the byte data pool.
             Texture2D texture = data.CursorTexture;
             if (texture == null || texture.width != W || texture.height != H)
             {
@@ -386,15 +383,23 @@ namespace xsoverlay_tweak.Patches.Cursor
                 {
                     for (int y = 0; y < h; y++)
                     {
+                        int targetY = targetYBase - y;
+                        // Safety boundaries check to avoid array corruption since texture size is fixed 64x64
+                        if (targetY < 0 || targetY >= H) continue;
+
                         byte* srcRowPtr = pPixels + (y * stride);
-                        Color32* targetRowPtr = pColors + ((targetYBase - y) * W + offsetX);
+                        Color32* targetRowPtr = pColors + (targetY * W + offsetX);
 
                         for (int x = 0; x < w; x++)
                         {
-                            targetRowPtr[x].r = srcRowPtr[2];
-                            targetRowPtr[x].g = srcRowPtr[1];
-                            targetRowPtr[x].b = srcRowPtr[0];
-                            targetRowPtr[x].a = srcRowPtr[3];
+                            // Verify target X is inside the 64x64 canvas boundaries
+                            if (offsetX + x >= 0 && offsetX + x < W)
+                            {
+                                targetRowPtr[x].r = srcRowPtr[2];
+                                targetRowPtr[x].g = srcRowPtr[1];
+                                targetRowPtr[x].b = srcRowPtr[0];
+                                targetRowPtr[x].a = srcRowPtr[3];
+                            }
                             srcRowPtr += 4;
                         }
                     }
@@ -410,26 +415,34 @@ namespace xsoverlay_tweak.Patches.Cursor
                 {
                     for (int y = 0; y < h; y++)
                     {
+                        int targetY = targetYBase - y;
+                        // Safety boundaries check to avoid array corruption since texture size is fixed 64x64
+                        if (targetY < 0 || targetY >= H) continue;
+
                         byte* andRowPtr = pPixels + (y * stride);
                         byte* xorRowPtr = pPixels + ((y + h) * stride);
-                        Color32* targetRowPtr = pColors + ((targetYBase - y) * W + offsetX);
+                        Color32* targetRowPtr = pColors + (targetY * W + offsetX);
 
                         for (int x = 0; x < w; x++)
                         {
-                            int byteIdx = x / 8;
-                            int bitIdx = 7 - (x % 8);
+                            // Verify target X is inside the 64x64 canvas boundaries
+                            if (offsetX + x >= 0 && offsetX + x < W)
+                            {
+                                int byteIdx = x / 8;
+                                int bitIdx = 7 - (x % 8);
 
-                            bool andBit = ((andRowPtr[byteIdx] >> bitIdx) & 1) != 0;
-                            bool xorBit = ((xorRowPtr[byteIdx] >> bitIdx) & 1) != 0;
+                                bool andBit = ((andRowPtr[byteIdx] >> bitIdx) & 1) != 0;
+                                bool xorBit = ((xorRowPtr[byteIdx] >> bitIdx) & 1) != 0;
 
-                            if (!andBit && !xorBit)
-                                targetRowPtr[x] = new Color32(0, 0, 0, 255);
-                            else if (andBit && xorBit)
-                                targetRowPtr[x] = new Color32(255, 255, 255, 255);
-                            else if (!andBit && xorBit)
-                                targetRowPtr[x] = new Color32(255, 255, 255, 255);
-                            else
-                                targetRowPtr[x] = new Color32(0, 0, 0, 0);
+                                if (!andBit && !xorBit)
+                                    targetRowPtr[x] = new Color32(0, 0, 0, 255);
+                                else if (andBit && xorBit)
+                                    targetRowPtr[x] = new Color32(255, 255, 255, 255);
+                                else if (!andBit && xorBit)
+                                    targetRowPtr[x] = new Color32(255, 255, 255, 255);
+                                else
+                                    targetRowPtr[x] = new Color32(0, 0, 0, 0);
+                            }
                         }
                     }
                 }
