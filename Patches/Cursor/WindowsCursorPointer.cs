@@ -4,11 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using uWindowCapture;
-using Valve.VR;
 using XSOverlay;
-using xsoverlay_tweak.Patches.CommunityRequest;
 using xsoverlay_tweak.Patches.Pointer;
-using xsoverlay_tweak.Patches.QualityOfLife;
 using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.Cursor
@@ -23,7 +20,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         // Reusable buffers to reduce GC allocations
         private static byte[] _rawPixelBuffer = new byte[64 * 64 * 4];
 
-        private class CursorData
+        public class CursorData
         {
             public Texture2D CursorTexture;
             public Color32[] ColorBuffer;
@@ -36,7 +33,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         }
 
         private class XSWindowResult { public bool IsMatch; }
-        private static readonly ConditionalWeakTable<Raycaster, CursorData> CursorDictionary = new();
+        public static readonly ConditionalWeakTable<Raycaster, CursorData> CursorDictionary = new();
         private static readonly ConditionalWeakTable<Unity_Overlay, XSWindowResult> IsXSWindowCache = new();
 
         private static readonly AccessTools.FieldRef<UI_RelativeTransformManipulator, bool> ScaleByDistance_Ref = AccessTools.FieldRefAccess<UI_RelativeTransformManipulator, bool>("ScaleByDistance");
@@ -180,51 +177,6 @@ namespace xsoverlay_tweak.Patches.Cursor
             }
 
             return true;
-        }
-
-        [HarmonyPatch("SetVisualCursorTransform")]
-        [HarmonyPostfix]
-        public static void CursorParallelToCurveoverlay(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref VROverlayIntersectionResults_t rayHitResults, ref GameObject ___VisualCursorElement)
-        {
-            if (!IsEnable() || !IsHand(__instance)) return;
-
-            if (CursorDictionary.TryGetValue(__instance, out CursorData Data) && Data.IsCursor)
-            {
-                PullTriggerPointerLock.InstanceState.TryGetValue(__instance, out PullTriggerPointerLock.RaycasterState ClickState);
-
-                if (!___InputDevice.ClickFreezeActive && (ClickState == null || !ClickState.IsBlock))
-                {
-                    Unity_Overlay overlay = __instance.HoveringOverlay;
-                    Transform transform = overlay.transform;
-                    Quaternion rotation = overlay.transform.rotation;
-
-                    if (overlay?.WorldSpaceSceneImpostor != null) // Overlay attached to device
-                    {
-                        transform = overlay.WorldSpaceSceneImpostor.transform;
-                        rotation = overlay.WorldSpaceSceneImpostor.transform.rotation;
-
-                        if (OverlayAttachSmooth.OverlayStatus.TryGetValue(overlay, out var SmoothData)) // Attached device rolling lock
-                            if (SmoothData.LockRoll)
-                                rotation = SmoothData.Rotation;
-                    }
-
-                    if (overlay.overlayCurveRadius.Equals(0)) // Overlay not curve
-                        ___VisualCursorElement.transform.rotation = rotation;
-                    else // Cursor faces up to the overlay curved surface
-                    {
-                        Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
-                        Vector3 worldNormal = transform.TransformDirection(localNormal);
-
-                        worldNormal.x = -worldNormal.x; // Mirror X in world space to align with Unity's coordinate system for the cursor plate.
-
-                        // Calculate the tilt required to stay parallel to the curved surface at this specific point.
-                        Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
-
-                        // Apply the surface tilt to the overlay's base world rotation.
-                        ___VisualCursorElement.transform.rotation = rotation * surfaceTilt;
-                    }
-                }
-            }
         }
 
         [HarmonyPatch("HandleClicksForDesktopWindows")]

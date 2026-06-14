@@ -44,6 +44,7 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Pointer.InactivePointerOpacity));
         harmony.PatchAll(typeof(Patches.Pointer.PointerActiveClick));
         harmony.PatchAll(typeof(Patches.Pointer.PointerDoubleClickDelay));
+        harmony.PatchAll(typeof(Patches.Pointer.PointerParallelOverlay));
         harmony.PatchAll(typeof(Patches.Pointer.PointerScaleMultiply));
 
         // Mouse Navigation
