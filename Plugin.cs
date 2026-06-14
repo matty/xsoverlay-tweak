@@ -77,9 +77,6 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.QualityOfLife.WebViewWiderScroll));
         harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
 
-        // Track Space HMD Smooth
-        harmony.PatchAll(typeof(Patches.CommunityRequest.TrackSpaceHMDSmooth));
-
         // Fix
         harmony.PatchAll(typeof(Patches.Fix.CtrlKeyStickyFix));
         harmony.PatchAll(typeof(Patches.Fix.CursorMovingInteractionFix));
@@ -92,6 +89,7 @@ public class Plugin : BaseUnityPlugin
         // Community Request
         harmony.PatchAll(typeof(Patches.CommunityRequest.HideInvalidBattery));
         harmony.PatchAll(typeof(Patches.CommunityRequest.LoadLayoutKeyboard));
+        harmony.PatchAll(typeof(Patches.CommunityRequest.OverlayAttachSmooth));
         harmony.PatchAll(typeof(Patches.CommunityRequest.OverlayConfirmClose));
         harmony.PatchAll(typeof(Patches.CommunityRequest.MouseButtonSwap));
         harmony.PatchAll(typeof(Patches.CommunityRequest.WindowToolbarGesture));

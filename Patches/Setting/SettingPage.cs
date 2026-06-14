@@ -103,8 +103,8 @@ namespace xsoverlay_tweak.Patches.Setting
                 ["XSOverlayTweak.HideInvalidBattery"] = XConfig.HideInvalidBattery.Value,
                 ["XSOverlayTweak.LoadLayoutKeyboard"] = XConfig.LoadLayoutKeyboard.Value,
                 ["XSOverlayTweak.MouseButtonSwap"] = XConfig.MouseButtonSwap.Value,
+                ["XSOverlayTweak.OverlayAttachSmooth"] = XConfig.OverlayAttachSmooth.Value,
                 ["XSOverlayTweak.OverlayConfirmClose"] = XConfig.OverlayConfirmClose.Value,
-                ["XSOverlayTweak.TrackSpaceHMDSmooth"] = XConfig.TrackSpaceHMDSmooth.Value,
                 ["XSOverlayTweak.WindowToolbarGesture"] = XConfig.WindowToolbarGesture.Value,
                 ["XSOverlayTweak.WindowToolbarKeyboard"] = XConfig.WindowToolbarKeyboard.Value,
                 ["XSOverlayTweak.WristStateRestore"] = XConfig.WristStateRestore.Value,
@@ -307,11 +307,11 @@ namespace xsoverlay_tweak.Patches.Setting
                 case "XSOverlayTweak.MouseButtonSwap":
                     XConfig.MouseButtonSwap.Value = bool.Parse(value);
                     break;
+                case "XSOverlayTweak.OverlayAttachSmooth":
+                    XConfig.OverlayAttachSmooth.Value = bool.Parse(value);
+                    break;
                 case "XSOverlayTweak.OverlayConfirmClose":
                     XConfig.OverlayConfirmClose.Value = bool.Parse(value);
-                    break;
-                case "XSOverlayTweak.TrackSpaceHMDSmooth":
-                    XConfig.TrackSpaceHMDSmooth.Value = bool.Parse(value);
                     break;
                 case "XSOverlayTweak.WindowToolbarGesture":
                     XConfig.WindowToolbarGesture.Value = bool.Parse(value);

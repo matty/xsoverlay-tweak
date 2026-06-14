@@ -12,12 +12,13 @@ using Vuplex.WebView;
 using XSOverlay;
 using XSOverlay.WebApp;
 using XSOverlay.Websockets.API;
+using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.CommunityRequest
 {
-    internal class TrackSpaceHMDSmooth
+    internal class OverlayAttachSmooth
     {
-        private class SmoothData
+        public class SmoothData
         {
             public Vector3 Position;
             public Quaternion Rotation;
@@ -28,11 +29,12 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             public bool IsMoving = false;
             public bool IsSmooth = true;
             public bool LockRoll = true;
+            public bool LockHover = false;
             public int DistThreshold = 0;
             public int AngleThreshold = 0;
             public int StopThreshold = 5;
         }
-        private static readonly ConditionalWeakTable<Unity_Overlay, SmoothData> OverlayStatus = new();
+        public static readonly ConditionalWeakTable<Unity_Overlay, SmoothData> OverlayStatus = new();
 
         private static bool IsRecenter = false;
         private static Coroutine RecenterCoroutine;
@@ -66,8 +68,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         public static void UpdateSmoothMovement(Unity_Overlay __instance)
         {
             if (!IsEnable()) return;
-            if (__instance.deviceToTrack != Unity_Overlay.OverlayTrackedDevice.HMD ||
-                !__instance.isVisible || __instance.IsHidden || __instance.IsPaused) return;
+            if (__instance.deviceToTrack == Unity_Overlay.OverlayTrackedDevice.None || !__instance.isVisible || __instance.IsHidden || __instance.IsPaused) return;
 
             if (!OverlayStatus.TryGetValue(__instance, out var Data)) return;
 
@@ -136,17 +137,13 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                         float angle = Quaternion.Angle(Data.Rotation, targetRotation);
 
                         if (__instance.IsHeld || (parentOverlay != null && parentOverlay.IsHeld))
-                        {
                             Data.IsMoving = true;
-                        }
-                        else if (dist > (oneCentimetre * Data.DistThreshold) || angle > (oneDegree * Data.AngleThreshold))
-                        {
-                            Data.IsMoving = true;
-                        }
-                        else if (dist < (oneCentimetre * Data.StopThreshold) && angle < (oneDegree * Data.StopThreshold))
-                        {
+                        else if (Data.LockHover && EventBridge.CurrentHoveringOverlay == __instance)
                             Data.IsMoving = false;
-                        }
+                        else if (dist > (oneCentimetre * Data.DistThreshold) || angle > (oneDegree * Data.AngleThreshold))
+                            Data.IsMoving = true;
+                        else if (dist < (oneCentimetre * Data.StopThreshold) && angle < (oneDegree * Data.StopThreshold))
+                            Data.IsMoving = false;
                     }
 
                     if (Data.IsMoving || IsRecenter)
@@ -246,10 +243,11 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                         var trackingSpaceEl = document.getElementById('TrackingSpace');
                         if (!tweakSection || !trackingSpaceEl) return;
                         var checked = trackingSpaceEl.querySelector('input:checked');
-                        var isHMD = checked && checked.getAttribute('internalName') === 'HMD';
+                        var isWorld = checked && checked.getAttribute('internalName') === 'World';
+                        tweakSection.style.display = isWorld ? 'none' : 'block';
+
                 // Ensure the page container has a vertical scrollbar if content overflows
-                        tweakSection.style.display = isHMD ? 'block' : 'none';
-                        if (pageContainer) pageContainer.style.overflowY = isHMD ? 'auto' : 'hidden';
+                        if (pageContainer) pageContainer.style.overflowY = isWorld ? 'hidden' : 'auto';
                     }
 
                     var trackingSpaceEl = document.getElementById('TrackingSpace');
@@ -260,6 +258,9 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
                     var lockRollSettingDef = new Ui.OverlaySetting(Ui.ComponentType.Toggle, 'Lock Roll', '', true);
                     lockRollSettingDef.internalName = 'LockRoll';
+
+                    var lockHoverSettingDef = new Ui.OverlaySetting(Ui.ComponentType.Toggle, 'Lock Hover', '', false);
+                    lockHoverSettingDef.internalName = 'LockHover';
 
                     var distThresholdDef = new Ui.OverlaySetting(Ui.ComponentType.Slider, 'Distance', '', 20, [0, 150, 5], 'Centimetre');
                     distThresholdDef.internalName = 'DistThreshold';
@@ -273,6 +274,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     if (window.SettingsLayout && window.SettingsLayout.Settings) {
                         window.SettingsLayout.Settings.Smooth = smoothSettingDef;
                         window.SettingsLayout.Settings.LockRoll = lockRollSettingDef;
+                        window.SettingsLayout.Settings.LockHover = lockHoverSettingDef;
                         window.SettingsLayout.Settings.DistThreshold = distThresholdDef;
                         window.SettingsLayout.Settings.AngleThreshold = angleThresholdDef;
                         window.SettingsLayout.Settings.StopThreshold = stopThresholdDef;
@@ -285,6 +287,10 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     Ui.Divider(tweakSection, 'divider', 'LockRoll_Divider');
                     Ui.Toggle(lockRollSettingDef, 'Lock Roll', true, null, tweakSection);
                     Ui.Description(tweakSection, 'Prevents the Overlay from HMD rolling.', 'LockRoll_Desc');
+
+                    Ui.Divider(tweakSection, 'divider', 'LockHover_Divider');
+                    Ui.Toggle(lockHoverSettingDef, 'Lock Hover', false, null, tweakSection);
+                    Ui.Description(tweakSection, 'Stops moving while hovering the Overlay.', 'LockHover_Desc');
 
                     Ui.Divider(tweakSection, 'divider', 'DistThreshold_Divider');
                     Ui.Slider(distThresholdDef, 'Distance', 20, [0, 150, 5], 'Centimetre', tweakSection, 300);
@@ -305,7 +311,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
                     function HandleMessages(msg) {
                         var decoded = Api.Parse(msg);
-                        if (decoded.Command === 'UpdateActiveOverlaySmoothInformation') {
+                        if (decoded.Command === 'UpdateAttachedInformation') {
                             SetMenuSmoothStates(decoded.JsonData);
                         }
                     }
@@ -314,6 +320,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                         let el;
                         if (el = document.getElementById('Smooth')) el.checked = data.isSmooth;
                         if (el = document.getElementById('LockRoll')) el.checked = data.lockRoll;
+                        if (el = document.getElementById('LockHover')) el.checked = data.lockHover;
                     
                         if (el = document.getElementById('DistThreshold')) {
                             el.value = data.distThreshold;
@@ -381,6 +388,9 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     case "LockRoll":
                         Data.LockRoll = bool.Parse(value);
                         break;
+                    case "LockHover":
+                        Data.LockHover = bool.Parse(value);
+                        break;
                     case "DistThreshold":
                         Data.DistThreshold = int.Parse(value);
                         break;
@@ -407,16 +417,17 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
             if (OverlayStatus.TryGetValue(targetOverlay, out var Data))
             {
-                string text = JsonConvert.SerializeObject(new OverlaySmoothInformation
+                string text = JsonConvert.SerializeObject(new AttachedInformation
                 {
                     isSmooth = Data.IsSmooth,
                     lockRoll = Data.LockRoll,
+                    lockHover = Data.LockHover,
                     distThreshold = Data.DistThreshold,
                     angleThreshold = Data.AngleThreshold,
                     stopThreshold = Data.StopThreshold,
                 });
 
-                __instance.SendMessage("UpdateActiveOverlaySmoothInformation", text, null, Enums.MessageTarget.All);
+                __instance.SendMessage("UpdateAttachedInformation", text, null, Enums.MessageTarget.All);
             }
         }
 
@@ -446,6 +457,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     {
                         ["isSmooth"] = Data.IsSmooth,
                         ["lockRoll"] = Data.LockRoll,
+                        ["lockHover"] = Data.LockHover,
                         ["distThreshold"] = Data.DistThreshold,
                         ["angleThreshold"] = Data.AngleThreshold,
                         ["stopThreshold"] = Data.StopThreshold,
@@ -485,6 +497,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                     {
                         Data.IsSmooth = bool.Parse(HmdSmooth["isSmooth"].ToString());
                         Data.LockRoll = bool.Parse(HmdSmooth["lockRoll"].ToString());
+                        Data.LockHover = bool.Parse(HmdSmooth["lockHover"].ToString());
                         Data.DistThreshold = int.Parse(HmdSmooth["distThreshold"].ToString());
                         Data.AngleThreshold = int.Parse(HmdSmooth["angleThreshold"].ToString());
                         Data.StopThreshold = int.Parse(HmdSmooth["stopThreshold"].ToString());
@@ -503,13 +516,14 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
 
         private static bool IsEnable()
         {
-            return XConfig.TrackSpaceHMDSmooth.Value;
+            return XConfig.OverlayAttachSmooth.Value;
         }
 
-        private struct OverlaySmoothInformation
+        private struct AttachedInformation
         {
             public bool isSmooth;
             public bool lockRoll;
+            public bool lockHover;
             public int distThreshold;
             public int angleThreshold;
             public int stopThreshold;

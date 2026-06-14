@@ -79,7 +79,7 @@ namespace xsoverlay_tweak
         public static ConfigEntry<bool> LoadLayoutKeyboard;
         public static ConfigEntry<bool> MouseButtonSwap;
         public static ConfigEntry<bool> OverlayConfirmClose;
-        public static ConfigEntry<bool> TrackSpaceHMDSmooth;
+        public static ConfigEntry<bool> OverlayAttachSmooth;
         public static ConfigEntry<bool> WindowToolbarGesture;
         public static ConfigEntry<bool> WindowToolbarKeyboard;
         public static ConfigEntry<bool> WristStateRestore;
@@ -162,8 +162,8 @@ namespace xsoverlay_tweak
             HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", true, "Hide invalid battery device from Wrist Overlay.");
             LoadLayoutKeyboard = cfg.Bind("CommunityRequest", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityRequest", "MouseButtonSwap", true, "Detecting the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
+            OverlayAttachSmooth = cfg.Bind("CommunityRequest", "OverlayAttachSmooth", true, "When Capture Overlay attached to device,\nIt will use Position Dampening and Rotation Dampening settings to smooth its movement.");
             OverlayConfirmClose = cfg.Bind("CommunityRequest", "OverlayConfirmClose", false, "Requires pressing the close overlay button three times to close.");
-            TrackSpaceHMDSmooth = cfg.Bind("CommunityRequest", "TrackSpaceHMDSmooth", true, "When Capture Overlay uses HMD Tracking Space,\nIt will use Position Dampening and Rotation Dampening settings to smooth its movement.");
             WindowToolbarGesture = cfg.Bind("CommunityRequest", "WindowToolbarGesture", true, "When hovering over the Window Toolbar, right-click to switch to previous Window or thumbstick scrolling the Window list.");
             WindowToolbarKeyboard = cfg.Bind("CommunityRequest", "WindowToolbarKeyboard", false, "Add keyboard summon button to the Capture Overlay Toolbar.");
             WristStateRestore = cfg.Bind("CommunityRequest", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
