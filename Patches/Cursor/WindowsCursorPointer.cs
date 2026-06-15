@@ -17,6 +17,10 @@ namespace xsoverlay_tweak.Patches.Cursor
         private static readonly int CURSORINFO_SIZE = Marshal.SizeOf(typeof(CURSORINFO));
         private static readonly int BITMAP_SIZE = Marshal.SizeOf(typeof(BITMAP));
 
+        // --- CACHED SYSTEM CURSOR HANDLES ---
+        private static readonly IntPtr IdentAppStarting = LoadCursor(IntPtr.Zero, (IntPtr)32650); // IDC_APPSTARTING
+        private static readonly IntPtr IdentWait = LoadCursor(IntPtr.Zero, (IntPtr)32514);        // IDC_WAIT
+
         // Reusable buffers to reduce GC allocations
         private static byte[] _rawPixelBuffer = new byte[64 * 64 * 4];
 
@@ -85,55 +89,59 @@ namespace xsoverlay_tweak.Patches.Cursor
                 Unity_Overlay hoveringOverlay = __instance.HoveringOverlay;
                 if (hoveringOverlay != null && EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && hoveringOverlay.IsDesktopCapture && IsTargetWindow(hoveringOverlay))
                 {
-                    CURSORINFO ci = new() { cbSize = CURSORINFO_SIZE };
-
-                    if (GetCursorInfo(out ci) && (ci.flags & CURSOR_SHOWING) != 0)
+                    if (Data.IsCursor)
                     {
                         ___VisualCursorElementOverlay.AutoUpdateOverlayTexture = false;
                         ___VisualCursorElementOverlay.colorTint = Color.white;
-
-                        bool isAnimated = IsPossiblyAnimatedCursor(ci.hCursor);
-                        bool shouldUpdate = ci.hCursor != Data.LastCursorHandle || (isAnimated && Time.time - Data.LastFrameUpdateTime > 0.066f) || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture;
-
-                        if (shouldUpdate)
-                        {
-                            if (ci.hCursor != Data.LastCursorHandle)
-                            {
-                                Data.AnimationFrame = 0;
-                                Data.LastFrameUpdateTime = 0;
-                            }
-                            Data.IsCursor = true;
-                            Data.LastCursorHandle = ci.hCursor;
-
-                            // Prevent GPU memory leak: Destroy the old texture before creating a new one
-                            if (Data.CursorTexture != null)
-                                UnityEngine.Object.Destroy(Data.CursorTexture);
-
-                            // Force software overrides any custom textures the engine loaded
-                            Data.CursorTexture = ExtractCurrentWindowsCursor(ci.hCursor, Data, out Data.HotSpotOffset);
-
-                            // Disable pointer scale by distance
-                            if (Data.RelativeTransform == null)
-                                Data.RelativeTransform = ___VisualCursorElementOverlay.GetComponent<UI_RelativeTransformManipulator>();
-
-                            ScaleByDistance_Ref(Data.RelativeTransform) = false;
-
-                            float Width = hoveringOverlay.renderTexWidthOverride;
-                            float Height = hoveringOverlay.renderTexHeightOverride;
-                            float num3 = hoveringOverlay.widthInMeters;
-
-                            if (Height > Width)
-                                num3 *= Height / Width;
-
-                            float widthInMeters = 0.024f * num3 * PointerScaleMultiply.GetScale();
-                            ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
-                            ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
-                            ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
-                            ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
-                        }
                     }
-                    else if (Data.IsCursor)
-                        ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
+
+                    if (Time.unscaledTime - Data.LastFrameUpdateTime > 0.066f) // ~15 FPS
+                    {
+                        Data.LastFrameUpdateTime = Time.unscaledTime;
+                        CURSORINFO ci = new() { cbSize = CURSORINFO_SIZE };
+
+                        if (GetCursorInfo(out ci) && (ci.flags & CURSOR_SHOWING) != 0)
+                        {
+                            bool isAnimated = IsPossiblyAnimatedCursor(ci.hCursor);
+                            bool shouldUpdate = ci.hCursor != Data.LastCursorHandle || isAnimated || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture;
+
+                            if (shouldUpdate)
+                            {
+                                if (ci.hCursor != Data.LastCursorHandle)
+                                    Data.AnimationFrame = 0;
+                                Data.IsCursor = true;
+                                Data.LastCursorHandle = ci.hCursor;
+
+                                // Prevent GPU memory leak: Destroy the old texture before creating a new one
+                                if (Data.CursorTexture != null)
+                                    UnityEngine.Object.Destroy(Data.CursorTexture);
+
+                                // Force software overrides any custom textures the engine loaded
+                                Data.CursorTexture = ExtractCurrentWindowsCursor(ci.hCursor, Data, out Data.HotSpotOffset);
+
+                                // Disable pointer scale by distance
+                                if (Data.RelativeTransform == null)
+                                    Data.RelativeTransform = ___VisualCursorElementOverlay.GetComponent<UI_RelativeTransformManipulator>();
+
+                                ScaleByDistance_Ref(Data.RelativeTransform) = false;
+
+                                float Width = hoveringOverlay.renderTexWidthOverride;
+                                float Height = hoveringOverlay.renderTexHeightOverride;
+                                float num3 = hoveringOverlay.widthInMeters;
+
+                                if (Height > Width)
+                                    num3 *= Height / Width;
+
+                                float widthInMeters = 0.024f * num3 * PointerScaleMultiply.GetScale();
+                                ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
+                                ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
+                                ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
+                                ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
+                            }
+                        }
+                        else if (Data.IsCursor)
+                            ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
+                    }
                 }
                 else if (Data.IsCursor)
                     ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
@@ -175,17 +183,12 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         private static bool IsPossiblyAnimatedCursor(IntPtr hCursor)
         {
-            IntPtr defaultArrow = LoadCursor(IntPtr.Zero, (IntPtr)32512); // IDC_ARROW
-            IntPtr textIBeam = LoadCursor(IntPtr.Zero, (IntPtr)32513);    // IDC_IBEAM
-            IntPtr sizeNS = LoadCursor(IntPtr.Zero, (IntPtr)32645);       // IDC_SIZENS
-            IntPtr sizeWE = LoadCursor(IntPtr.Zero, (IntPtr)32644);       // IDC_SIZEWE
+            // It is ONLY animated if it is the Working in Background wheel or the Full Busy wheel
+            if (hCursor == IdentAppStarting || hCursor == IdentWait)
+                return true;
 
-            if (hCursor == defaultArrow || hCursor == textIBeam || hCursor == sizeNS || hCursor == sizeWE)
-            {
-                return false;
-            }
-
-            return true;
+            // Every other cursor (Arrow, IBeam, Resize, Hand, etc.) is static
+            return false;
         }
 
         [HarmonyPatch("HandleClicksForDesktopWindows")]
@@ -309,11 +312,7 @@ namespace xsoverlay_tweak.Patches.Cursor
 
                 if (isAnimated)
                 {
-                    if (Time.time - data.LastFrameUpdateTime > 0.066f) // ~15 FPS
-                    {
-                        data.AnimationFrame++;
-                        data.LastFrameUpdateTime = Time.time;
-                    }
+                    data.AnimationFrame++;
 
                     IntPtr hdcScreen = GetDC(IntPtr.Zero);
                     IntPtr hdcMem = CreateCompatibleDC(hdcScreen);
