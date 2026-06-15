@@ -16,7 +16,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             public Unity_Overlay LaserA;
             public Unity_Overlay LaserB;
-            public Texture2D Texture = new(1, 250, TextureFormat.RGB24, false);
+            public Texture2D Texture = new(1, 250, TextureFormat.RGBA32, false);
             public float Distance = 1f;
             public float Distance_Last = 1f;
             public Vector3 RayHitPoint_last = new();
@@ -224,9 +224,47 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
                 if (Data.Texture.height == newHeight) return;
 
-                Data.LastUpdateLengthTime = Time.time;
-                Data.Texture.Reinitialize(1, newHeight);
-                Data.Texture.Apply(); // Apply changes to the GPU.
+                Data.LastUpdateLengthTime = Time.unscaledTime;
+
+                // Reinitialize keeping the Alpha support active
+                Data.Texture.Reinitialize(1, newHeight, TextureFormat.RGBA32, false);
+
+                // Generate the procedural fading color pixels
+                Color32[] colors = new Color32[newHeight];
+
+                // Define how many pixels long the fading transition to be
+                int fadeLengthInPixels = Mathf.Min(100, newHeight);
+
+                for (int y = 0; y < newHeight; y++)
+                {
+                    byte alpha = 255; // Default fully opaque
+
+                    // y = 0 is the ending of the beam
+                    if (y < fadeLengthInPixels)
+                    {
+                        float fadeRatio = (float)y / fadeLengthInPixels;
+                        alpha = (byte)(255 * fadeRatio);
+                    }
+
+                    // Start point face
+                    /*{
+                        int distanceFromEnd = (newHeight - 1) - y;
+                        if (distanceFromEnd < fadeLengthInPixels)
+                        {
+                            float fadeRatio = (float)distanceFromEnd / fadeLengthInPixels;
+                            alpha = (byte)(255 * fadeRatio);
+                        }
+                    }*/
+
+
+                    // Use solid white for the base channel data because Unity_Overlay.colorTint 
+                    // inside HandleLaserMovement will tint it to your preferred AccentColor automatically!
+                    colors[y] = new Color32(255, 255, 255, alpha);
+                }
+
+                // Upload the new pixel data array to the GPU
+                Data.Texture.SetPixels32(colors);
+                Data.Texture.Apply();
 
                 Data.LaserA.overlayTexture = Data.Texture;
                 Data.LaserA.overlay.overlayTexture = Data.Texture;
