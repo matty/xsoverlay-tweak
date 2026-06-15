@@ -55,7 +55,10 @@ namespace xsoverlay_tweak.Patches.Cursor
             XConfig.WindowsCursorPointer.SettingChanged += (Event, Args) =>
             {
                 if (IsEnable())
-                    CursorDictionary.Add(__instance, new());
+                {
+                    if (!CursorDictionary.TryGetValue(__instance, out _))
+                        CursorDictionary.Add(__instance, new());
+                }
                 else
                     if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
                     {
@@ -67,7 +70,10 @@ namespace xsoverlay_tweak.Patches.Cursor
             EventBridge.InputMethodChanged += () =>
             {
                 if (IsEnable())
-                    CursorDictionary.Add(__instance, new());
+                {
+                    if (!CursorDictionary.TryGetValue(__instance, out _))
+                        CursorDictionary.Add(__instance, new());
+                }
                 else
                     if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
                     {
@@ -183,6 +189,9 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         private static bool IsPossiblyAnimatedCursor(IntPtr hCursor)
         {
+            if (XConfig.WindowsCursorPointer.Value == 2) // Using animated cursor option
+                return true;
+
             // It is ONLY animated if it is the Working in Background wheel or the Full Busy wheel
             if (hCursor == IdentAppStarting || hCursor == IdentWait)
                 return true;
@@ -209,7 +218,7 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         public static bool IsEnable()
         {
-            return XConfig.WindowsCursorPointer.Value && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
+            return XConfig.WindowsCursorPointer.Value != 0 && XSettingsManager.Instance.Settings.InputMethod == InputMethods.EmulateMouse;
         }
 
         //?? --- Win32 API Interop ---

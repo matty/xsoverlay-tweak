@@ -149,7 +149,7 @@ namespace xsoverlay_tweak.Patches.Setting
                     XConfig.MouseSmoothSpeed.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.WindowsCursorPointer":
-                    XConfig.WindowsCursorPointer.Value = bool.Parse(value);
+                    XConfig.WindowsCursorPointer.Value = int.Parse(value);
                     break;
 
                 // Pointer
