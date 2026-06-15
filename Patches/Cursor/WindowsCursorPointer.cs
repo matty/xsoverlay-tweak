@@ -75,7 +75,7 @@ namespace xsoverlay_tweak.Patches.Cursor
 
         [HarmonyPatch("Update")]
         [HarmonyPostfix]
-        public static void ChangePointerTextureToWindowsCursor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay, ref Texture2D ___CursorIcon)
+        public static void ChangePointerTextureToWindowsCursor(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementOverlay, Texture2D ___CursorIcon)
         {
             if (!IsEnable()) return;
             if (!EventBridge.IsRaycasterHand(__instance)) return;
@@ -131,10 +131,6 @@ namespace xsoverlay_tweak.Patches.Cursor
                             ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
                             ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
                         }
-
-                        // Fix click animation scale
-                        if (___VisualCursorElementClickAnimationOverlay.gameObject.activeSelf)
-                            ___VisualCursorElementClickAnimationOverlay.widthInMeters /= 5f;
                     }
                     else if (Data.IsCursor)
                         ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
@@ -142,6 +138,15 @@ namespace xsoverlay_tweak.Patches.Cursor
                 else if (Data.IsCursor)
                     ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
             }
+        }
+
+        [HarmonyPatch("AnimateCursorClick"), HarmonyPatch("AnimateCursorHold"), HarmonyPatch("AnimateCursorHoldRightClick")]
+        [HarmonyPostfix]
+        public static void FixClickAnimationScale(Raycaster __instance, ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay, Unity_Overlay ___VisualCursorElementOverlay)
+        {
+            if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
+                if (Data.IsCursor)
+                    ___VisualCursorElementClickAnimationOverlay.widthInMeters = ___VisualCursorElementOverlay.widthInMeters / 1.5f;
         }
 
         private static bool IsTargetWindow(Unity_Overlay overlay)
