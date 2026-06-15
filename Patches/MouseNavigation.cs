@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using UnityEngine;
 using Valve.Newtonsoft.Json;
 using Valve.Newtonsoft.Json.Linq;
 using Valve.VR;
@@ -40,6 +41,8 @@ namespace xsoverlay_tweak.Patches
         private static readonly uint DigitalDataSize = (uint)Marshal.SizeOf(typeof(InputDigitalActionData_t));
         private static InputDigitalActionData_t _sharedData = new();
 
+        private static float lastTriggerTime;
+
         // Get current active hand
         [HarmonyPatch(typeof(UpdateDateTime), "Awake")]
         [HarmonyPostfix]
@@ -55,23 +58,28 @@ namespace xsoverlay_tweak.Patches
         {
             if (!IsEnable()) return;
 
-            // Back Navigation
-            if (EventBridge.IsHoverAnyDesktopOrWindowCapture)
-                if (CheckActionTriggered(Actions.MouseBack.Path, ref ActionHandleBack, ref BackWasPressedLastFrame))
-                {
-                    SimulateBackNavigation(XInputManager.sim);
+            if (Time.unscaledTime - lastTriggerTime >= 0.022f) // ~45 FPS
+            {
+                lastTriggerTime = Time.unscaledTime;
 
-                    AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
-                }
+                // Back Navigation
+                if (EventBridge.IsHoverAnyDesktopOrWindowCapture)
+                    if (CheckActionTriggered(Actions.MouseBack.Path, ref ActionHandleBack, ref BackWasPressedLastFrame))
+                    {
+                        SimulateBackNavigation(XInputManager.sim);
 
-            // Forward Navigation
-            if (EventBridge.IsHoverAnyDesktopOrWindowCapture)
-                if (CheckActionTriggered(Actions.MouseForward.Path, ref ActionHandleForward, ref ForwardWasPressedLastFrame))
-                {
-                    SimulateForwardNavigation(XInputManager.sim);
+                        AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
+                    }
 
-                    AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
-                }
+                // Forward Navigation
+                if (EventBridge.IsHoverAnyDesktopOrWindowCapture)
+                    if (CheckActionTriggered(Actions.MouseForward.Path, ref ActionHandleForward, ref ForwardWasPressedLastFrame))
+                    {
+                        SimulateForwardNavigation(XInputManager.sim);
+
+                        AdvancedHaptics.Rumble(__instance.GrabAxis == ActivationAxis.LeftTrigger, 0.01f, 40f, 0.3f);
+                    }
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
