@@ -48,7 +48,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         {
             if (!IsEnable()) return;
 
-            if (!OverlayStatus.TryGetValue(___currOverlay, out var _))
+            if (!OverlayStatus.TryGetValue(___currOverlay, out _))
                 OverlayStatus.Add(___currOverlay, new());
         }
 
@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
             if (!IsEnable()) return;
 
             if (__instance.overlayName.Equals("window.settings") || __instance.overlayName.Equals("window.toolbar"))
-                if (!OverlayStatus.TryGetValue(__instance, out var _))
+                if (!OverlayStatus.TryGetValue(__instance, out _))
                     OverlayStatus.Add(__instance, new() { IsChildOverlay = true });
         }
 
