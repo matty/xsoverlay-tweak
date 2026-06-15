@@ -4,6 +4,6 @@
     {
         public const string PLUGIN_GUID = "xsoverlay.tweak";
         public const string PLUGIN_NAME = "XSOverlay Tweak";
-        public const string PLUGIN_VERSION = "1.0.0";
+        public const string PLUGIN_VERSION = "1.1.0";
     }
 }
