@@ -123,7 +123,7 @@ namespace xsoverlay_tweak
             Dashboardkeyboard = cfg.Bind("Dashboard", "Dashboardkeyboard", false, "Keeps Keyboard visible while the SteamVR Dashboard is open.");
 
             // Haptic
-            GrabHaptic = cfg.Bind("Haptic", "GrabHaptic", 50, "Plays a haptic feedback when grab any Overlay.");
+            GrabHaptic = cfg.Bind("Haptic", "GrabHaptic", 50, "Plays a haptic feedback when grabbing any Overlay.");
             KeyboardKeyHaptic = cfg.Bind("Haptic", "KeyboardKeyHaptic", 30, "Plays a haptic feedback when Pointer is hovering a Keyboard key.");
             KeyboardPressHaptic = cfg.Bind("Haptic", "KeyboardPressHaptic", 30, "Plays a haptic feedback when Pointer is pressing a Keyboard key.");
             OverlaySwapHaptic = cfg.Bind("Haptic", "OverlaySwapHaptic", 30, "Plays a haptic feedback when Pointer is switching Overlay.");
@@ -160,8 +160,8 @@ namespace xsoverlay_tweak
             WebViewFix = cfg.Bind("Fix", "WebViewFix", true, "Fixes an issue where certain WebView UI elements were not clickable.");
 
             // Community Request
-            HideBattery = cfg.Bind("CommunityRequest", "HideBattery", false, "Hide Wrist Overlay battery information widget.");
-            HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", true, "Hide invalid battery device from Wrist Overlay.");
+            HideBattery = cfg.Bind("CommunityRequest", "HideBattery", false, "Hide the Wrist Overlay battery information widget.");
+            HideInvalidBattery = cfg.Bind("CommunityRequest", "HideInvalidBattery", true, "Hide the invalid battery device from Wrist Overlay.");
             LoadLayoutKeyboard = cfg.Bind("CommunityRequest", "LoadLayoutKeyboard", true, "Layout will save the current keyboard state to the selected profile.");
             MouseButtonSwap = cfg.Bind("CommunityRequest", "MouseButtonSwap", true, "Detect the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.");
             OverlayAttachSmooth = cfg.Bind("CommunityRequest", "OverlayAttachSmooth", true, "When Capture Overlay is attached to the device, it will add more options to the Window Settings flyout to control Overlay movement behavior, using Position Dampening and Rotation Dampening settings to smooth its movement.");
