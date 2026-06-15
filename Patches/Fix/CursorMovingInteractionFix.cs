@@ -19,10 +19,9 @@ namespace xsoverlay_tweak.Patches.Fix
         {
             if (!IsEnable()) return;
 
-            float currentTime = Time.unscaledTime;
-            if (currentTime - lastTriggerTime >= 0.02f) // Limit frequency to 20Hz
+            if (Time.unscaledTime - lastTriggerTime >= 0.05f) // ~20 FPS
             {
-                lastTriggerTime = currentTime;
+                lastTriggerTime = Time.unscaledTime;
                 mouse_event(MOUSEEVENTF_MOVE, 1, 1, 0, 0);
             }
         }
