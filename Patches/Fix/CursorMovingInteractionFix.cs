@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using XSOverlay;
@@ -12,17 +13,25 @@ namespace xsoverlay_tweak.Patches.Fix
 
         private const uint MOUSEEVENTF_MOVE = 0x0001;
         private static float lastTriggerTime;
+        private static int lastX;
+        private static int lastY;
 
         [HarmonyPatch(typeof(MouseOperations), nameof(MouseOperations.SetCursorPosition))]
         [HarmonyPostfix]
-        public static void SetCursorPosition()
+        public static void SetCursorPosition(int x, int y)
         {
             if (!IsEnable()) return;
 
             if (Time.unscaledTime - lastTriggerTime >= 0.05f) // ~20 FPS
             {
-                lastTriggerTime = Time.unscaledTime;
-                mouse_event(MOUSEEVENTF_MOVE, 1, 1, 0, 0);
+                if (Math.Abs(x - lastX) > 20 || Math.Abs(y - lastY) > 20)
+                {
+                    lastTriggerTime = Time.unscaledTime;
+                    mouse_event(MOUSEEVENTF_MOVE, 1, 1, 0, 0);
+
+                    lastX = x;
+                    lastY = y;
+                }
             }
         }
 
