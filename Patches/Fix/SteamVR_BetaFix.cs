@@ -2,7 +2,6 @@
 using System;
 using UnityEngine;
 using Valve.VR;
-using xsoverlay_tweak.Patches.CommunityRequest;
 using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.Fix
@@ -22,62 +21,16 @@ namespace xsoverlay_tweak.Patches.Fix
         [HarmonyPostfix]
         public static void FixPointerClipping(
             Raycaster __instance,
-            VROverlayIntersectionResults_t rayHitResults,
             ref GameObject ___VisualCursorElement,
-            ref GameObject ___VisualCursorElementClickAnimation,
-            ref Unity_Overlay ___VisualCursorElementClickAnimationOverlay)
+            ref Vector3 ___CurrentRayPosition,
+            ref Vector3 ___RayHitPoint,
+            ref Vector3 ___CurrentRayDirection)
         {
-            if (!IsEnable()) return;
-            if (!EventBridge.IsRaycasterHand(__instance)) return;
+            if (!IsEnable() || !IsOverlayClipping || !EventBridge.IsRaycasterHand(__instance)) return;
 
-            if (IsOverlayClipping)
-            {
-                Unity_Overlay overlay = __instance.HoveringOverlay;
-
-                if (overlay != null && ___VisualCursorElement != null)
-                {
-                    // Recreate the precise world rotation calculation from your other patch
-                    Transform transform = overlay.transform;
-                    Quaternion rotation = overlay.transform.rotation;
-
-                    if (overlay?.WorldSpaceSceneImpostor != null) // Handle attached device
-                    {
-                        transform = overlay.WorldSpaceSceneImpostor.transform;
-                        rotation = overlay.WorldSpaceSceneImpostor.transform.rotation;
-
-                        if (OverlayAttachSmooth.OverlayStatus.TryGetValue(overlay, out var SmoothData))
-                            if (SmoothData.LockRoll)
-                                rotation = SmoothData.Rotation;
-                    }
-
-                    Vector3 pushDirection;
-
-                    if (overlay.overlayCurveRadius.Equals(0)) // Flat overlay
-                    {
-                        // Flat overlays push out along the overlay's true forward vector
-                        pushDirection = rotation * Vector3.forward;
-                    }
-                    else // Curved overlay
-                    {
-                        Vector3 localNormal = new(rayHitResults.vNormal.v0, rayHitResults.vNormal.v1, rayHitResults.vNormal.v2);
-                        Vector3 worldNormal = transform.TransformDirection(localNormal);
-
-                        // Mirror X in world space exactly like your curve patch does
-                        worldNormal.x = -worldNormal.x;
-
-                        Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
-
-                        // This gives us the exact world direction pointing directly away from the curved face
-                        pushDirection = (rotation * surfaceTilt) * Vector3.forward;
-                    }
-
-                    // Apply the push away from the screen face (OpenVR Z axis compensation)
-                    ___VisualCursorElement.transform.position += pushDirection * -0.0015f;
-
-                    if (___VisualCursorElementClickAnimationOverlay.gameObject.activeSelf)
-                        ___VisualCursorElementClickAnimation.transform.position += pushDirection * -0.0001f;
-                }
-            }
+            // Push back hit point 3mm
+            Vector3 position = (___RayHitPoint = (___CurrentRayPosition + ___CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (___CurrentRayDirection * 0.003f));
+            ___VisualCursorElement.transform.position = position;
         }
 
         [HarmonyPatch(typeof(OpenVR), nameof(OpenVR.Init))]
