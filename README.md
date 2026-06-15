@@ -21,12 +21,12 @@
 - **Windows Cursor Pointer**: Hides the Capture Overlay Cursor and uses the Windows Cursor image as the Pointer to mimic the SteamVR Dashboard.
 
 ### 👈 Pointer & Interaction
+- **Active Click**: Clicking the inactive hand's Pointer makes it the Active Hand and performs a Mouse Click simultaneously for two-hand interaction.
 - **Active WebViews**: Applies the inactive Pointer features to WebView Overlay such as Settings, Wrist, and others.
+- **Double Click Delay**: Applies the Double Click Delay from XSOverlay settings to the physical Pointer itself, not just the cursor.
 - **Emulate Mouse Click Animation**: Enables the Pointer click visual animation for Input Method > Emulate Mouse.
 - **Inactive Highlight**: Highlights the inactive hand's Pointer in red for easier identification.
 - **Inactive Opacity**: Sets the opacity level for the inactive hand's Pointer.
-- **Active Click**: Clicking the inactive hand's Pointer makes it the Active Hand and performs a Mouse Click simultaneously for two-hand interaction.
-- **Double Click Delay**: Applies the Double Click Delay from XSOverlay settings to the physical Pointer itself, not just the cursor.
 - **Scale Multiplier**: Multiplier for the Pointer scale relative to the global XSOverlay setting.
 
 
@@ -47,6 +47,7 @@
 ### ⚡ Optimization
 - **Efficiency Mode**: Enables Windows Efficiency Mode for XSOverlay to reduce CPU usage when not interacting with any Overlay.
 - **Inactive Refresh Rate**: The target Refresh Rate for XSOverlay rendering when not interacting with any Overlay.
+- **Optimization OSC**: Instead of connecting to OSC in the loop thread, connect to the OSC server when new data is sent.
 
 ### ✨ Quality of Life
 - **Default Capture Overlay Texture**: Initializes a Capture Overlay with a white texture to prevent new spawns from appearing invisible.
@@ -58,28 +59,28 @@
 - **Pull Trigger Click Threshold**: The Trigger pull threshold required to trigger a Left Click.
 - **Pull Trigger Pointer Lock**: Locks the Pointer in place while the Trigger is held for easier double clicking.
 - **WebView Wider Scroll**: Makes the WebView scrollbar wider for easier interaction.
+- **Windows Accent Color**: Using Windows accent color as XSOverlay accent color.
 - **Wrist Over Position**: Increases the allowed positioning radius of the Wrist Overlay.
 
 ### 🔧 Fixes
 - **Ctrl Key Sticky Fix**: Fixes the issue where the Ctrl key is not sticky.
+- **Cursor Moving Interaction Fix**: Fix where Windows cursor movement events fail to interact with elements. For example, hovering the cursor over the Windows taskbar displays a thumbnail preview, or dragging to move the system tray icon.
+- **Handle Scrolling Fix**: Normalize stick scrolling speed by the HMD refresh rate and support horizontal scrolling.
+- **Keyboard Control Button State**: Fix keyboard control button color not following the state when summoning.
 - **Load Layout Scale Fix**: Ensures saved scale values are applied correctly when loading an Overlay Layout.
 - **Overlay Roll Curve Fix**: Prevents an Overlay from turning invisible when curvature and rotation change simultaneously.
 - **WebView Fix**: Fixes an issue where certain WebView UI elements were not clickable.
 
-## 🆕 Incoming Update
-- **Cursor Moving Interaction Fix**: Fix where Windows cursor movement events fail to interact with elements. For example, hovering the cursor over the Windows taskbar displays a thumbnail preview, or dragging to move the system tray icon.
-- **Handle Scrolling Fix**: Normalize stick scrolling speed by the HMD refresh rate and support horizontal scrolling.
+### ✨ Community Request
 - **Hide Battery**: Hide Wrist Overlay battery information widget.
 - **Hide Invalid Battery**: Hide invalid battery device from Wrist Overlay.
 - **Load Layout Keyboard**: Layout will save the current keyboard state to the selected profile.
 - **Mouse Button Swap**: Detect the Windows setting 'Switch primary and secondary buttons' to auto-swap controller binding.
-- **Optimization OSC**: Instead of connecting to OSC in the loop thread, connect to the OSC server when new data is sent.
-- **Overlay Confirm Close**: Requires pressing the close overlay button three times to close.
 - **Overlay Attach Smooth**: When Capture Overlay is attached to the device, it will add more options to the Window Settings flyout to control Overlay movement behavior, using Position Dampening and Rotation Dampening settings to smooth its movement.
+- **Overlay Confirm Close**: Requires pressing the close overlay button three times to close.
 - **Window Toolbar Gesture**: When hovering over the Window Toolbar, right-click to switch to the previous Window or use thumbstick scrolling the Window list.
 - **Window Toolbar Keyboard**: Add a keyboard  summon button to the Capture Overlay Toolbar.
 - **Wrist State Restore**: Restore the last Wrist Overlay state at launch.
-- **fpsVR Socket**: Attaches the fpsVR overlay to a specific socket position of XSOverlay.
 
 ## ⛏️ Installation
 1. Download the plugin ZIP from [Releases](https://github.com/chaixshot/xxsoverlay-tweak/releases/latest)
