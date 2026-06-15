@@ -1,8 +1,9 @@
 ﻿using HarmonyLib;
 using Microsoft.Win32;
 using System;
-using System.Drawing;
+using System.Collections;
 using System.Runtime.InteropServices;
+using UnityEngine;
 using XSOverlay;
 
 namespace xsoverlay_tweak.Patches.QualityOfLife
@@ -18,9 +19,12 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             XConfig.WindowsAccentColor.SettingChanged += (s, e) =>
             {
                 if (IsEnalbe())
-                    ApplyAccentColor(XSettingsManager.Instance);
+                    Plugin.Instance.StartCoroutine(ApplyAccentColor(XSettingsManager.Instance));
                 else
+                {
                     XSettingsManager.Instance.Settings.AccentColor = (UnityEngine.Color)xsoColor;
+                    ShootAction(XSettingsManager.Instance);
+                }
             };
         }
 
@@ -30,7 +34,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             if (!IsEnalbe()) return;
 
-            ApplyAccentColor(__instance);
+            Plugin.Instance.StartCoroutine(ApplyAccentColor(__instance));
         }
 
         [HarmonyPatch(typeof(XSettingsManager), nameof(XSettingsManager.ChangeColorChannel))]
@@ -42,9 +46,11 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             xsoColor = __instance.Settings.AccentColor;
         }
 
-        private static void ApplyAccentColor(XSettingsManager instance)
+        private static IEnumerator ApplyAccentColor(XSettingsManager instance)
         {
-            Color? accentColor = GetWindowsAccentColor();
+            yield return new WaitForSecondsRealtime(0.2f); // Wait for real xso.AccentColor save to overlaySettings.json
+
+            System.Drawing.Color? accentColor = GetWindowsAccentColor();
 
             if (accentColor.HasValue)
             {
@@ -55,14 +61,25 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 instance.Settings.AccentColor.g = accentColor.Value.G / 255f;
                 instance.Settings.AccentColor.b = accentColor.Value.B / 255f;
                 // instance.Settings.AccentColor.a = accentColor.Value.A / 255f;
+
+                ShootAction(instance);
             }
+        }
+
+        private static void ShootAction(XSettingsManager instance)
+        {
+            Action<UnityEngine.Color, bool> UpdateMainColorTheme = (Action<UnityEngine.Color, bool>)AccessTools.Field(typeof(XSettingsManager), "UpdateMainColorTheme").GetValue(instance);
+            Action<UnityEngine.Color, bool> UpdateAccentColors = (Action<UnityEngine.Color, bool>)AccessTools.Field(typeof(XSettingsManager), "UpdateAccentColors").GetValue(instance);
+
+            UpdateAccentColors?.Invoke(UnityEngine.Color.black, arg2: false);
+            UpdateMainColorTheme?.Invoke(UnityEngine.Color.black, arg2: false);
         }
 
         // Native Win32 API structure fallback for Windows 7, 7.1, 8, and 8.1
         [DllImport("dwmapi.dll", PreserveSig = false)]
         private static extern void DwmGetColorizationColor(out uint pcrColorization, [MarshalAs(UnmanagedType.Bool)] out bool pfOpaqueBlend);
 
-        private static Color? GetWindowsAccentColor()
+        private static System.Drawing.Color? GetWindowsAccentColor()
         {
             try
             {
@@ -79,7 +96,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         byte b = (byte)((accentColorDword >> 16) & 0xFF);
                         byte a = (byte)((accentColorDword >> 24) & 0xFF);
 
-                        return Color.FromArgb(a, r, g, b);
+                        return System.Drawing.Color.FromArgb(a, r, g, b);
                     }
                 }
 
@@ -93,7 +110,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                 byte win7G = (byte)((colorizationColor >> 8) & 0xFF);
                 byte win7B = (byte)(colorizationColor & 0xFF);
 
-                return Color.FromArgb(win7A, win7R, win7G, win7B);
+                return System.Drawing.Color.FromArgb(win7A, win7R, win7G, win7B);
             }
             catch (Exception ex)
             {
