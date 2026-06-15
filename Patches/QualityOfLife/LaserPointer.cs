@@ -132,7 +132,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                     Data.LaserB.transform.rotation = Data.LaserA.transform.rotation;
                     Data.LaserB.transform.Rotate(0, 180, 0, Space.Self);
 
-                    if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.005f)
+                    if (Mathf.Abs(Data.Distance_Last - Data.Distance) > 0.02f)
                         UpdateLaserLength(__instance);
                 }
 
@@ -159,13 +159,13 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
 
                     Data.LaserA.colorTint = targetColor;
                     Data.LaserA.opacity = targetOpacity;
-                    Data.LaserA.overlay.overlayColor = targetColor;
-                    Data.LaserA.overlay.overlayRenderModelColor = targetColor;
+                    //Data.LaserA.overlay.overlayColor = targetColor;
+                    //Data.LaserA.overlay.overlayRenderModelColor = targetColor;
 
                     Data.LaserB.colorTint = targetColor;
                     Data.LaserB.opacity = targetOpacity;
-                    Data.LaserB.overlay.overlayColor = targetColor;
-                    Data.LaserB.overlay.overlayRenderModelColor = targetColor;
+                    //Data.LaserB.overlay.overlayColor = targetColor;
+                    //Data.LaserB.overlay.overlayRenderModelColor = targetColor;
                 }
             }
         }
@@ -218,7 +218,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
         {
             if (LaserDictionary.TryGetValue(hovering, out LaserData Data))
             {
-                if (Time.time - Data.LastUpdateLengthTime < 1f / 15f) return; // 15 fps
+                if (Time.unscaledTime - Data.LastUpdateLengthTime < 0.1f) return; // ~10 FPS
 
                 int newHeight = Mathf.Max(1, (int)(Data.Distance * 500));
 
