@@ -113,9 +113,9 @@ namespace xsoverlay_tweak
             PointerScaleMultiply = cfg.Bind("Pointer", "PointerScaleMultiply", 100, "Multiplier for the Pointer scale relative to the global XSOverlay setting.");
 
             // Wrist
-            fpsVRSocket = cfg.Bind("QualityOfLife", "fpsVRSocket", 0, "Attaches the fpsVR overlay to a specific socket position of XSOverlay.");
-            WristOverPosition = cfg.Bind("QualityOfLife", "WristOverPosition", true, "Increases the allowed positioning radius of the Wrist Overlay.");
-            WristStateRestore = cfg.Bind("CommunityRequest", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
+            fpsVRSocket = cfg.Bind("Wrist", "fpsVRSocket", 0, "Attaches the fpsVR Overlay to a specific socket position of XSOverlay.");
+            WristOverPosition = cfg.Bind("Wrist", "WristOverPosition", true, "Increases the allowed positioning radius of the Wrist Overlay.");
+            WristStateRestore = cfg.Bind("Wrist", "WristStateRestore", true, "Restore the last Wrist Overlay state at launch.");
 
             // Mouse Navigation
             MouseNavigation = cfg.Bind("MouseNavigation", "MouseNavigation", false, "Custom keybindings for Mouse Forward/Back navigation.\nConfiguration: Press 'Bindings' tab in XSOverlay settings to open SteamVR bindings menu.\nEdit the Current Binding and add a button for 'MouseBack/MouseForward'.");

@@ -5,7 +5,7 @@ using XSOverlay;
 using XSOverlay.WebApp;
 using xsoverlay_tweak.Utils;
 
-namespace xsoverlay_tweak.Patches.CommunityRequest
+namespace xsoverlay_tweak.Patches.Wrist
 {
     internal class WristStateRestore
     {

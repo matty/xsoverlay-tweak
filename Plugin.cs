@@ -47,9 +47,9 @@ public class Plugin : BaseUnityPlugin
         harmony.PatchAll(typeof(Patches.Pointer.PointerScaleMultiply));
 
         // Wrist
-        harmony.PatchAll(typeof(Patches.QualityOfLife.fpsVRSocket));
-        harmony.PatchAll(typeof(Patches.QualityOfLife.WristOverPosition));
-        harmony.PatchAll(typeof(Patches.CommunityRequest.WristStateRestore));
+        harmony.PatchAll(typeof(Patches.Wrist.fpsVRSocket));
+        harmony.PatchAll(typeof(Patches.Wrist.WristOverPosition));
+        harmony.PatchAll(typeof(Patches.Wrist.WristStateRestore));
 
         // Mouse Navigation
         harmony.PatchAll(typeof(Patches.MouseNavigation));
