@@ -11,6 +11,9 @@ namespace xsoverlay_tweak.Utils
 {
     internal class EventBridge
     {
+        public static readonly float OneCentimetre = 0.01f;
+        public static readonly float OneDegree = 1.0f;
+
         public static bool IsHoverAnyOverlay = false;
         public static bool IsHoverAnyDesktopOrWindowCapture = false;
         public static bool IsHoverAnyDesktopCapture = false;

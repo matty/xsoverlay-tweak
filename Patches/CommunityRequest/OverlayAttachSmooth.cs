@@ -39,9 +39,6 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
         private static bool IsRecenter = false;
         private static Coroutine RecenterCoroutine;
 
-        private static readonly float oneCentimetre = 0.01f;
-        private static readonly float oneDegree = 1.0f;
-
         [HarmonyPatch(typeof(Overlay_Manager), nameof(Overlay_Manager.CreateNewOverlayWindow))]
         [HarmonyPostfix]
         public static void CaptureOverlaySpawned(Unity_Overlay ___currOverlay)
@@ -140,9 +137,9 @@ namespace xsoverlay_tweak.Patches.CommunityRequest
                             Data.IsMoving = true;
                         else if (Data.LockHover && EventBridge.CurrentHoveringOverlay == __instance)
                             Data.IsMoving = false;
-                        else if (dist > (oneCentimetre * Data.DistThreshold) || angle > (oneDegree * Data.AngleThreshold))
+                        else if (dist > (EventBridge.OneCentimetre * Data.DistThreshold) || angle > (EventBridge.OneDegree * Data.AngleThreshold))
                             Data.IsMoving = true;
-                        else if (dist < (oneCentimetre * Data.StopThreshold) && angle < (oneDegree * Data.StopThreshold))
+                        else if (dist < (EventBridge.OneCentimetre * Data.StopThreshold) && angle < (EventBridge.OneDegree * Data.StopThreshold))
                             Data.IsMoving = false;
                     }
 
