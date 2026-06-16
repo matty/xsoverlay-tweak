@@ -191,9 +191,66 @@ const addSetting = (sectionObj, type, id, name, desc, defaultValue, opts, opts1)
 // --- Build Sections ---
 SECTIONS.forEach(s => {
     const section = new Ui.Section(s.name, s.priority, pageRoot);
+    const bg = section.Background;
+    const header = bg.querySelector('.page-section-text');
+
     s.settings.forEach(set => {
         addSetting(section, set.type, set.id, set.name, set.description, set.default, set.options, set.unit);
     });
+
+    // Make section collapsible by clicking its header
+    if (header && s.name && !s.name.includes('hidden') && s.name !== '_' && s.name !== 'About') {
+        header.style.cursor = 'pointer';
+        header.style.display = 'flex';
+        header.style.justifyContent = 'space-between';
+        header.style.alignItems = 'center';
+        header.style.userSelect = 'none';
+        header.style.transition = 'font-weight 0.1s ease, transform 0.1s ease';
+        header.style.transformOrigin = 'left center';
+
+        header.addEventListener('mouseenter', () => {
+            window.vuplex.postMessage('XSOverlayTweak-Haptic-Hover');
+            header.style.fontWeight = 'bold';
+            header.style.transform = 'scale(1.15)';
+        });
+
+        header.addEventListener('mouseleave', () => {
+            header.style.fontWeight = '';
+            header.style.transform = 'scale(1)';
+        });
+
+        const indicator = document.createElement('i');
+        indicator.className = 'bi bi-chevron-down theme-font-contrast';
+        indicator.style.transition = 'transform 0.2s ease';
+        indicator.style.marginLeft = '5px';
+
+        // Collapse all sections by default
+        bg.classList.add('section-collapsed');
+        indicator.style.transform = 'rotate(-90deg)';
+        Array.from(bg.children).forEach(child => {
+            if (child !== header) {
+                child.style.display = 'none';
+            }
+        });
+
+        header.appendChild(indicator);
+
+        header.addEventListener('click', () => {
+            const rectBefore = header.getBoundingClientRect().top;
+
+            const isCollapsed = bg.classList.toggle('section-collapsed');
+            indicator.style.transform = isCollapsed ? 'rotate(-90deg)' : '';
+            Array.from(bg.children).forEach(child => {
+                if (child !== header) {
+                    child.style.display = isCollapsed ? 'none' : '';
+                }
+            });
+
+            // Anti-expansion jump: maintain header position relative to viewpoint
+            const rectAfter = header.getBoundingClientRect().top;
+            pageRoot.scrollTop += (rectAfter - rectBefore);
+        });
+    }
 });
 
 // --- Navigation Logic ---
