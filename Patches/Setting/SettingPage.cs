@@ -249,7 +249,7 @@ namespace xsoverlay_tweak.Patches.Setting
 
                 // Optimization
                 case "XSOverlayTweak.EfficiencyMode":
-                    XConfig.EfficiencyMode.Value = bool.Parse(value);
+                    XConfig.EfficiencyMode.Value = int.Parse(value);
                     break;
                 case "XSOverlayTweak.InactiveRefreshRate":
                     XConfig.InactiveRefreshRate.Value = int.Parse(value);

@@ -1,5 +1,7 @@
 ﻿using HarmonyLib;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using XSOverlay;
@@ -7,12 +9,11 @@ using xsoverlay_tweak.Utils;
 
 namespace xsoverlay_tweak.Patches.Optimization
 {
-    [HarmonyPatch(typeof(DeviceManager))]
     internal class EfficiencyMode
     {
         public static bool IsInEfficiencyMode = false;
 
-        [HarmonyPatch("Start")]
+        [HarmonyPatch(typeof(DeviceManager), "Start")]
         [HarmonyPostfix]
         public static void InitializeEvents(DeviceManager __instance)
         {
@@ -25,7 +26,7 @@ namespace xsoverlay_tweak.Patches.Optimization
             };
         }
 
-        [HarmonyPatch("GetHMDRefreshRate")]
+        [HarmonyPatch(typeof(DeviceManager), "GetHMDRefreshRate")]
         [HarmonyPostfix]
         public static void DetermineShouldEfficiencyMode()
         {
@@ -43,14 +44,49 @@ namespace xsoverlay_tweak.Patches.Optimization
             }
         }
 
+        [HarmonyPatch(typeof(Unity_Overlay), "FadeOverlayIn")]
+        [HarmonyPostfix]
+        public static void OverlayPinnedFadedIn(Unity_Overlay __instance)
+        {
+            if (XConfig.EfficiencyMode.Value.Equals(2))
+                if (__instance.isPinned)
+                    Plugin.Instance.StartCoroutine(Delay());
+
+            static IEnumerator Delay()
+            {
+                yield return new WaitForSecondsRealtime(0.1f);
+                EventBridge.Ref_DeviceManager.GetHMDRefreshRate(DeviceManager.Instance);
+            }
+        }
+
         public static bool IsEfficiencyModeEnable()
         {
-            return XConfig.EfficiencyMode.Value;
+            return !XConfig.EfficiencyMode.Value.Equals(0);
         }
 
         public static bool ShouldInEfficiencyMode()
         {
-            return IsEfficiencyModeEnable() && !Overlay_Manager.Instance.editMode && !EventBridge.IsHoverAnyOverlay && !EventBridge.IsNotificationVisible;
+            bool inNonActive = IsEfficiencyModeEnable() && !Overlay_Manager.Instance.editMode && !EventBridge.IsHoverAnyOverlay && !EventBridge.IsNotificationVisible;
+
+            if (XConfig.EfficiencyMode.Value.Equals(1))
+                return inNonActive;
+            else if (XConfig.EfficiencyMode.Value.Equals(2))
+            {
+                bool isPinnedVisible = false;
+                List<Unity_Overlay> activeOverlayComponents = Overlay_Manager.Instance.ActiveOverlayComponents;
+
+                for (int i = 0; i < activeOverlayComponents.Count; i++)
+                {
+                    Unity_Overlay overlay = activeOverlayComponents[i];
+
+                    if (!overlay.opacity.Equals(0) && overlay.isPinned && !overlay.IsHidden && !overlay.IsPaused)
+                        isPinnedVisible = true;
+                }
+
+                return inNonActive && !isPinnedVisible;
+            }
+
+            return false;
         }
     }
 
