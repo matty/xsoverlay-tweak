@@ -12,6 +12,8 @@ namespace xsoverlay_tweak.Patches.Cursor
         private delegate void SyncedUpdateDelegate(Raycaster instance, Unity_Overlay overlay);
         private static readonly SyncedUpdateDelegate SyncedOverlayUpdate = AccessTools.MethodDelegate<SyncedUpdateDelegate>(AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate"));
 
+        public static readonly Action<Raycaster> HandleScrolling = AccessTools.MethodDelegate<Action<Raycaster>>(AccessTools.Method(typeof(Raycaster), "HandleScrolling"));
+
         private static readonly List<Raycaster> RaycasterInstances = [];
         private static readonly Unity_Overlay EmptyOverlay = new();
 
@@ -68,7 +70,9 @@ namespace xsoverlay_tweak.Patches.Cursor
             // Add listener from overlay update 
             MethodInfo SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
             Action<Unity_Overlay> handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
+
             XSOEventSystem.OnUpdatedOverlay += handler;
+            XSOEventSystem.OnUpdatedOverlay -= SyncHandleScrolling;
         }
 
         private static void RemoveUpdatedOverlay(Raycaster __instance)
@@ -76,7 +80,21 @@ namespace xsoverlay_tweak.Patches.Cursor
             // Remove listener from overlay update 
             MethodInfo SyncedOverlayUpdate = AccessTools.Method(typeof(Raycaster), "SyncedOverlayUpdate");
             Action<Unity_Overlay> handler = (Action<Unity_Overlay>)Delegate.CreateDelegate(typeof(Action<Unity_Overlay>), __instance, SyncedOverlayUpdate);
+
             XSOEventSystem.OnUpdatedOverlay -= handler;
+            XSOEventSystem.OnUpdatedOverlay += SyncHandleScrolling;
+        }
+
+        private static void SyncHandleScrolling(Unity_Overlay overlay)
+        {
+            for (int i = 0; i < RaycasterInstances.Count; i++)
+            {
+                Raycaster raycaster = RaycasterInstances[i];
+
+                if (EventBridge.IsActiveHand(raycaster))
+                    if (raycaster.HoveringOverlay != null && raycaster.HoveringOverlay.overlayRootObject != null)
+                        HandleScrolling(raycaster);
+            }
         }
 
         private static bool IsEnable()
