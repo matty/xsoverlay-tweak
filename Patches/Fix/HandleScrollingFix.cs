@@ -16,20 +16,18 @@ namespace xsoverlay_tweak.Patches.Fix
 
             float baseScrollSpeed = XSettingsManager.Instance.Settings.ScrollSpeed;
             float scrollFactor = baseScrollSpeed / RefreshRate.HMDRefreshRate;
-            float deadzone = 0.15f;
+            float deadzone = 0.01f;
 
             // Read BOTH horizontal (x)and vertical (y) axes from the input device
-            float scrollX = ___InputDevice.NormalizedScrollAxis.x;
-            float scrollY = ___InputDevice.NormalizedScrollAxis.y;
+            float scrollX = ___InputDevice.Scroll.axis.x;
+            float scrollY = ___InputDevice.Scroll.axis.y;
 
             float absX = Mathf.Abs(scrollX);
             float absY = Mathf.Abs(scrollY);
 
             // If both axes are inside the deadzone, or click engine is broken, stop processing
             if ((absX <= deadzone && absY <= deadzone) || (float)___ScrollClicksPerSecond <= 0f)
-            {
                 return false;
-            }
 
             if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
             {
@@ -40,7 +38,7 @@ namespace xsoverlay_tweak.Patches.Fix
                     if (horizontalTicks > 0)
                     {
                         _horizontalTicks -= horizontalTicks;
-                        XInputManager.sim.Mouse.HorizontalScroll((scrollX > 0f) ? 1 : -1 * horizontalTicks);
+                        XInputManager.sim.Mouse.HorizontalScroll(((scrollX > 0f) ? 1 : -1) * horizontalTicks);
                     }
                 }
 
@@ -51,7 +49,7 @@ namespace xsoverlay_tweak.Patches.Fix
                     if (verticalTicks > 0)
                     {
                         ____tickAccumulator -= verticalTicks;
-                        MouseOperations.Scroll(((scrollY > 0f) ? 1 : (-1)) * verticalTicks, XInputManager.sim);
+                        MouseOperations.Scroll((((scrollY > 0f) ? 1 : (-1))) * verticalTicks, XInputManager.sim);
                     }
                 }
             }
