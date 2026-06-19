@@ -29,7 +29,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 if (!IsEnabled()) return;
 
                 if (XConfig.fpsVRSocket.Value == 1 || XConfig.fpsVRSocket.Value == 2) // Top, Bottom
-                    RefreshWristState(enable);
+                    RefreshWristState(enable, 0.4f);
             };
 
             XSOEventSystem.OnStartStopPerformanceMonitor += (enable) =>
@@ -39,7 +39,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsPerformanceMonitor = enable;
 
                 if (XConfig.fpsVRSocket.Value == 1 || XConfig.fpsVRSocket.Value == 2) // Top, Bottom
-                    RefreshWristState(enable);
+                    RefreshWristState(enable, 0.4f);
             };
 
             CustomAPI.OnToggleMediaPlayer += (enable) =>
@@ -49,7 +49,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                    RefreshWristState(enable);
+                    RefreshWristState(enable, 0.4f);
             };
 
             CustomAPI.OnClickToggleMediaPlayer += (enable) =>
@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                    RefreshWristState(enable);
+                    RefreshWristState(enable, 0.4f);
             };
 
             XConfig.fpsVRSocket.SettingChanged += (sender, args) =>
@@ -73,7 +73,7 @@ namespace xsoverlay_tweak.Patches.Wrist
             {
                 if (!IsEnabled()) return;
 
-                await Task.Delay(100);
+                await Task.Delay(100); // Forget why is here
                 ChangefpsVRTranform();
             };
 
@@ -85,19 +85,23 @@ namespace xsoverlay_tweak.Patches.Wrist
             };
         }
 
-        [HarmonyPatch(typeof(DeviceManager), "UpdateDevices")]
+        [HarmonyPatch(typeof(Unity_Overlay), "FadeOverlayIn")]
         [HarmonyPostfix]
-        public static void UpdateInTick()
+        public static void WristOverlayFadedIn(Unity_Overlay __instance)
         {
             if (!IsEnabled()) return;
 
-            if (!IsClosing)
-                ChangefpsVRTranform();
+            if (__instance.IsWristOverlay)
+                if (!IsClosing)
+                    if (__instance.overlay.overlayTexture == null) // First visible
+                        RefreshWristState(true, 0.1f); // Wait for IsHidden == false to fire UpdateTexture()
+                    else
+                        ChangefpsVRTranform();
         }
 
         [HarmonyPatch(typeof(WindowMovementManager), "DoScaleWindowFixed")]
         [HarmonyPostfix]
-        public static void UpdateOnScaling(ref Unity_Overlay activeOverlay)
+        public static void UpdateOnScaling(Unity_Overlay activeOverlay)
         {
             if (!IsEnabled()) return;
 
@@ -107,7 +111,7 @@ namespace xsoverlay_tweak.Patches.Wrist
 
         [HarmonyPatch(typeof(WindowMovementManager), "DetermineIfOverlayShouldBeCurved")]
         [HarmonyPostfix]
-        public static void UpdateOnMoving(ref Unity_Overlay overlay)
+        public static void UpdateOnMoving(Unity_Overlay overlay)
         {
             if (!IsEnabled()) return;
 
@@ -206,9 +210,9 @@ namespace xsoverlay_tweak.Patches.Wrist
                 Plugin.Logger.LogError(evroverlayError.ToString());
         }
 
-        private static IEnumerator ClosingDelay()
+        private static IEnumerator ClosingDelay(float delay)
         {
-            yield return new WaitForSeconds(0.4f);
+            yield return new WaitForSeconds(delay);
 
             ChangefpsVRTranform();
             ClosingCoroutine = null;
@@ -243,7 +247,7 @@ namespace xsoverlay_tweak.Patches.Wrist
             return result;
         }
 
-        private static void RefreshWristState(bool enable)
+        private static void RefreshWristState(bool enable, float delay = 0f)
         {
             if (ClosingCoroutine != null)
             {
@@ -253,8 +257,8 @@ namespace xsoverlay_tweak.Patches.Wrist
 
             IsClosing = !enable;
 
-            if (IsClosing)
-                ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay());
+            if (IsClosing || delay != 0f)
+                ClosingCoroutine = Plugin.Instance.StartCoroutine(ClosingDelay(delay));
             else
                 ChangefpsVRTranform();
         }
