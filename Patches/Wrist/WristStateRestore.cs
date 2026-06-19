@@ -55,7 +55,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                     {
                         Task.Run(async () =>
                         {
-                            await Task.Delay(1000);
+                            await Task.Delay(1500); // Wait for CustomAPI execute listener first
 
                             wv._webView.WebView.ExecuteJavaScript(jsCode, (result) =>
                             {
