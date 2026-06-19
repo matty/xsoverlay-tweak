@@ -55,7 +55,7 @@ namespace xsoverlay_tweak.Patches.Cursor
         }
 
         [HarmonyPatch(typeof(UpdateDateTime), "Update")]
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         public static void DoAlwayUpdateCursor()
         {
             if (!IsEnable()) return;
