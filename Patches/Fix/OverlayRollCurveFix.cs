@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 using XSOverlay;
 
@@ -7,29 +6,31 @@ namespace xsoverlay_tweak.Patches.Fix
 {
     internal class OverlayRollCurveFix
     {
-        private class RollState { public float LastRotation; }
-        private static readonly ConditionalWeakTable<Unity_Overlay, RollState> LastX = new();
-
         [HarmonyPatch(typeof(WindowMovementManager), nameof(WindowMovementManager.DetermineIfOverlayShouldBeCurved))]
-        [HarmonyPrefix]
-        public static bool CurveApplyFlicker(ref Unity_Overlay overlay)
+        [HarmonyPostfix]
+        public static void CurveApplyFlicker(Unity_Overlay overlay)
         {
-            if (!IsEnable()) return true;
+            // If our mod feature is disabled, stop right here
+            if (!IsEnable()) return;
 
-            RollState state = LastX.GetOrCreateValue(overlay);
-            Quaternion rotation = overlay.transform.rotation;
+            // Check if the overlay is currently flag-marked as curved by the original method
+            if (overlay.OverlayIsWithinCurveRange && overlay.overlayCurveRadius > 0f)
+            {
+                // Get current rotation angles
+                Vector3 currentEuler = overlay.transform.rotation.eulerAngles;
 
-            if (rotation.eulerAngles.x > 335f) // Overlay rolling change at this angle along with curve
-                if (rotation.eulerAngles.x > state.LastRotation || !overlay.IsHeld) // Moving down or spawn in
-                {
-                    overlay.overlayCachedCurveRadius = 0f;
+                // Normalize the X-axis (Pitch) to standard -180 to 180 degrees
+                float pitch = currentEuler.x;
+                if (pitch > 180f) pitch -= 360f;
 
-                    return false;
-                }
+                // Critical zone threshold where SteamVR mesh starts glitching
+                float criticalPitchThreshold = -25f;
 
-            state.LastRotation = rotation.eulerAngles.x;
-
-            return true;
+                // If it is tilted dangerously back OR the user is dragging it around while curved,
+                // force the pitch axis perfectly flat (0) while maintaining its Yaw (y) and Roll (z).
+                if (pitch < criticalPitchThreshold || overlay.IsHeld)
+                    overlay.transform.rotation = Quaternion.Euler(0f, currentEuler.y, currentEuler.z);
+            }
         }
 
         private static bool IsEnable()
