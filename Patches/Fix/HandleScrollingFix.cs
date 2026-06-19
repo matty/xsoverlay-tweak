@@ -7,16 +7,13 @@ namespace xsoverlay_tweak.Patches.Fix
 {
     internal class HandleScrollingFix
     {
-        private static float _horizontalTicks;
+        private static float ____horizontalTicks;
+
         [HarmonyPatch(typeof(Raycaster), "HandleScrolling")]
         [HarmonyPrefix]
-        public static bool FixScrollingSpeed(Raycaster __instance, ref MouseInputDevice ___InputDevice, ref int ___ScrollClicksPerSecond, ref float ____tickAccumulator, ref Vector2 ___CursorUVNormalized)
+        public static bool FixScrollingSpeed(Raycaster __instance, MouseInputDevice ___InputDevice, int ___ScrollClicksPerSecond, ref float ____tickAccumulator, Vector2 ___CursorUVNormalized)
         {
             if (!IsEnable()) return true;
-
-            float baseScrollSpeed = XSettingsManager.Instance.Settings.ScrollSpeed;
-            float scrollFactor = baseScrollSpeed / RefreshRate.HMDRefreshRate;
-            float deadzone = 0.01f;
 
             // Read BOTH horizontal (x)and vertical (y) axes from the input device
             float scrollX = ___InputDevice.Scroll.axis.x;
@@ -26,31 +23,31 @@ namespace xsoverlay_tweak.Patches.Fix
             float absY = Mathf.Abs(scrollY);
 
             // If both axes are inside the deadzone, or click engine is broken, stop processing
+            float deadzone = 0.01f;
             if ((absX <= deadzone && absY <= deadzone) || (float)___ScrollClicksPerSecond <= 0f)
                 return false;
 
+            float baseScrollSpeed = XSettingsManager.Instance.Settings.ScrollSpeed;
+            float scrollFactor = baseScrollSpeed / RefreshRate.HMDRefreshRate;
+
             if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
             {
-                if (absX > deadzone) // Handle Horizontal Scrolling
+                // Handle Horizontal Scrolling
+                ____horizontalTicks += absX * (float)___ScrollClicksPerSecond * scrollFactor;
+                int horizontalTicks = (int)____horizontalTicks;
+                if (horizontalTicks > 0)
                 {
-                    _horizontalTicks += absX * (float)___ScrollClicksPerSecond * scrollFactor;
-                    int horizontalTicks = (int)_horizontalTicks;
-                    if (horizontalTicks > 0)
-                    {
-                        _horizontalTicks -= horizontalTicks;
-                        XInputManager.sim.Mouse.HorizontalScroll(((scrollX > 0f) ? 1 : -1) * horizontalTicks);
-                    }
+                    ____horizontalTicks -= horizontalTicks;
+                    XInputManager.sim.Mouse.HorizontalScroll(((scrollX > 0f) ? 1 : -1) * horizontalTicks);
                 }
 
-                if (absY > deadzone) // Handle Vertical Scrolling
+                // Handle Vertical Scrolling
+                ____tickAccumulator += absY * (float)___ScrollClicksPerSecond * scrollFactor;
+                int verticalTicks = (int)____tickAccumulator;
+                if (verticalTicks > 0)
                 {
-                    ____tickAccumulator += absY * (float)___ScrollClicksPerSecond * scrollFactor;
-                    int verticalTicks = (int)____tickAccumulator;
-                    if (verticalTicks > 0)
-                    {
-                        ____tickAccumulator -= verticalTicks;
-                        MouseOperations.Scroll((((scrollY > 0f) ? 1 : (-1))) * verticalTicks, XInputManager.sim);
-                    }
+                    ____tickAccumulator -= verticalTicks;
+                    MouseOperations.Scroll((((scrollY > 0f) ? 1 : (-1))) * verticalTicks, XInputManager.sim);
                 }
             }
             else if (__instance.HoveringOverlay.IsPluginApplication)
