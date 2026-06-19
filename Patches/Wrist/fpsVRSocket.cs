@@ -39,7 +39,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsPerformanceMonitor = enable;
 
                 if (XConfig.fpsVRSocket.Value == 1 || XConfig.fpsVRSocket.Value == 2) // Top, Bottom
-                    RefreshWristState(enable, 0.4f);
+                    RefreshWristState(enable, 0.1f);
             };
 
             CustomAPI.OnToggleMediaPlayer += (enable) =>
@@ -49,7 +49,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                    RefreshWristState(enable, 0.4f);
+                    RefreshWristState(enable, 0.1f);
             };
 
             CustomAPI.OnClickToggleMediaPlayer += (enable) =>
@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches.Wrist
                 IsMediaPlayer = enable;
 
                 if (XConfig.fpsVRSocket.Value == 2) // Bottom
-                    RefreshWristState(enable, 0.4f);
+                    RefreshWristState(enable, 0.1f);
             };
 
             XConfig.fpsVRSocket.SettingChanged += (sender, args) =>
