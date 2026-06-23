@@ -69,7 +69,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             if (!EventBridge.IsRaycasterHand(__instance)) return;
 
             ShouldBeActive = Overlay_Manager.Instance.editMode || __instance.HoveringOverlay != null;
-
+ 
             if (LaserDictionary.TryGetValue(__instance, out LaserData Data))
             {
                 if (ShouldBeActive)
@@ -108,7 +108,7 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
                         CurrentRayPosition = __instance.transform.position;
                         CurrentRayDirection = Quaternion.AngleAxis(__instance.RayRotationOffset, __instance.transform.right) * __instance.transform.forward;
                     }
-
+ 
                     // Capture overlay backward hit point
                     if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true)
                         RayHitPoint = (CurrentRayPosition + CurrentRayDirection * __instance.FinalSteamVRRaycastResults.fDistance) - (CurrentRayDirection * 0.05f);

@@ -56,7 +56,7 @@ namespace xsoverlay_tweak.Patches.Fix
                 foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
                     if (allOverlay.overlayName.Equals("window.settings"))
                     {
-                        allOverlay.OverlayWebView._webView.WebView.SetRenderingEnabled(true);
+                        allOverlay.OverlayWebView?._webView?.WebView?.SetRenderingEnabled(true);
                         break;
                     }
         }
