@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.Fix
             float baseScrollSpeed = XSettingsManager.Instance.Settings.ScrollSpeed;
             float scrollFactor = baseScrollSpeed / RefreshRate.HMDRefreshRate;
 
-            if (__instance.HoveringOverlay.IsDesktopOrWindowCapture)
+            if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true)
             {
                 // Handle Horizontal Scrolling
                 ____horizontalTicks += absX * (float)___ScrollClicksPerSecond * scrollFactor;
@@ -50,7 +50,7 @@ namespace xsoverlay_tweak.Patches.Fix
                     MouseOperations.Scroll((((scrollY > 0f) ? 1 : (-1))) * verticalTicks, XInputManager.sim);
                 }
             }
-            else if (__instance.HoveringOverlay.IsPluginApplication)
+            else if (__instance?.HoveringOverlay?.IsPluginApplication == true)
             {
                 // Vector mapping for embedded browser engine frames: 
                 // Inverts Y for browser standard window scrolling coordinates, retains direct X

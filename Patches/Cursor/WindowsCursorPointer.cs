@@ -92,65 +92,67 @@ namespace xsoverlay_tweak.Patches.Cursor
 
             if (CursorDictionary.TryGetValue(__instance, out CursorData Data))
             {
-                Unity_Overlay hoveringOverlay = __instance.HoveringOverlay;
-                if (hoveringOverlay != null && EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && hoveringOverlay.IsDesktopCapture && IsTargetWindow(hoveringOverlay))
-                {
-                    if (Data.IsCursor)
-                    {
-                        ___VisualCursorElementOverlay.AutoUpdateOverlayTexture = false;
-                        ___VisualCursorElementOverlay.colorTint = Color.white;
-                    }
+                Unity_Overlay targetOverlay = __instance.HoveringOverlay;
 
-                    if (Time.unscaledTime - Data.LastFrameUpdateTime > 0.066f) // ~15 FPS
+                if (targetOverlay != null)
+                    if (EventBridge.IsActiveHand(__instance) && __instance.HeldOverlay == null && targetOverlay.IsDesktopCapture && IsTargetWindow(targetOverlay))
                     {
-                        Data.LastFrameUpdateTime = Time.unscaledTime;
-                        CURSORINFO ci = new() { cbSize = CURSORINFO_SIZE };
-
-                        if (GetCursorInfo(out ci) && (ci.flags & CURSOR_SHOWING) != 0)
+                        if (Data.IsCursor)
                         {
-                            bool isAnimated = IsPossiblyAnimatedCursor(ci.hCursor);
-                            bool shouldUpdate = ci.hCursor != Data.LastCursorHandle || isAnimated || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture;
-
-                            if (shouldUpdate)
-                            {
-                                if (ci.hCursor != Data.LastCursorHandle)
-                                    Data.AnimationFrame = 0;
-                                Data.IsCursor = true;
-                                Data.LastCursorHandle = ci.hCursor;
-
-                                // Prevent GPU memory leak: Destroy the old texture before creating a new one
-                                if (Data.CursorTexture != null)
-                                    UnityEngine.Object.Destroy(Data.CursorTexture);
-
-                                // Force software overrides any custom textures the engine loaded
-                                Data.CursorTexture = ExtractCurrentWindowsCursor(ci.hCursor, Data, out Data.HotSpotOffset);
-
-                                // Disable pointer scale by distance
-                                if (Data.RelativeTransform == null)
-                                    Data.RelativeTransform = ___VisualCursorElementOverlay.GetComponent<UI_RelativeTransformManipulator>();
-
-                                ScaleByDistance_Ref(Data.RelativeTransform) = false;
-
-                                float Width = hoveringOverlay.renderTexWidthOverride;
-                                float Height = hoveringOverlay.renderTexHeightOverride;
-                                float num3 = hoveringOverlay.widthInMeters;
-
-                                if (Height > Width)
-                                    num3 *= Height / Width;
-
-                                float widthInMeters = 0.024f * num3 * PointerScaleMultiply.GetScale();
-                                ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
-                                ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
-                                ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
-                                ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
-                            }
+                            ___VisualCursorElementOverlay.AutoUpdateOverlayTexture = false;
+                            ___VisualCursorElementOverlay.colorTint = Color.white;
                         }
-                        else if (Data.IsCursor)
-                            ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
+
+                        if (Time.unscaledTime - Data.LastFrameUpdateTime > 0.066f) // ~15 FPS
+                        {
+                            Data.LastFrameUpdateTime = Time.unscaledTime;
+                            CURSORINFO ci = new() { cbSize = CURSORINFO_SIZE };
+
+                            if (GetCursorInfo(out ci) && (ci.flags & CURSOR_SHOWING) != 0)
+                            {
+                                bool isAnimated = IsPossiblyAnimatedCursor(ci.hCursor);
+                                bool shouldUpdate = ci.hCursor != Data.LastCursorHandle || isAnimated || Data.CursorTexture == null || ___VisualCursorElementOverlay.overlayTexture != Data.CursorTexture;
+
+                                if (shouldUpdate)
+                                {
+                                    if (ci.hCursor != Data.LastCursorHandle)
+                                        Data.AnimationFrame = 0;
+                                    Data.IsCursor = true;
+                                    Data.LastCursorHandle = ci.hCursor;
+
+                                    // Prevent GPU memory leak: Destroy the old texture before creating a new one
+                                    if (Data.CursorTexture != null)
+                                        UnityEngine.Object.Destroy(Data.CursorTexture);
+
+                                    // Force software overrides any custom textures the engine loaded
+                                    Data.CursorTexture = ExtractCurrentWindowsCursor(ci.hCursor, Data, out Data.HotSpotOffset);
+
+                                    // Disable pointer scale by distance
+                                    if (Data.RelativeTransform == null)
+                                        Data.RelativeTransform = ___VisualCursorElementOverlay.GetComponent<UI_RelativeTransformManipulator>();
+
+                                    ScaleByDistance_Ref(Data.RelativeTransform) = false;
+
+                                    float Width = targetOverlay.renderTexWidthOverride;
+                                    float Height = targetOverlay.renderTexHeightOverride;
+                                    float num3 = targetOverlay.widthInMeters;
+
+                                    if (Height > Width)
+                                        num3 *= Height / Width;
+
+                                    float widthInMeters = 0.024f * num3 * PointerScaleMultiply.GetScale();
+                                    ___VisualCursorElementOverlay.overlayTexture = Data.CursorTexture;
+                                    ___VisualCursorElementOverlay.overlay.overlayTexture = Data.CursorTexture;
+                                    ___VisualCursorElementOverlay.widthInMeters = widthInMeters;
+                                    ___VisualCursorElementOverlay.overlay.overlayWidthInMeters = widthInMeters;
+                                }
+                            }
+                            else if (Data.IsCursor)
+                                ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
+                        }
                     }
-                }
-                else if (Data.IsCursor)
-                    ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
+                    else if (Data.IsCursor)
+                        ResetToDefaultCursor(__instance, ___VisualCursorElementOverlay, ___CursorIcon, Data);
             }
         }
 

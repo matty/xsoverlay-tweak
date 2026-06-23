@@ -41,25 +41,26 @@ namespace xsoverlay_tweak.Patches.QualityOfLife
             if (EventBridge.IsActiveHand(__instance))
                 if (InstanceState.TryGetValue(__instance, out RaycasterState Data))
                 {
-                    if (__instance.HoveringOverlay != null && !__instance.HoveringOverlay.IsHeld && !__instance.HoveringOverlay.IsLocked && __instance.HeldOverlay == null)
-                        if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true || (XConfig.PullTriggerPointerLock.Value == 2 && __instance?.HoveringOverlay?.IsPluginApplication == true))
-                        {
-                            Data.IsDown = ___HadMouseInputDown || ___HoldingTouch || ___IsWebViewTouchEventDown;
-
-                            if (GetTriggerAxis(__instance) > 0f && !Data.IsDown)
+                    if (__instance.HoveringOverlay != null)
+                        if (!__instance.HoveringOverlay.IsHeld && !__instance.HoveringOverlay.IsLocked && __instance.HeldOverlay == null)
+                            if (__instance?.HoveringOverlay?.IsDesktopOrWindowCapture == true || (XConfig.PullTriggerPointerLock.Value == 2 && __instance?.HoveringOverlay?.IsPluginApplication == true))
                             {
-                                if (Data.IsStopping)
-                                    Plugin.Instance.StopCoroutine(Data.Coroutine);
+                                Data.IsDown = ___HadMouseInputDown || ___HoldingTouch || ___IsWebViewTouchEventDown;
 
-                                if (!Data.IsBlock)
-                                    AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, XConfig.PullTriggerPointerLockHaptic.Value / 100f);
+                                if (GetTriggerAxis(__instance) > 0f && !Data.IsDown)
+                                {
+                                    if (Data.IsStopping)
+                                        Plugin.Instance.StopCoroutine(Data.Coroutine);
 
-                                Data.IsStopping = false;
-                                Data.IsBlock = true;
+                                    if (!Data.IsBlock)
+                                        AdvancedHaptics.Rumble(__instance.HapticDeviceName == Raycaster.HapticDevice.Left, 0.001f, 320f, XConfig.PullTriggerPointerLockHaptic.Value / 100f);
 
-                                return;
+                                    Data.IsStopping = false;
+                                    Data.IsBlock = true;
+
+                                    return;
+                                }
                             }
-                        }
 
                     if (Data.IsBlock && !Data.IsStopping)
                     {

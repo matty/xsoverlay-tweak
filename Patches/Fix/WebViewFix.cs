@@ -52,7 +52,7 @@ namespace xsoverlay_tweak.Patches.Fix
         {
             if (!IsEnable()) return;
 
-            if (__instance.HoveringOverlay.overlayName.Equals("window.toolbar"))
+            if (__instance?.HoveringOverlay?.overlayName == "window.toolbar")
                 foreach (Unity_Overlay allOverlay in Overlay_Manager.Instance.AllSceneOverlays)
                     if (allOverlay.overlayName.Equals("window.settings"))
                     {

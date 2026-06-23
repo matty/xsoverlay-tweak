@@ -24,32 +24,32 @@ namespace xsoverlay_tweak.Patches.Pointer
         {
             if (!EventBridge.IsRaycasterHand(__instance)) return;
 
-            Unity_Overlay overlay = __instance.HoveringOverlay;
-            if (overlay != null)
+            Unity_Overlay targetOverlay = __instance.HoveringOverlay;
+            if (targetOverlay != null)
                 if (IsEnable() || WindowsCursorPointer.CursorDictionary.TryGetValue(__instance, out WindowsCursorPointer.CursorData Data) && Data.IsCursor)
                 {
                     PullTriggerPointerLock.InstanceState.TryGetValue(__instance, out PullTriggerPointerLock.RaycasterState ClickState);
 
                     if (!___InputDevice.ClickFreezeActive && (ClickState == null || !ClickState.IsBlock))
                     {
-                        Transform transform = overlay.transform;
-                        Quaternion rotation = overlay.transform.rotation;
+                        Transform transform = targetOverlay.transform;
+                        Quaternion rotation = targetOverlay.transform.rotation;
 
-                        if (overlay?.WorldSpaceSceneImpostor != null) // Overlay attached to device
+                        if (targetOverlay?.WorldSpaceSceneImpostor != null) // Overlay attached to device
                         {
-                            transform = overlay.WorldSpaceSceneImpostor.transform;
-                            rotation = overlay.WorldSpaceSceneImpostor.transform.rotation;
+                            transform = targetOverlay.WorldSpaceSceneImpostor.transform;
+                            rotation = targetOverlay.WorldSpaceSceneImpostor.transform.rotation;
 
-                            if (OverlayAttachSmooth.OverlayStatus.TryGetValue(overlay, out var SmoothData)) // Attached device rolling lock
+                            if (OverlayAttachSmooth.OverlayStatus.TryGetValue(targetOverlay, out var SmoothData)) // Attached device rolling lock
                                 if (SmoothData.LockRoll)
                                     rotation = SmoothData.Rotation;
                         }
 
-                        if (overlay.overlayCurveRadius.Equals(0)) // Overlay not curve
+                        if (targetOverlay.overlayCurveRadius.Equals(0)) // Overlay not curve
                         {
                             ___VisualCursorElement.transform.rotation = rotation;
                         }
-                        else // Cursor faces up to the overlay curved surface
+                        else // Cursor faces up to the targetOverlay curved surface
                         {
                             Vector3 localNormal = new(ovrIntersectionResults.vNormal.v0, ovrIntersectionResults.vNormal.v1, ovrIntersectionResults.vNormal.v2);
                             Vector3 worldNormal = transform.TransformDirection(localNormal);
@@ -59,7 +59,7 @@ namespace xsoverlay_tweak.Patches.Pointer
                             // Calculate the tilt required to stay parallel to the curved surface at this specific point.
                             Quaternion surfaceTilt = Quaternion.FromToRotation(Vector3.forward, worldNormal);
 
-                            // Apply the surface tilt to the overlay's base world rotation.
+                            // Apply the surface tilt to the targetOverlay's base world rotation.
                             ___VisualCursorElement.transform.rotation = rotation * surfaceTilt;
                         }
 

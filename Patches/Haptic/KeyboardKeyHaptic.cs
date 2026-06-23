@@ -30,7 +30,7 @@ namespace xsoverlay_tweak.Patches.Haptic
         [HarmonyPostfix]
         public static void PlayHapticOnHoverButton(Raycaster __instance, List<RaycastResult> ___PointerResult)
         {
-            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance) || __instance.HoveringOverlay.IsPluginApplication || __instance.HeldOverlay != null) return;
+            if (!IsEnable() || !EventBridge.IsRaycasterHand(__instance) || __instance?.HoveringOverlay?.IsPluginApplication == true || __instance.HeldOverlay != null) return;
 
             if (HoverDictionary.TryGetValue(__instance, out HoverData Data))
             {

@@ -92,7 +92,7 @@ namespace xsoverlay_tweak.Patches.Cursor
                 Raycaster raycaster = RaycasterInstances[i];
 
                 if (EventBridge.IsActiveHand(raycaster))
-                    if (raycaster.HoveringOverlay != null && raycaster.HoveringOverlay.overlayRootObject != null)
+                    if (raycaster.HoveringOverlay != null)
                         if (!raycaster.HoveringOverlay.IsBeingScaled && !raycaster.HoveringOverlay.IsHeld && !raycaster.HoveringOverlay.IsLocked)
                             HandleScrolling(raycaster);
             }
